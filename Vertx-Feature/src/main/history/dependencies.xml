@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<features xmlns="http://karaf.apache.org/xmlns/features/v1.4.0" name="Vertx-Feature-0.1.0-SNAPSHOT">
+    <feature version="0.0.0">
+        <feature prerequisite="false" dependency="false">scr</feature>
+        <bundle>mvn:com.fasterxml.jackson.core/jackson-annotations/2.6.0</bundle>
+        <bundle>mvn:com.fasterxml.jackson.core/jackson-core/2.6.1</bundle>
+        <bundle>mvn:com.fasterxml.jackson.core/jackson-databind/2.6.1</bundle>
+        <bundle>mvn:de.nierbeck.example.vertx/Vertx-Http/0.1.0-SNAPSHOT</bundle>
+        <bundle>mvn:de.nierbeck.example.vertx/Vertx-Shell/0.1.0-SNAPSHOT</bundle>
+        <bundle>mvn:de.nierbeck.example.vertx/Vertx-System/0.1.0-SNAPSHOT</bundle>
+        <bundle>mvn:de.nierbeck.example.vertx/Vertx-Verticles/0.1.0-SNAPSHOT</bundle>
+        <bundle>mvn:io.netty/netty-buffer/4.0.33.Final</bundle>
+        <bundle>mvn:io.netty/netty-codec-http/4.0.36.Final</bundle>
+        <bundle>mvn:io.netty/netty-codec/4.0.36.Final</bundle>
+        <bundle>mvn:io.netty/netty-common/4.0.36.Final</bundle>
+        <bundle>mvn:io.netty/netty-handler/4.0.36.Final</bundle>
+        <bundle>mvn:io.netty/netty-transport/4.0.36.Final</bundle>
+        <bundle>mvn:io.vertx/vertx-auth-common/3.2.1</bundle>
+        <bundle>mvn:io.vertx/vertx-core/3.2.1</bundle>
+        <bundle>mvn:io.vertx/vertx-web/3.2.1</bundle>
+    </feature>
+</features>
