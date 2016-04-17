@@ -1,28 +1,13 @@
 package de.nierbeck.example.vertx.shell;
 
-import java.io.IOException;
-import java.io.PrintStream;
-import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.stream.Collectors;
-
-import javax.xml.bind.DatatypeConverter;
-
 import org.apache.karaf.shell.api.action.Argument;
 import org.apache.karaf.shell.api.action.Command;
 import org.apache.karaf.shell.api.action.Option;
-import org.apache.karaf.shell.api.action.lifecycle.Reference;
 import org.apache.karaf.shell.api.action.lifecycle.Service;
-import org.apache.karaf.shell.api.console.Session;
 
-import io.vertx.core.Handler;
 import io.vertx.core.MultiMap;
-import io.vertx.core.buffer.Buffer;
 import io.vertx.core.eventbus.DeliveryOptions;
-import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.eventbus.Message;
-import io.vertx.core.eventbus.MessageConsumer;
 
 @Command(scope = "vertx", name = "bus-send", description = "Send a message to the event bus")
 @Service
@@ -42,8 +27,6 @@ public class VertxBusSend extends AbstractVertxCommand {
 
     @Option(name = "verbose")
     private boolean verbose;
-
-    private ExecutorService executorService = Executors.newSingleThreadExecutor();
 
     @Override
     public Object execute() throws Exception {

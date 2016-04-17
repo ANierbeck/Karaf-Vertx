@@ -5,8 +5,6 @@ import java.util.List;
 import org.apache.karaf.shell.api.action.Argument;
 import org.apache.karaf.shell.api.action.Command;
 import org.apache.karaf.shell.api.action.lifecycle.Service;
-import org.apache.karaf.shell.support.table.Row;
-import org.apache.karaf.shell.support.table.ShellTable;
 
 import io.vertx.core.shareddata.LocalMap;
 import io.vertx.core.shareddata.SharedData;

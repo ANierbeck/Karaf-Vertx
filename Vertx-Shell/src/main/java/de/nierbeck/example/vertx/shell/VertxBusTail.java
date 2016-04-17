@@ -21,7 +21,6 @@ import io.vertx.core.MultiMap;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.eventbus.Message;
-import io.vertx.core.eventbus.MessageConsumer;
 
 @Command(scope = "vertx", name = "bus-tail", description = "Subscribe to one or several event bus address and logs received messages on the console")
 @Service
@@ -100,7 +99,7 @@ public class VertxBusTail extends AbstractVertxCommand {
 
         public void run() {
             EventBus eb = getEventBusService();
-            List<MessageConsumer<Object>> consumers = addresses.stream().map(address -> {
+            addresses.stream().map(address -> {
                 Handler<Message<Object>> consumer = msg -> {
                     Object body = msg.body();
                     String bodyString = null;
