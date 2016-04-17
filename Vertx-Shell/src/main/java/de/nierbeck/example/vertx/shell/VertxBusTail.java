@@ -3,10 +3,8 @@ package de.nierbeck.example.vertx.shell;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.List;
-import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.LinkedBlockingQueue;
 import java.util.stream.Collectors;
 
 import javax.xml.bind.DatatypeConverter;
@@ -32,7 +30,7 @@ public class VertxBusTail extends AbstractVertxCommand {
     @Reference
     Session session;
 
-    @Argument(multiValued = true, name = "adress", required = false, description = "Adress of EventBus")
+    @Argument(multiValued = true, name = "adress", required = true, description = "Adress of EventBus")
     private List<String> addresses;
 
     @Option(name = "verbose", description = "Verbose output")
