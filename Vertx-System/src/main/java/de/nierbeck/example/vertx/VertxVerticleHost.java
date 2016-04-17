@@ -1,7 +1,9 @@
 package de.nierbeck.example.vertx;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -22,6 +24,8 @@ public class VertxVerticleHost {
     private Vertx vertxService;
     
     private List<Verticle> verticles = new ArrayList<>();
+    
+    private Map<Verticle, String> deployedVerticles = new HashMap<>();
     
     @Deactivate
     public void stop() {
@@ -60,6 +64,8 @@ public class VertxVerticleHost {
             vertxService.deployVerticle(verticle, deploy -> {
                 if (deploy.succeeded()) {
                     LOGGER.info("Deployment of verticle succeeded");
+                    String id = deploy.result();
+                    deployedVerticles.put(verticle, id);
                 } else {
                     LOGGER.log(Level.SEVERE, "Deployment of verticle failed", deploy.cause());
                 }
@@ -71,7 +77,9 @@ public class VertxVerticleHost {
         verticles.remove(verticle);
         if (verticle == null)
             return;
-        if (vertxService != null)
-            vertxService.undeploy(verticle.getVertx().getOrCreateContext().deploymentID());
+        if (vertxService != null) {
+            vertxService.undeploy(deployedVerticles.get(verticle));
+            deployedVerticles.remove(verticle);
+        }
     }
 }

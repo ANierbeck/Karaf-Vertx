@@ -46,7 +46,7 @@ public class VertxBusTail extends AbstractVertxCommand {
     @Override
     public Object execute() throws Exception {
         
-        if (addresses.isEmpty()) {
+        if (addresses == null || addresses.isEmpty()) {
             return "provide at lease one address";
         }
         
