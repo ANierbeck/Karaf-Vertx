@@ -18,7 +18,7 @@ public class VertxMapGet extends AbstractVertxCommand {
     @Argument(index = 0, name = "map", description = "the name of the map to get from", required = true)
     private String map;
 
-    @Argument(index = 1, multiValued = true, description = "the keys to get", name = "keys", required = true)
+    @Argument(index = 1, multiValued = true, description = "the keys to get", name = "keys", required = false)
     private List<String> keys;
 
     @Override
@@ -32,16 +32,24 @@ public class VertxMapGet extends AbstractVertxCommand {
         table.column("\nValue");
 
         if (keys != null) {
-            for (String key : keys) {
-                Object value = map.get(key);
-                Row row = table.addRow();
-                row.addContent(key, value);
-            }
+            keys.forEach(key -> {
+                renderRow(map, table, key);
+            });
+        } else {
+            map.keySet().forEach(key -> {
+                renderRow(map, table, (String) key);
+            });
         }
         
         table.print(System.out);
 
         return null;
+    }
+
+    private void renderRow(LocalMap<Object, Object> map, ShellTable table, String key) {
+        Object value = map.get(key);
+        Row row = table.addRow();
+        row.addContent(key, value);
     }
 
 }
