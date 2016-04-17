@@ -2,6 +2,7 @@ package de.nierbeck.example.vertx;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.osgi.service.component.annotations.Component;
@@ -56,7 +57,13 @@ public class VertxVerticleHost {
         if (verticle == null)
             return;
         if (vertxService != null)
-            vertxService.deployVerticle(verticle);
+            vertxService.deployVerticle(verticle, deploy -> {
+                if (deploy.succeeded()) {
+                    LOGGER.info("Deployment of verticle succeeded");
+                } else {
+                    LOGGER.log(Level.SEVERE, "Deployment of verticle failed", deploy.cause());
+                }
+            });
     }
     
     public void removeVerticle(Verticle verticle) {

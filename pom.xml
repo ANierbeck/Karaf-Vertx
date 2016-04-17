@@ -20,7 +20,7 @@
 		<module>Vertx-Verticles</module>
 		<module>Vertx-Http</module>
 	</modules>
-	
+
 	<properties>
 		<vertx.version>3.2.1</vertx.version>
 		<karaf.version>4.0.4</karaf.version>
@@ -28,7 +28,7 @@
 		<osgi.version>6.0.0</osgi.version>
 		<netty.version>4.0.36.Final</netty.version>
 	</properties>
-	
+
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
@@ -38,13 +38,19 @@
 			</dependency>
 			<dependency>
 				<groupId>io.vertx</groupId>
+				<artifactId>vertx-core</artifactId>
+				<version>${vertx.version}</version>
+				<type>test-jar</type>
+			</dependency>
+			<dependency>
+				<groupId>io.vertx</groupId>
 				<artifactId>vertx-web</artifactId>
 				<version>${vertx.version}</version>
 			</dependency>
 			<dependency>
-			    <groupId>io.vertx</groupId>
-			    <artifactId>vertx-shell</artifactId>
-			    <version>${vertx.version}</version>
+				<groupId>io.vertx</groupId>
+				<artifactId>vertx-shell</artifactId>
+				<version>${vertx.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.osgi</groupId>
@@ -76,9 +82,15 @@
 				<artifactId>netty-codec-http</artifactId>
 				<version>${netty.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>io.vertx</groupId>
+				<artifactId>vertx-unit</artifactId>
+				<scope>test</scope>
+				<version>${vertx.version}</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
-	
+
 	<build>
 		<plugins>
 			<plugin>
@@ -90,5 +102,5 @@
 			</plugin>
 		</plugins>
 	</build>
-	
+
 </project>
