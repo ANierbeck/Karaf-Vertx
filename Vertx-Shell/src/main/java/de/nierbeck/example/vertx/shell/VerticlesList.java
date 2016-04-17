@@ -1,23 +1,17 @@
 
 package de.nierbeck.example.vertx.shell;
 
-import org.apache.karaf.shell.api.action.Action;
 import org.apache.karaf.shell.api.action.Command;
-import org.apache.karaf.shell.api.action.lifecycle.Reference;
 import org.apache.karaf.shell.api.action.lifecycle.Service;
 import org.apache.karaf.shell.support.table.Row;
 import org.apache.karaf.shell.support.table.ShellTable;
 
-import io.vertx.core.Vertx;
 import io.vertx.core.impl.Deployment;
 import io.vertx.core.impl.VertxInternal;
 
 @Command(scope = "verticles", name = "list", description = "Lists deployed Verticles")
 @Service
-public class VerticlesList implements Action {
-
-    @Reference
-    private Vertx vertxService;
+public class VerticlesList extends AbstractVertxCommand {
 
     @Override
     public Object execute() throws Exception {
@@ -28,8 +22,8 @@ public class VerticlesList implements Action {
         table.column("Identifier");
         table.column("Options");
         
-        vertxService.deploymentIDs().forEach(id -> { 
-                Deployment deployment = ((VertxInternal)vertxService).getDeployment(id);
+        getVertxService().deploymentIDs().forEach(id -> { 
+                Deployment deployment = ((VertxInternal)getVertxService()).getDeployment(id);
                 Row row = table.addRow();
                 row.addContent(id, deployment.verticleIdentifier(), deployment.deploymentOptions().toJson());
             }
@@ -43,4 +37,5 @@ public class VerticlesList implements Action {
         
         return null;
     }
+
 }
