@@ -38,6 +38,9 @@ public class VertxService {
     @Activate
     public void start(BundleContext context) {
         LOGGER.info("Creating Vert.x instance");
+//        vertx = Vertx.vertx(new VertxOptions().setMetricsOptions(
+//                new DropwizardMetricsOptions().setJmxEnabled(true)
+//            ));
         vertx = Vertx.vertx();
         vertxRegistration = context.registerService(Vertx.class, vertx, null);
         LOGGER.info("Vert.x service registered");
