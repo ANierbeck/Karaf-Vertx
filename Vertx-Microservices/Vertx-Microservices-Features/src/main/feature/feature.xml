@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<features name="${project.artifactId}-${project.version}" xmlns="http://karaf.apache.org/xmlns/features/v1.4.0">
+
+	<repository>mvn:de.nierbeck.example.vertx/Vertx-Feature/${project.version}/xml/features</repository>
+	<repository>mvn:org.ops4j.pax.jdbc/pax-jdbc-features/${pax-jdbc.version}/xml/features</repository>
+
+	<feature name='${project.artifactId}' version="${project.version}">
+		<details>${project.description}</details>
+		<config name="org.ops4j.datasource-test">
+			osgi.jdbc.driver.name=H2
+			databaseName=test
+			user=sa
+			password=
+			dataSourceName=testds-h2
+		</config>
+		<feature>Vertx-Feature</feature>
+		<feature>Vertx-JDBC</feature>
+		<feature>pax-jdbc-h2</feature>
+		<feature>pax-jdbc-config</feature>
+		<feature>pax-jdbc-pool-aries</feature>
+	</feature>
+	
+</features>

@@ -1,0 +1,19 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>de.nierbeck.example.vertx</groupId>
+    <artifactId>vertx-parent</artifactId>
+    <version>0.1.0-SNAPSHOT</version>
+  </parent>
+  <artifactId>Vertx-Microservices</artifactId>
+  <packaging>pom</packaging>
+  <groupId>de.nierbeck.example.vertx.mircoservices</groupId>
+  <modules>
+  	<module>Vertx-Microservices-JDBC</module>
+  	<module>Vertx-Microservices-Bookservice</module>
+  	
+  	<module>Vertx-Microservices-Features</module>
+  	<module>Vertx-Microservices-Entity</module>
+  	<module>Vertx-Microservices-Karaf</module>
+  </modules>
+</project>

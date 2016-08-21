@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<features xmlns="http://karaf.apache.org/xmlns/features/v1.4.0" name="Vertx-Microservices-Features-0.1.0-SNAPSHOT">
+    <feature version="0.0.0">
+        <feature prerequisite="false" dependency="false">Vertx-Feature</feature>
+        <feature prerequisite="false" dependency="false">Vertx-JDBC</feature>
+        <feature prerequisite="false" dependency="false">pax-jdbc-config</feature>
+        <feature prerequisite="false" dependency="false">pax-jdbc-h2</feature>
+        <feature prerequisite="false" dependency="false">pax-jdbc-pool-aries</feature>
+        <bundle>mvn:de.nierbeck.example.vertx.mircoservices/Vertx-Microservices-Bookservice/0.1.0-SNAPSHOT</bundle>
+        <bundle>mvn:de.nierbeck.example.vertx.mircoservices/Vertx-Microservices-Entity/0.1.0-SNAPSHOT</bundle>
+        <bundle>mvn:de.nierbeck.example.vertx.mircoservices/Vertx-Microservices-JDBC/0.1.0-SNAPSHOT</bundle>
+    </feature>
+</features>
