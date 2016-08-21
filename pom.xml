@@ -19,14 +19,15 @@
 		<module>Vertx-Karaf</module>
 		<module>Vertx-Verticles</module>
 		<module>Vertx-Http</module>
+		<module>Vertx-Microservices</module>
 	</modules>
 
 	<properties>
-		<vertx.version>3.2.1</vertx.version>
-		<karaf.version>4.0.4</karaf.version>
+		<vertx.version>3.3.2</vertx.version>
+		<karaf.version>4.0.5</karaf.version>
 		<maven-bundle-plugin.version>3.0.1</maven-bundle-plugin.version>
 		<osgi.version>6.0.0</osgi.version>
-		<netty.version>4.0.36.Final</netty.version>
+		<netty.version>4.1.1.Final</netty.version>
 	</properties>
 
 	<dependencyManagement>
@@ -50,6 +51,11 @@
 			<dependency>
 				<groupId>io.vertx</groupId>
 				<artifactId>vertx-shell</artifactId>
+				<version>${vertx.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>io.vertx</groupId>
+				<artifactId>vertx-jdbc-client</artifactId>
 				<version>${vertx.version}</version>
 			</dependency>
 			<dependency>
@@ -86,6 +92,16 @@
 				<groupId>io.vertx</groupId>
 				<artifactId>vertx-unit</artifactId>
 				<scope>test</scope>
+				<version>${vertx.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.osgi</groupId>
+				<artifactId>osgi.cmpn</artifactId>
+				<version>6.0.0</version>
+			</dependency>
+			<dependency>
+				<groupId>io.vertx</groupId>
+				<artifactId>vertx-dropwizard-metrics</artifactId>
 				<version>${vertx.version}</version>
 			</dependency>
 		</dependencies>
