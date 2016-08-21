@@ -10,6 +10,14 @@
 	<packaging>bundle</packaging>
 
 	<dependencies>
+	
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>Vertx-Microservices-Entity</artifactId>
+			<version>${project.version}</version>
+			<scope>provided</scope>
+		</dependency>
+	
 		<dependency>
 			<groupId>io.vertx</groupId>
 			<artifactId>vertx-jdbc-client</artifactId>

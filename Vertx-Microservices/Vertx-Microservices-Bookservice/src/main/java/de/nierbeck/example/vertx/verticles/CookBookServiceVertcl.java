@@ -11,6 +11,7 @@ import org.osgi.service.metatype.annotations.Designate;
 import org.osgi.service.metatype.annotations.ObjectClassDefinition;
 
 import de.nierbeck.example.vertx.encoder.BookEncoder;
+import de.nierbeck.example.vertx.encoder.RecipeEncoder;
 import de.nierbeck.example.vertx.entity.Book;
 import de.nierbeck.example.vertx.entity.Recipe;
 import io.vertx.core.AbstractVerticle;
@@ -22,6 +23,7 @@ import io.vertx.core.http.HttpServerResponse;
 import io.vertx.core.json.Json;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
+import io.vertx.ext.web.handler.BodyHandler;
 
 @ObjectClassDefinition(name = "Server Configuration")
 @interface ServerConfig {
@@ -37,7 +39,7 @@ public class CookBookServiceVertcl extends AbstractVerticle {
     private ServerConfig cfg;
 
     private HttpServer server;
-    
+
     @Reference
     private EventBus eventBus;
 
@@ -59,8 +61,9 @@ public class CookBookServiceVertcl extends AbstractVerticle {
     @Override
     public void start(Future<Void> future) throws Exception {
         LOGGER.info("starting rest router");
-        
+
         eventBus.registerDefaultCodec(Book.class, new BookEncoder());
+        eventBus.registerDefaultCodec(Recipe.class, new RecipeEncoder());
 
         // Create a router object.
         Router router = Router.router(getVertx());
@@ -71,12 +74,14 @@ public class CookBookServiceVertcl extends AbstractVerticle {
             response.putHeader("content-type", "text/html")
                     .end("<h1>Hello from my first Vert.x 3 OSGi application</h1>");
         });
-        
-        router.post("/cookbook/:id/recipe").handler(this::publishRecipeToEventBus);
-        
-        router.get("/cookbook/:id").handler(this::receiveCookBook);
-        
 
+        
+        router.route("/cookbook*").handler(BodyHandler.create());
+        router.get("/cookbook/:id").handler(this::receiveCookBook);
+        router.get("/cookbook/:book_id/recipe/:id").handler(this::receiveRecipe);
+        router.post("/cookbook/:book_id/recipe").handler(this::addRecipe);
+//        router.post("/cookbook/:book_id/recipe/:id").handler(this::updateRecipe);
+        
         getVertx().createHttpServer().requestHandler(router::accept).listen(cfg.port(), result -> {
             if (result.succeeded()) {
                 future.complete();
@@ -93,33 +98,53 @@ public class CookBookServiceVertcl extends AbstractVerticle {
             server.close();
         }
     }
-    
-    private void publishRecipeToEventBus(RoutingContext routingContext) {
-        String id = routingContext.request().getParam("id");
+
+    private void addRecipe(RoutingContext routingContext) {
+        String bookId = routingContext.request().getParam("book_id");
         Recipe recipe = Json.decodeValue(routingContext.getBodyAsString(), Recipe.class);
-        
+        recipe.setBookId(Long.valueOf(bookId));
+
         HttpServerResponse response = routingContext.response();
         response.setStatusCode(201)
                 .putHeader("content-type", "application/json; charset=utf-8")
                 .end(Json.encodePrettily(recipe));
-
-        eventBus.publish("de.nierbeck.vertx.jdbc.write", recipe);
+        eventBus.publish("de.nierbeck.vertx.jdbc.write.add.recipe", recipe);
     }
     
-    private void receiveCookBook(RoutingContext routingContext) {
-        
+    private void receiveRecipe(RoutingContext routingContext) {
         String id = routingContext.request().getParam("id");
-        
+        String bookId = routingContext.request().getParam("book_id");
+        Recipe recipe = new Recipe();
+        recipe.setBookId(Long.valueOf(bookId));
+        recipe.setId(Long.valueOf(id));
+
+
+        eventBus.send("de.nierbeck.vertx.jdbc.read", recipe, message -> {
+            HttpServerResponse response = routingContext.response();
+            response.putHeader("content-type", "application/json; charset=utf-8")
+                .end(Json.encodePrettily(message.result().body()));
+            response.close();
+        });
+    }
+
+    private void receiveCookBook(RoutingContext routingContext) {
+
+        String id = routingContext.request().getParam("id");
+
         Book book = new Book();
         book.setId(Long.valueOf(id));
-        
+
         eventBus.send("de.nierbeck.vertx.jdbc.read", book, message -> {
-            Book customMessage = (Book) message.result().body();
             HttpServerResponse response = routingContext.response();
-            System.out.println("Receiver ->>>>>>>> " + customMessage);
-            if (customMessage != null) {
-                response.putHeader("content-type", "application/json; charset=utf-8")
-                        .end(Json.encodePrettily(customMessage));
+            if (!message.failed()) {
+                Book customMessage = (Book) message.result().body();
+                System.out.println("Receiver ->>>>>>>> " + customMessage);
+                if (customMessage != null) {
+                    response.putHeader("content-type", "application/json; charset=utf-8")
+                            .end(Json.encodePrettily(customMessage));
+                }
+            } else {
+                LOGGER.log(Level.SEVERE, "message failed");
             }
             response.closed();
 

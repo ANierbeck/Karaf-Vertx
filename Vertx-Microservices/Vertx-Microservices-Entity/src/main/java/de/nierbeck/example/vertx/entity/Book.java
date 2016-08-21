@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.vertx.core.buffer.Buffer;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Book implements Serializable {
 
@@ -20,8 +20,16 @@ public class Book implements Serializable {
 	private String isbn;
 
 	private List<Recipe> recipes = new ArrayList<>();
+	
+	public Book() {}
 
-	public Long getId() {
+	public Book(Long id, String name, String isbn) {
+	    this.id = id;
+	    this.name = name;
+	    this.isbn = isbn;
+    }
+
+    public Long getId() {
 		return id;
 	}
 
@@ -52,6 +60,7 @@ public class Book implements Serializable {
 		return recipes;
 	}
 
+    @JsonProperty(required=false)
 	public void setRecipes(List<Recipe> recipes) {
 		this.recipes = recipes;
 	}

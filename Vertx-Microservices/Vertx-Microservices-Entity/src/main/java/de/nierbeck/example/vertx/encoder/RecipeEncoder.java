@@ -1,16 +1,16 @@
 package de.nierbeck.example.vertx.encoder;
 
-import de.nierbeck.example.vertx.entity.Book;
+import de.nierbeck.example.vertx.entity.Recipe;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.eventbus.MessageCodec;
 import io.vertx.core.json.Json;
 
-public class BookEncoder implements MessageCodec<Book, Book>{
+public class RecipeEncoder implements MessageCodec<Recipe, Recipe>{
 
     @Override
-    public void encodeToWire(Buffer buffer, Book book) {
+    public void encodeToWire(Buffer buffer, Recipe recipe) {
      // Easiest ways is using JSON object
-        String json = Json.encode(book);
+        String json = Json.encode(recipe);
 
         // Length of JSON: is NOT characters count
         int length = json.getBytes().length;
@@ -21,7 +21,7 @@ public class BookEncoder implements MessageCodec<Book, Book>{
     }
 
     @Override
-    public Book decodeFromWire(int pos, Buffer buffer) {
+    public Recipe decodeFromWire(int pos, Buffer buffer) {
         // My custom message starting from this *position* of buffer
         int _pos = pos;
 
@@ -32,13 +32,13 @@ public class BookEncoder implements MessageCodec<Book, Book>{
         // Jump 4 because getInt() == 4 bytes
         String jsonStr = buffer.getString(_pos+=4, _pos+=length);
         
-        return Json.decodeValue(jsonStr, Book.class);
+        return Json.decodeValue(jsonStr, Recipe.class);
         
     }
 
     @Override
-    public Book transform(Book book) {
-        return book;
+    public Recipe transform(Recipe recipe) {
+        return recipe;
     }
 
     @Override

@@ -14,6 +14,19 @@ public class Recipe implements Serializable {
 	private String name;
 
 	private String ingredients;
+	
+	private Long bookId;
+	
+	public Recipe() {
+	    //default constructor
+	}
+	
+	public Recipe(Long id, String name, String ingredients, Long bookId) {
+	    this.id = id; 
+	    this.name = name;
+	    this.ingredients = ingredients;
+	    this.bookId = bookId;
+	}
 
 	public Long getId() {
 		return id;
@@ -39,7 +52,21 @@ public class Recipe implements Serializable {
 		this.name = name;
 	}
 
-	@Override
+	/**
+     * @return the bookId
+     */
+    public Long getBookId() {
+        return bookId;
+    }
+
+    /**
+     * @param bookId the bookId to set
+     */
+    public void setBookId(Long bookId) {
+        this.bookId = bookId;
+    }
+
+    @Override
 	public String toString() {
 		return "Recipe [id=" + id + ", ingredients=" + ingredients + "]";
 	}
