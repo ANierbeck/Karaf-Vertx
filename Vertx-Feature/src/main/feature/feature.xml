@@ -1,27 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
 
-    Licensed to the Apache Software Foundation (ASF) under one or more
-    contributor license agreements.  See the NOTICE file distributed with
-    this work for additional information regarding copyright ownership.
-    The ASF licenses this file to You under the Apache License, Version 2.0
-    (the "License"); you may not use this file except in compliance with
-    the License.  You may obtain a copy of the License at
+<features name="${project.artifactId}-${project.version}" xmlns="http://karaf.apache.org/xmlns/features/v1.4.0">
 
-       http://www.apache.org/licenses/LICENSE-2.0
-
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
-    limitations under the License.
--->
-<features name="${project.artifactId}-${project.version}" xmlns="http://karaf.apache.org/xmlns/features/v1.3.0">
+	<feature name="Vertx-Core">
+		<bundle start-level="80">mvn:io.vertx/vertx-core/${vertx.version}</bundle>
+        <bundle start-level="80">mvn:io.netty/netty-buffer/${netty.version}</bundle>
+        <bundle start-level="80">mvn:io.netty/netty-handler-proxy/${netty.version}</bundle>
+        <bundle start-level="80">mvn:io.netty/netty-codec-socks/${netty.version}</bundle>
+        <bundle start-level="80">mvn:io.netty/netty-codec-http2/${netty.version}</bundle>
+        <bundle start-level="80">mvn:io.netty/netty-resolver/${netty.version}</bundle>
+        <bundle start-level="80">mvn:io.netty/netty-resolver-dns/${netty.version}</bundle>
+        <bundle start-level="80">mvn:io.netty/netty-codec-dns/${netty.version}</bundle>
+        <bundle start-level="80">mvn:com.fasterxml.jackson.core/jackson-core/2.7.4</bundle>
+        <bundle start-level="80">mvn:com.fasterxml.jackson.core/jackson-databind/2.7.4</bundle>
+        <bundle start-level="80">mvn:com.fasterxml.jackson.core/jackson-annotations/2.7.0</bundle>
+	</feature>
+	
+	<feature name="Vertx-Web">
+		<bundle start-level="80">mvn:io.vertx/vertx-web/${vertx.version}</bundle>
+        <bundle start-level="80">mvn:io.vertx/vertx-auth-common/${vertx.version}</bundle>
+        <bundle start-level="80">mvn:io.netty/netty-transport/${netty.version}</bundle>
+        <bundle start-level="80">mvn:io.netty/netty-handler/${netty.version}</bundle>
+        <bundle start-level="80">mvn:io.netty/netty-codec/${netty.version}</bundle>
+        <bundle start-level="80">mvn:io.netty/netty-common/${netty.version}</bundle>
+        <bundle start-level="80">mvn:io.netty/netty-codec-http/${netty.version}</bundle>
+	</feature>
+	
+	<feature name="Vertx-JDBC">
+		<bundle start-level="80">mvn:io.vertx/vertx-jdbc-client/${vertx.version}</bundle>
+		<bundle start-level="80">mvn:io.vertx/vertx-sql-common/${vertx.version}</bundle>
+		<bundle start-level="80">wrap:mvn:com.mchange/c3p0/0.9.5.2</bundle>
+		<bundle start-level="80">wrap:mvn:com.mchange/mchange-commons-java/0.2.11</bundle>
+	</feature>
 
     <feature name='${project.artifactId}' description='${project.name}' version='${project.version}'>
         <details>${project.description}</details>
         <feature>scr</feature>
-        <!-- <config>foo=bar</config> -->
+        <feature>Vertx-Core</feature>
+        <feature>Vertx-Web</feature>
     </feature>
 
 </features>

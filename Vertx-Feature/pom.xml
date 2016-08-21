@@ -61,31 +61,43 @@
 		<dependency>
 			<groupId>io.vertx</groupId>
 			<artifactId>vertx-core</artifactId>
+			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>io.vertx</groupId>
 			<artifactId>vertx-web</artifactId>
+			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>io.netty</groupId>
 			<artifactId>netty-transport</artifactId>
+			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>io.netty</groupId>
 			<artifactId>netty-handler</artifactId>
+			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>io.netty</groupId>
 			<artifactId>netty-common</artifactId>
+			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>io.netty</groupId>
 			<artifactId>netty-codec-http</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		
+		<dependency>
+			<groupId>io.vertx</groupId>
+			<artifactId>vertx-dropwizard-metrics</artifactId>
+			<scope>provided</scope>
 		</dependency>
 
 	</dependencies>
@@ -107,7 +119,7 @@
 				<artifactId>karaf-maven-plugin</artifactId>
 
 				<configuration>
-					<startLevel>50</startLevel>
+					<startLevel>80</startLevel>
 					<aggregateFeatures>true</aggregateFeatures>
 					<checkDependencyChange>true</checkDependencyChange>
 					<failOnDependencyChange>false</failOnDependencyChange>
