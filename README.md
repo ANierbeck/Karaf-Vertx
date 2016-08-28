@@ -10,5 +10,6 @@ This includes:
 - A WhiteBoard Extender to register verticles as services   
 - A Karaf Feature File   
 - A Karaf custom Distribution for easy testing   
+- A submodule as example on how to use this, for "microservices" with vertx
 
 KUDOS to https://github.com/vert-x3/vertx-examples/tree/master/osgi-examples for inspiring me to work on this. 
