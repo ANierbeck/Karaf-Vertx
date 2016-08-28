@@ -25,7 +25,7 @@
 	<artifactId>Vertx-Feature</artifactId>
 	<packaging>feature</packaging>
 
-	<name>Vertx-Feature-feature</name>
+	<name>Vertx-Feature</name>
 	<description>Vertx-Feature details</description>
 
 	<dependencies>

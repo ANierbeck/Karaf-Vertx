@@ -23,12 +23,25 @@
 	</modules>
 
 	<properties>
-		<vertx.version>3.3.2</vertx.version>
+		<vertx.version>3.4.0-SNAPSHOT</vertx.version>
 		<karaf.version>4.0.5</karaf.version>
 		<maven-bundle-plugin.version>3.0.1</maven-bundle-plugin.version>
 		<osgi.version>6.0.0</osgi.version>
-		<netty.version>4.1.1.Final</netty.version>
+		<netty.version>4.1.4.Final</netty.version>
 	</properties>
+
+	<repositories>
+		<repository>
+			<id>oss-sonatype-snapshots</id>
+			<url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
 
 	<dependencyManagement>
 		<dependencies>

@@ -1,8 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <features name="${project.artifactId}-${project.version}" xmlns="http://karaf.apache.org/xmlns/features/v1.4.0">
-
+	
+	<feature name="Aries-SPI-Fly">
+        <bundle dependency="true" start-level="30">mvn:org.ow2.asm/asm-all/5.0.2</bundle>
+        <bundle dependency="true" start-level="30">mvn:org.apache.aries.spifly/org.apache.aries.spifly.dynamic.bundle/1.0.2</bundle>
+        <bundle dependency="true" start-level="30">mvn:org.apache.aries/org.apache.aries.util/1.1.0</bundle>
+	</feature>
+	
 	<feature name="Vertx-Core">
+		<feature prerequesit="true">Aries-SPI-Fly</feature>
+        <bundle start-level="80">mvn:io.vertx/vertx-dropwizard-metrics/3.4.0-SNAPSHOT</bundle>
+        <bundle start-level="80">mvn:io.dropwizard.metrics/metrics-core/3.1.2</bundle>
 		<bundle start-level="80">mvn:io.vertx/vertx-core/${vertx.version}</bundle>
         <bundle start-level="80">mvn:io.netty/netty-buffer/${netty.version}</bundle>
         <bundle start-level="80">mvn:io.netty/netty-handler-proxy/${netty.version}</bundle>
