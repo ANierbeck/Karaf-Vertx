@@ -44,7 +44,7 @@
 		<karaf.version>4.0.5</karaf.version>
 		<maven-bundle-plugin.version>3.0.1</maven-bundle-plugin.version>
 		<osgi.version>6.0.0</osgi.version>
-		<netty.version>4.1.4.Final</netty.version>
+		<netty.version>4.1.5.Final</netty.version>
 	</properties>
 
 	<repositories>
