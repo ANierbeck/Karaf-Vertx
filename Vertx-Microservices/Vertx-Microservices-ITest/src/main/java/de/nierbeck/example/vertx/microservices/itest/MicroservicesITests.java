@@ -13,11 +13,12 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
-package org.Vertx.Exampl.ITest;
+package de.nierbeck.example.vertx.microservices.itest;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.junit.matchers.JUnitMatchers.containsString;
 import static org.ops4j.pax.exam.CoreOptions.maven;
 import static org.ops4j.pax.exam.karaf.options.KarafDistributionOption.configureConsole;
@@ -29,6 +30,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -36,11 +40,13 @@ import java.util.concurrent.FutureTask;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
+import javax.sql.DataSource;
 
 import org.apache.karaf.features.BootFinished;
 import org.apache.karaf.features.FeaturesService;
 import org.apache.karaf.shell.api.console.Session;
 import org.apache.karaf.shell.api.console.SessionFactory;
+import org.hamcrest.core.IsInstanceOf;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -53,13 +59,14 @@ import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
 import org.ops4j.pax.exam.spi.reactors.PerClass;
 import org.osgi.framework.BundleContext;
 
-import io.vertx.core.AbstractVerticle;
-import io.vertx.core.Verticle;
+import de.nierbeck.example.vertx.entity.Book;
+import de.nierbeck.example.vertx.entity.Recipe;
 import io.vertx.core.Vertx;
+import io.vertx.core.eventbus.EventBus;
 
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerClass.class)
-public class MyTest {
+public class MicroservicesITests {
 
     @Inject
     private BundleContext bc;
@@ -69,6 +76,12 @@ public class MyTest {
 
     @Inject
     protected Vertx vertxService;
+    
+    @Inject
+    protected EventBus eventBus;
+    
+    @Inject
+    protected DataSource dataSource;
 
     @Inject
     protected SessionFactory sessionFactory;
@@ -88,18 +101,20 @@ public class MyTest {
     @Inject
     BootFinished bootFinished;
 
+    private Connection connection;
+
     @Configuration
     public static Option[] configuration() throws Exception {
         return new Option[] { karafDistributionConfiguration()
                 .frameworkUrl(
                             maven()
-                                .groupId("de.nierbeck.example.vertx")
-                                .artifactId("Vertx-Karaf")
+                                .groupId("de.nierbeck.example.vertx.mircoservices")
+                                .artifactId("Vertx-Microservices-Karaf")
                                 .type("tar.gz")
                                 .versionAsInProject())
                 .unpackDirectory(new File("target/paxexam/unpack/"))
-                .useDeployFolder(false)
-                /* .runEmbedded(true), //only for debugging */,
+                .useDeployFolder(false),
+//                .runEmbedded(true), //only for debugging
                 configureConsole().ignoreLocalConsole(), logLevel(LogLevel.INFO), keepRuntimeFolder() 
             };
     }
@@ -107,10 +122,15 @@ public class MyTest {
     @Before
     public void setUpITest() throws Exception {
         session = sessionFactory.create(System.in, printStream, errStream);
+        
+        connection = dataSource.getConnection();
     }
 
     @After
     public void cleanupITest() throws Exception {
+        connection.close();
+        
+        connection = null;
         session = null;
     }
     
@@ -120,7 +140,7 @@ public class MyTest {
     }
 
     @Test
-    public void checkVertxFeature() throws Exception {
+    public void checkEventFeature() throws Exception {
         assertThat(featuresService.isInstalled(featuresService.getFeature("Vertx-Feature")), is(true));
     }
 
@@ -128,44 +148,63 @@ public class MyTest {
     public void checkVertexService() {
         assertThat(vertxService, is(notNullValue()));
     }
+    
+    @SuppressWarnings("deprecation")
+    @Test
+    public void checkMicroserviceVerticlesAvailable() throws Exception {
+        assertThat(executeCommand("verticles:list"), containsString("JdbcServiceVertcl"));
+        assertThat(executeCommand("verticles:list"), containsString("CookBookServiceVertcl"));
+    }
 
     @Test
-    public void installVerticle() throws Exception {
+    public void sendUpdatePerBus() throws Exception {
+        
+        writeBookToBus();
+        
+        Thread.sleep(1000); //used in the test, to make sure the async call is executed!
+        
+        Statement statement = connection.createStatement();
+        ResultSet query = statement.executeQuery("SELECT * FROM BOOK;");
+        assertTrue(query.next());
+        assertTrue(query.next());
+        assertThat(query.getLong(1), is(2l));
+        statement.close();
+        
+        writeRecipeToBus();
 
-        assertThat(vertxService, is(notNullValue()));
-
-        MyVerticle verticle = new MyVerticle();
-
-        bc.registerService(Verticle.class, verticle, null);
-
-        // make sure it's started
-        Thread.sleep(2000);
-
-        assertThat(verticle.isStarted(), is(true));
+        Thread.sleep(1000); //used in the test, to make sure the async call is executed!
+        
+        statement = connection.createStatement();
+        query = statement.executeQuery("SELECT * FROM RECIPE WHERE book_id = 2;");
+        
+        assertTrue(query.next());
+        assertThat(query.getLong(1), is(2l));
+        assertThat(query.getLong(4), is(2l));
+        assertThat(query.getString(2), containsString("testRecipe"));
     }
     
     @Test
-    public void testVerticlesList() throws Exception {
-        assertThat(executeCommand("verticles:list"), containsString("MyVerticle"));
+    public void readDataPerBus() throws Exception {
+        
+        eventBus.send("de.nierbeck.vertx.jdbc.read", new Book(1l, null, null), message -> {
+            assertThat(message.result().body(), IsInstanceOf.instanceOf(Book.class));
+            Book book = (Book) message.result().body();
+            assertThat(book.getId(), is(1l));
+            assertThat(book.getIsbn(), containsString("1234-56789"));
+            assertThat(book.getName(), containsString("Java Cookbook"));
+        });
+    }
+
+    private void writeRecipeToBus() {
+        Recipe recipe = new Recipe(2l,"testRecipe", "testIngredient", 2l);
+        eventBus.send("de.nierbeck.vertx.jdbc.write.add", recipe);
+    }
+
+    private void writeBookToBus() {
+        Book book = new Book(2l, "testBook", "testISBN");
+        eventBus.send("de.nierbeck.vertx.jdbc.write.add", book);
     }
     
-    @Test
-    public void testServerList() throws Exception {
-        assertThat(executeCommand("vertx:netlist"), containsString("8080"));
-    }
-
-    public class MyVerticle extends AbstractVerticle {
-        private boolean started = false;
-
-        public boolean isStarted() {
-            return started;
-        }
-
-        @Override
-        public void start() throws Exception {
-            started = true;
-        }
-    }
     
     protected String executeCommand(final String command) throws IOException {
         byteArrayOutputStream.flush();

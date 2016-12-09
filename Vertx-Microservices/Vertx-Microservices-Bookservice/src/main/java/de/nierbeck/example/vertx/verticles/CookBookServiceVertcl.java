@@ -146,7 +146,7 @@ public class CookBookServiceVertcl extends AbstractVerticle {
         response.setStatusCode(201)
                 .putHeader("content-type", "application/json; charset=utf-8")
                 .end(Json.encodePrettily(recipe));
-        eventBus.publish("de.nierbeck.vertx.jdbc.write.add.recipe", recipe);
+        eventBus.publish("de.nierbeck.vertx.jdbc.write.add", recipe);
     }
     
     private void receiveRecipe(RoutingContext routingContext) {
@@ -159,8 +159,15 @@ public class CookBookServiceVertcl extends AbstractVerticle {
 
         eventBus.send("de.nierbeck.vertx.jdbc.read", recipe, message -> {
             HttpServerResponse response = routingContext.response();
-            response.putHeader("content-type", "application/json; charset=utf-8")
-                .end(Json.encodePrettily(message.result().body()));
+            if (!message.failed()) {
+                Recipe customMessage = (Recipe) message.result().body();
+                if (customMessage != null) {
+                    response.putHeader("content-type", "application/json; charset=utf-8")
+                    .end(Json.encodePrettily(message.result().body()));
+                }
+            } else {
+                LOGGER.log(Level.SEVERE, "message failed to retrieve recipe");
+            }
             response.close();
         });
     }

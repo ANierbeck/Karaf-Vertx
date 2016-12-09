@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -41,7 +42,7 @@ public class VertxVerticleHost {
     
     private List<Verticle> verticles = new ArrayList<>();
     
-    private Map<Verticle, String> deployedVerticles = new HashMap<>();
+    private Map<Verticle, String> deployedVerticles = new ConcurrentHashMap<>();
     
     @Deactivate
     public void stop() {
@@ -51,7 +52,11 @@ public class VertxVerticleHost {
 
     private void cleanup() {
         if (vertxService != null) {
-            verticles.forEach(verticle -> vertxService.undeploy(verticle.getVertx().getOrCreateContext().deploymentID()));
+            verticles.forEach(verticle -> {
+                String deploymentID = verticle.getVertx().getOrCreateContext().deploymentID();
+                if (deploymentID != null)
+                    vertxService.undeploy(deploymentID);
+                });
         }
     }
     
@@ -93,8 +98,11 @@ public class VertxVerticleHost {
         verticles.remove(verticle);
         if (verticle == null)
             return;
-        if (vertxService != null) {
-            vertxService.undeploy(deployedVerticles.get(verticle));
+        if (vertxService != null && deployedVerticles.get(verticle) != null) {
+            String verticleId = deployedVerticles.get(verticle);
+            if (vertxService.deploymentIDs().contains(verticleId)) {
+                vertxService.undeploy(verticleId);
+            }
             deployedVerticles.remove(verticle);
         }
     }

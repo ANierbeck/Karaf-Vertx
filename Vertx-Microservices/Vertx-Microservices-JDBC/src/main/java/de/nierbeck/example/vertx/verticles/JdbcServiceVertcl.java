@@ -58,13 +58,14 @@ public class JdbcServiceVertcl extends AbstractVerticle {
 
         initDb();
 
-        MessageConsumer<Object> read = eventBus.consumer("de.nierbeck.vertx.jdbc.read");
-        MessageConsumer<Object> writeRecipe = eventBus.consumer("de.nierbeck.vertx.jdbc.write.add.recipe");
-        MessageConsumer<Object> updateRecipe = eventBus.consumer("de.nierbeck.vertx.jdbc.write.update.recipe");
+        MessageConsumer<Object> read = eventBus.consumer("de.nierbeck.vertx.jdbc.read"); //TODO: move those addresses to a "global" dict.
+        MessageConsumer<Object> write = eventBus.consumer("de.nierbeck.vertx.jdbc.write.add");
+        MessageConsumer<Object> update = eventBus.consumer("de.nierbeck.vertx.jdbc.write.update");
+        MessageConsumer<Object> delete = eventBus.consumer("de.nierbeck.vertx.jdbc.delete");
         read.handler(this::handleRead);
-        writeRecipe.handler(this::handleWriteRecipe);
-        
-        updateRecipe.handler(this::handleUpdateRecipe);
+        write.handler(this::handleWrite);
+        update.handler(this::handleUpdate);
+        delete.handler(this::handleDelete);
     }
     
     private void handleRead(Message<Object> message) {
@@ -120,40 +121,87 @@ public class JdbcServiceVertcl extends AbstractVerticle {
         }
     }
     
-    private void handleWriteRecipe(Message<Object> message) {
+    private void handleWrite(Message<Object> message) {
         LOGGER.info("received write message: " + message.body());
-        Recipe recipe = (Recipe) message.body();
-        client.getConnection(conn -> {
-            startTx(conn.result(), tx -> {
-                updateWithParams(conn.result(), "insert into recipe values(?,?,?,?)", new JsonArray().add(recipe.getId()).add(recipe.getName()).add(recipe.getIngredients()).add(recipe.getBookId()), execute -> {
-                    endTx(conn.result(), txDone -> {
-                        conn.result().close(done -> {
-                            if (done.failed()) {
-                                throw new RuntimeException(done.cause());
-                            }
+        
+        if (message.body() instanceof Recipe) {
+            Recipe recipe = (Recipe) message.body();
+            client.getConnection(conn -> {
+                startTx(conn.result(), tx -> {
+                    updateWithParams(conn.result(), "insert into recipe values(?,?,?,?)", new JsonArray().add(recipe.getId()).add(recipe.getName()).add(recipe.getIngredients()).add(recipe.getBookId()), execute -> {
+                        endTx(conn.result(), txDone -> {
+                            conn.result().close(done -> {
+                                if (done.failed()) {
+                                    throw new RuntimeException(done.cause());
+                                }
+                            });
                         });
                     });
                 });
             });
-        });
+        } else if (message.body() instanceof Book) {
+            Book book = (Book) message.body();
+            client.getConnection(conn -> {
+                startTx(conn.result(), tx -> {
+                    updateWithParams(conn.result(), "insert into book values(?,?,?)", new JsonArray().add(book.getId()).add(book.getName()).add(book.getIsbn()), execute -> {
+                        endTx(conn.result(), txDone -> {
+                            conn.result().close(done -> {
+                                if (done.failed()) {
+                                    throw new RuntimeException(done.cause());
+                                }
+                            });
+                        });
+                    });
+                });
+            });
+        }
     }
     
-    private void handleUpdateRecipe(Message<Object> message) {
+    private void handleUpdate(Message<Object> message) {
         LOGGER.info("received update message: "+message.body());
-        Recipe recipe = (Recipe) message.body();
-        client.getConnection(conn -> {
-            startTx(conn.result(), tx -> {
-                updateWithParams(conn.result(), "update recipe set (?,?,?,?)", new JsonArray().add(recipe.getId()).add(recipe.getName()).add(recipe.getIngredients()).add(recipe.getBookId()), execute -> {
-                    endTx(conn.result(), txDone -> {
-                        conn.result().close(done -> {
-                            if (done.failed()) {
-                                throw new RuntimeException(done.cause());
-                            }
+        
+        if (message.body() instanceof Recipe) {
+            Recipe recipe = (Recipe) message.body();
+            client.getConnection(conn -> {
+                startTx(conn.result(), tx -> {
+                    updateWithParams(conn.result(), "update recipe set (?,?,?,?) where id = ?", new JsonArray().add(recipe.getId()).add(recipe.getName()).add(recipe.getIngredients()).add(recipe.getBookId()).add(recipe.getId()), execute -> {
+                        endTx(conn.result(), txDone -> {
+                            conn.result().close(done -> {
+                                if (done.failed()) {
+                                    throw new RuntimeException(done.cause());
+                                }
+                            });
                         });
                     });
                 });
             });
-        });
+        } else if (message.body() instanceof Book) {
+            Book book = (Book) message.body();
+            client.getConnection(conn -> {
+                startTx(conn.result(), tx -> {
+                    updateWithParams(conn.result(), "update book set (?,?,?) where id = ?", new JsonArray().add(book.getId()).add(book.getName()).add(book.getIsbn()).add(book.getId()), execute -> {
+                        endTx(conn.result(), txDone -> {
+                            conn.result().close(done -> {
+                                if (done.failed()) {
+                                    throw new RuntimeException(done.cause());
+                                }
+                            });
+                        });
+                    });
+                });
+            });
+        }
+        
+    }
+    
+    private void handleDelete(Message<Object> message) {
+        LOGGER.info("received delete message: "+message.body());
+        
+        if (message.body() instanceof Recipe) {
+            //TODO: delete recipe
+        } else if (message.body() instanceof Book) {
+            //TODO: delete Book
+        }
     }
     
 
