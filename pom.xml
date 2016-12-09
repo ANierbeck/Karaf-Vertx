@@ -28,7 +28,7 @@
 		<module>Vertx-Verticles</module>
 		<module>Vertx-Http</module>
 		<module>Vertx-Microservices</module>
-		<module>Vertx-Slideshow</module>
+<!-- 		<module>Vertx-Slideshow</module> -->
 	</modules>
 
 	<properties>
