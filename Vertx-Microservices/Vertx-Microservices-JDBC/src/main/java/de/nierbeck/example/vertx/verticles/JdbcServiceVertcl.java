@@ -31,6 +31,7 @@ import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Handler;
 import io.vertx.core.Verticle;
 import io.vertx.core.eventbus.EventBus;
+import io.vertx.core.eventbus.Message;
 import io.vertx.core.eventbus.MessageConsumer;
 import io.vertx.core.json.JsonArray;
 import io.vertx.ext.jdbc.JDBCClient;
@@ -60,13 +61,20 @@ public class JdbcServiceVertcl extends AbstractVerticle {
         MessageConsumer<Object> read = eventBus.consumer("de.nierbeck.vertx.jdbc.read");
         MessageConsumer<Object> writeRecipe = eventBus.consumer("de.nierbeck.vertx.jdbc.write.add.recipe");
         MessageConsumer<Object> updateRecipe = eventBus.consumer("de.nierbeck.vertx.jdbc.write.update.recipe");
-        read.handler(message -> {
-            LOGGER.info("received read message: " + message.body());
-            Object body = message.body();
-            if (body instanceof Book) {
-                Book book = (Book) body;
-                Long id = book.getId();
-
+        read.handler(this::handleRead);
+        writeRecipe.handler(this::handleWriteRecipe);
+        
+        updateRecipe.handler(this::handleUpdateRecipe);
+    }
+    
+    private void handleRead(Message<Object> message) {
+        LOGGER.info("received read message: " + message.body());
+        Object body = message.body();
+        if (body instanceof Book) {
+            Book book = (Book) body;
+            Long id = book.getId();
+            
+            if (id != null) {
                 client.getConnection(conn -> {
                     queryWithParams(conn.result(), "select * from recipe where book_id=?", new JsonArray().add(id), rs -> {
                         List<Recipe> recipes = new ArrayList<>();
@@ -83,58 +91,71 @@ public class JdbcServiceVertcl extends AbstractVerticle {
                         });
                     });
                 });
-            } else if (body instanceof Recipe) {
-                Recipe recipe = (Recipe) body;
-                Long id = recipe.getId();
-                Long bookId = recipe.getBookId();
-                
+            } else {
                 client.getConnection(conn -> {
-                    queryWithParams(conn.result(), "select * from recipe where id= ? and book_id= ?", new JsonArray().add(bookId).add(id), rs -> {
-                        for (JsonArray line: rs.getResults()) {
-                            recipe.setName(line.getString(1));
-                            recipe.setIngredients(line.getString(2));
-                            message.reply(recipe);
-                        }
+                    query(conn.result(), "select * from book", rs -> {
+                        List<Book> books = new ArrayList<>();
+                        rs.getResults().stream().forEach(line -> {
+                            books.add(new Book(line.getLong(0), line.getString(1), line.getString(2)));
+                        });
+                        message.reply((List<Book>) books);
                     });
                 });
             }
-        });
-        writeRecipe.handler(message -> {
-            LOGGER.info("received write message: " + message.body());
-            Recipe recipe = (Recipe) message.body();
+
+        } else if (body instanceof Recipe) {
+            Recipe recipe = (Recipe) body;
+            Long id = recipe.getId();
+            Long bookId = recipe.getBookId();
+            
             client.getConnection(conn -> {
-                startTx(conn.result(), tx -> {
-                    updateWithParams(conn.result(), "insert into recipe values(?,?,?,?)", new JsonArray().add(recipe.getId()).add(recipe.getName()).add(recipe.getIngredients()).add(recipe.getBookId()), execute -> {
-                        endTx(conn.result(), txDone -> {
-                            conn.result().close(done -> {
-                                if (done.failed()) {
-                                    throw new RuntimeException(done.cause());
-                                }
-                            });
-                        });
-                    });
+                queryWithParams(conn.result(), "select * from recipe where id= ? and book_id= ?", new JsonArray().add(bookId).add(id), rs -> {
+                    for (JsonArray line: rs.getResults()) {
+                        recipe.setName(line.getString(1));
+                        recipe.setIngredients(line.getString(2));
+                        message.reply(recipe);
+                    }
                 });
             });
-        });
-        
-        updateRecipe.handler(message -> {
-            LOGGER.info("received update message: "+message.body());
-            Recipe recipe = (Recipe) message.body();
-            client.getConnection(conn -> {
-                startTx(conn.result(), tx -> {
-                    updateWithParams(conn.result(), "update recipe set (?,?,?,?)", new JsonArray().add(recipe.getId()).add(recipe.getName()).add(recipe.getIngredients()).add(recipe.getBookId()), execute -> {
-                        endTx(conn.result(), txDone -> {
-                            conn.result().close(done -> {
-                                if (done.failed()) {
-                                    throw new RuntimeException(done.cause());
-                                }
-                            });
+        }
+    }
+    
+    private void handleWriteRecipe(Message<Object> message) {
+        LOGGER.info("received write message: " + message.body());
+        Recipe recipe = (Recipe) message.body();
+        client.getConnection(conn -> {
+            startTx(conn.result(), tx -> {
+                updateWithParams(conn.result(), "insert into recipe values(?,?,?,?)", new JsonArray().add(recipe.getId()).add(recipe.getName()).add(recipe.getIngredients()).add(recipe.getBookId()), execute -> {
+                    endTx(conn.result(), txDone -> {
+                        conn.result().close(done -> {
+                            if (done.failed()) {
+                                throw new RuntimeException(done.cause());
+                            }
                         });
                     });
                 });
             });
         });
     }
+    
+    private void handleUpdateRecipe(Message<Object> message) {
+        LOGGER.info("received update message: "+message.body());
+        Recipe recipe = (Recipe) message.body();
+        client.getConnection(conn -> {
+            startTx(conn.result(), tx -> {
+                updateWithParams(conn.result(), "update recipe set (?,?,?,?)", new JsonArray().add(recipe.getId()).add(recipe.getName()).add(recipe.getIngredients()).add(recipe.getBookId()), execute -> {
+                    endTx(conn.result(), txDone -> {
+                        conn.result().close(done -> {
+                            if (done.failed()) {
+                                throw new RuntimeException(done.cause());
+                            }
+                        });
+                    });
+                });
+            });
+        });
+    }
+    
 
     private void initDb() {
         

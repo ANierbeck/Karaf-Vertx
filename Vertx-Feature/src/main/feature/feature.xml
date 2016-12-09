@@ -23,11 +23,11 @@
         <bundle dependency="true" start-level="30">mvn:org.apache.aries/org.apache.aries.util/1.1.0</bundle>
 	</feature>
 	
-	<feature name="Vertx-Core">
+	<feature name="Vertx-Core" version="${project.version}">
 		<feature prerequesit="true">Aries-SPI-Fly</feature>
-        <bundle start-level="80">mvn:io.vertx/vertx-dropwizard-metrics/3.4.0-SNAPSHOT</bundle>
-        <bundle start-level="80">mvn:io.dropwizard.metrics/metrics-core/3.1.2</bundle>
 		<bundle start-level="80">mvn:io.vertx/vertx-core/${vertx.version}</bundle>
+        <bundle start-level="80">mvn:io.vertx/vertx-dropwizard-metrics/${vertx.version}</bundle>
+        <bundle start-level="80">mvn:io.dropwizard.metrics/metrics-core/3.1.2</bundle>
         <bundle start-level="80">mvn:io.netty/netty-buffer/${netty.version}</bundle>
         <bundle start-level="80">mvn:io.netty/netty-handler-proxy/${netty.version}</bundle>
         <bundle start-level="80">mvn:io.netty/netty-codec-socks/${netty.version}</bundle>
@@ -38,9 +38,15 @@
         <bundle start-level="80">mvn:com.fasterxml.jackson.core/jackson-core/2.7.4</bundle>
         <bundle start-level="80">mvn:com.fasterxml.jackson.core/jackson-databind/2.7.4</bundle>
         <bundle start-level="80">mvn:com.fasterxml.jackson.core/jackson-annotations/2.7.0</bundle>
+        <bundle start-level="80">mvn:org.jetbrains.kotlin/kotlin-osgi-bundle/${kotlin.version}</bundle>
+       <capability>
+       	osgi.service;objectClass=io.vertx.core.Vertx,
+       	osgi.service;objectClass=io.vertx.core.spi.VertxMetricsFactory,
+       	osgi.service;objectClass=io.vertx.core.eventbus.EventBus
+       </capability>
 	</feature>
 	
-	<feature name="Vertx-Web">
+	<feature name="Vertx-Web" version="${project.version}">
 		<bundle start-level="80">mvn:io.vertx/vertx-web/${vertx.version}</bundle>
         <bundle start-level="80">mvn:io.vertx/vertx-auth-common/${vertx.version}</bundle>
         <bundle start-level="80">mvn:io.netty/netty-transport/${netty.version}</bundle>
@@ -50,7 +56,7 @@
         <bundle start-level="80">mvn:io.netty/netty-codec-http/${netty.version}</bundle>
 	</feature>
 	
-	<feature name="Vertx-JDBC">
+	<feature name="Vertx-JDBC" version="${project.version}">
 		<bundle start-level="80">mvn:io.vertx/vertx-jdbc-client/${vertx.version}</bundle>
 		<bundle start-level="80">mvn:io.vertx/vertx-sql-common/${vertx.version}</bundle>
 		<bundle start-level="80">wrap:mvn:com.mchange/c3p0/0.9.5.2</bundle>
@@ -59,9 +65,9 @@
 
     <feature name='${project.artifactId}' description='${project.name}' version='${project.version}'>
         <details>${project.description}</details>
-        <feature>scr</feature>
-        <feature>Vertx-Core</feature>
-        <feature>Vertx-Web</feature>
+        <feature dependency="true" version="0.1.0.SNAPSHOT">scr</feature>
+        <feature dependency="true" version="0.1.0.SNAPSHOT">Vertx-Core</feature>
+        <feature dependency="true" version="0.1.0.SNAPSHOT">Vertx-Web</feature>
     </feature>
 
 </features>

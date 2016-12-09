@@ -37,6 +37,7 @@
 		<dependency>
 			<groupId>io.vertx</groupId>
 			<artifactId>vertx-core</artifactId>
+			<scope>test</scope>
 		</dependency>
 
 		<dependency>
@@ -151,6 +152,13 @@
 			<artifactId>Vertx-Karaf</artifactId>
 			<version>${project.version}</version>
 			<type>tar.gz</type>
+			<scope>test</scope>
+		</dependency>
+		
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>Vertx-System</artifactId>
+			<version>${project.version}</version>
 			<scope>test</scope>
 		</dependency>
 

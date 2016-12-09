@@ -17,6 +17,7 @@
 
 package de.nierbeck.example.vertx.verticles;
 
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -38,6 +39,7 @@ import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.http.HttpServer;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.core.json.Json;
+import io.vertx.core.json.JsonArray;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.handler.BodyHandler;
@@ -97,6 +99,7 @@ public class CookBookServiceVertcl extends AbstractVerticle {
         router.get("/cookbook/:id").handler(this::receiveCookBook);
         router.get("/cookbook/:book_id/recipe/:id").handler(this::receiveRecipe);
         router.post("/cookbook/:book_id/recipe").handler(this::addRecipe);
+        router.get("/cookbook").handler(this::handleListBooks);
 //        router.post("/cookbook/:book_id/recipe/:id").handler(this::updateRecipe);
         
         getVertx().createHttpServer().requestHandler(router::accept).listen(cfg.port(), result -> {
@@ -114,6 +117,24 @@ public class CookBookServiceVertcl extends AbstractVerticle {
         if (server != null) {
             server.close();
         }
+    }
+    
+    private void handleListBooks(RoutingContext routingContext) {
+        eventBus.send("de.nierbeck.vertx.jdbc.read", new Book(), message -> {
+            HttpServerResponse response = routingContext.response();
+            if (!message.failed()) {
+                @SuppressWarnings("unchecked")
+                List<Book> customMessage = (List<Book>) message.result().body();
+                System.out.println("Receiver ->>>>>>>> " + customMessage);
+                if (customMessage != null) {
+                    response.putHeader("content-type", "application/json; charset=utf-8")
+                            .end(Json.encodePrettily(customMessage));
+                }
+            } else {
+                LOGGER.log(Level.SEVERE, "message failed");
+            }
+            response.closed();
+        });
     }
 
     private void addRecipe(RoutingContext routingContext) {
