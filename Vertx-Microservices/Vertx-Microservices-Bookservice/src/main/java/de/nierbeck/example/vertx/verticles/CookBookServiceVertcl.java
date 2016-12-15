@@ -17,6 +17,7 @@
 
 package de.nierbeck.example.vertx.verticles;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -29,6 +30,7 @@ import org.osgi.service.metatype.annotations.Designate;
 import org.osgi.service.metatype.annotations.ObjectClassDefinition;
 
 import de.nierbeck.example.vertx.encoder.BookEncoder;
+import de.nierbeck.example.vertx.encoder.ListOfBookEncoder;
 import de.nierbeck.example.vertx.encoder.RecipeEncoder;
 import de.nierbeck.example.vertx.entity.Book;
 import de.nierbeck.example.vertx.entity.Recipe;
@@ -83,6 +85,7 @@ public class CookBookServiceVertcl extends AbstractVerticle {
 
         eventBus.registerDefaultCodec(Book.class, new BookEncoder());
         eventBus.registerDefaultCodec(Recipe.class, new RecipeEncoder());
+        eventBus.registerDefaultCodec((Class<List<Book>>) (Class<?>) List.class, new ListOfBookEncoder());
 
         // Create a router object.
         Router router = Router.router(getVertx());
@@ -100,7 +103,7 @@ public class CookBookServiceVertcl extends AbstractVerticle {
         router.get("/cookbook/:book_id/recipe/:id").handler(this::receiveRecipe);
         router.post("/cookbook/:book_id/recipe").handler(this::addRecipe);
         router.get("/cookbook").handler(this::handleListBooks);
-//        router.post("/cookbook/:book_id/recipe/:id").handler(this::updateRecipe);
+        router.post("/cookbook/:book_id/recipe/:id").handler(this::updateRecipe);
         
         getVertx().createHttpServer().requestHandler(router::accept).listen(cfg.port(), result -> {
             if (result.succeeded()) {
@@ -147,6 +150,16 @@ public class CookBookServiceVertcl extends AbstractVerticle {
                 .putHeader("content-type", "application/json; charset=utf-8")
                 .end(Json.encodePrettily(recipe));
         eventBus.publish("de.nierbeck.vertx.jdbc.write.add", recipe);
+    }
+    
+    private void updateRecipe(RoutingContext routingContext) {
+        String bookId = routingContext.request().getParam("book_id");
+        Recipe recipe = Json.decodeValue(routingContext.getBodyAsString(), Recipe.class);
+        
+        if (recipe.getBookId() != Long.parseLong(bookId)) {
+            LOGGER.log(Level.INFO, "something wrong recipe of wrong book id");
+        } 
+        eventBus.publish("de.nierbeck.vertx.jdbc.write.update", recipe);
     }
     
     private void receiveRecipe(RoutingContext routingContext) {

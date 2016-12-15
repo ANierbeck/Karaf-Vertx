@@ -13,7 +13,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
-package org.Vertx.Exampl.ITest;
+package de.nierbeck.example.vertx.test;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -59,7 +59,7 @@ import io.vertx.core.Vertx;
 
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerClass.class)
-public class MyTest {
+public class CustomVertxKarafTest {
 
     @Inject
     private BundleContext bc;
@@ -100,7 +100,8 @@ public class MyTest {
                 .unpackDirectory(new File("target/paxexam/unpack/"))
                 .useDeployFolder(false)
                 /* .runEmbedded(true), //only for debugging */,
-                configureConsole().ignoreLocalConsole(), logLevel(LogLevel.INFO), keepRuntimeFolder() 
+                configureConsole().ignoreLocalConsole(), 
+                logLevel(LogLevel.INFO), keepRuntimeFolder()
             };
     }
     

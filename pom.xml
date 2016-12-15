@@ -17,7 +17,7 @@
 	<version>0.1.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
-	<name>OPS4J Pax Web</name>
+	<name>Vertx-Parent</name>
 
 	<modules>
 		<module>Vertx-Feature</module>
@@ -28,7 +28,7 @@
 		<module>Vertx-Verticles</module>
 		<module>Vertx-Http</module>
 		<module>Vertx-Microservices</module>
-<!-- 		<module>Vertx-Slideshow</module> -->
+		<!-- <module>Vertx-Slideshow</module> -->
 	</modules>
 
 	<properties>
@@ -140,6 +140,7 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
+
 
 	<build>
 		<pluginManagement>

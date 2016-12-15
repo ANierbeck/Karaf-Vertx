@@ -164,7 +164,7 @@ public class JdbcServiceVertcl extends AbstractVerticle {
             Recipe recipe = (Recipe) message.body();
             client.getConnection(conn -> {
                 startTx(conn.result(), tx -> {
-                    updateWithParams(conn.result(), "update recipe set (?,?,?,?) where id = ?", new JsonArray().add(recipe.getId()).add(recipe.getName()).add(recipe.getIngredients()).add(recipe.getBookId()).add(recipe.getId()), execute -> {
+                    updateWithParams(conn.result(), "update recipe set name = ?, ingredients = ?, book_id = ? where id = ?", new JsonArray().add(recipe.getName()).add(recipe.getIngredients()).add(recipe.getBookId()).add(recipe.getId()), execute -> {
                         endTx(conn.result(), txDone -> {
                             conn.result().close(done -> {
                                 if (done.failed()) {
@@ -179,7 +179,7 @@ public class JdbcServiceVertcl extends AbstractVerticle {
             Book book = (Book) message.body();
             client.getConnection(conn -> {
                 startTx(conn.result(), tx -> {
-                    updateWithParams(conn.result(), "update book set (?,?,?) where id = ?", new JsonArray().add(book.getId()).add(book.getName()).add(book.getIsbn()).add(book.getId()), execute -> {
+                    updateWithParams(conn.result(), "update book set name = ?, isbn = ? where id = ?", new JsonArray().add(book.getName()).add(book.getIsbn()).add(book.getId()), execute -> {
                         endTx(conn.result(), txDone -> {
                             conn.result().close(done -> {
                                 if (done.failed()) {

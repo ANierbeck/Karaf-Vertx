@@ -13,10 +13,12 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
-package de.nierbeck.example.vertx.microservices.itest;
+package de.nierbeck.example.vertx.microservices.test;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.matchers.JUnitMatchers.containsString;
@@ -33,6 +35,7 @@ import java.io.PrintStream;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -66,7 +69,7 @@ import io.vertx.core.eventbus.EventBus;
 
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerClass.class)
-public class MicroservicesITests {
+public class MicroservicesTest {
 
     @Inject
     private BundleContext bc;
@@ -157,7 +160,7 @@ public class MicroservicesITests {
     }
 
     @Test
-    public void sendUpdatePerBus() throws Exception {
+    public void sendInsertPerBus() throws Exception {
         
         writeBookToBus();
         
@@ -181,6 +184,40 @@ public class MicroservicesITests {
         assertThat(query.getLong(1), is(2l));
         assertThat(query.getLong(4), is(2l));
         assertThat(query.getString(2), containsString("testRecipe"));
+        
+        //cleanup
+        statement = connection.createStatement();
+        statement.execute("DELETE FROM RECIPE WHERE book_id = 2;");
+        statement.execute("DELETE FROM BOOK WHERE id = 2;");
+        
+    }
+    
+    @Test
+    public void sendUpdatePerBus() throws Exception {
+        Statement statement = connection.createStatement();
+        
+        Recipe recipe = new Recipe(2l,"testRecipe", "testIngredient", 1l);
+        eventBus.send("de.nierbeck.vertx.jdbc.write.add", recipe);
+        
+        Thread.sleep(1000); //used in the test, to make sure the async call is executed!
+        
+        recipe.setIngredients("testIngredientUpdated");
+        
+        eventBus.send("de.nierbeck.vertx.jdbc.write.update", recipe);
+        
+        Thread.sleep(1000); //used in the test, to make sure the async call is executed!
+        
+        statement = connection.createStatement();
+        ResultSet query = statement.executeQuery("SELECT * FROM RECIPE WHERE book_id = 1;");
+
+        assertTrue(query.next());
+        assertTrue(query.next());
+        assertThat(query.getLong(1), is(2l));
+        assertThat(query.getLong(4), is(1l));
+        assertThat(query.getString(3), containsString("testIngredientUpdated"));
+        
+        //Cleanup
+        statement.execute("DELETE FROM RECIPE WHERE id = 2");
     }
     
     @Test
@@ -195,6 +232,22 @@ public class MicroservicesITests {
         });
     }
 
+    @Test
+    public void readBooksFromBus() throws Exception {
+        eventBus.send("de.nierbeck.vertx.jdbc.read", new Book(), message -> { 
+            assertFalse(message.failed());
+            assertThat(message.result().body(), IsInstanceOf.instanceOf(List.class));
+            
+            List<Book> listOfBooks = (List<Book>)message.result().body();
+            assertThat(listOfBooks.size(), is(1));
+
+            assertThat(listOfBooks.get(0), IsInstanceOf.instanceOf(Book.class));
+            assertThat(listOfBooks.get(0).getId(), is(1l));
+            assertThat(listOfBooks.get(0).getIsbn(), containsString("1234-56789"));
+            assertThat(listOfBooks.get(0).getName(), containsString("Java Cookbook"));
+        });
+    }
+    
     private void writeRecipeToBus() {
         Recipe recipe = new Recipe(2l,"testRecipe", "testIngredient", 2l);
         eventBus.send("de.nierbeck.vertx.jdbc.write.add", recipe);
