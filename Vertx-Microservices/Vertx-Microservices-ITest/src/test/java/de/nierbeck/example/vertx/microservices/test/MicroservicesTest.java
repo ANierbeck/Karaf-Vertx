@@ -106,7 +106,7 @@ public class MicroservicesTest {
     private Connection connection;
 
     @Configuration
-    public static Option[] configuration() throws Exception {
+    public Option[] configuration() throws Exception {
         return new Option[] { karafDistributionConfiguration()
                 .frameworkUrl(
                             maven()

@@ -1,6 +1,6 @@
 package de.nierbeck.example.vertx.encoder;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 
@@ -10,10 +10,10 @@ import io.vertx.core.eventbus.MessageCodec;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
 
-public class ListOfBookEncoder implements MessageCodec<List<Book>, List<Book>> {
+public class ListOfBookEncoder implements MessageCodec<ArrayList<Book>, ArrayList<Book>> {
 
     @Override
-    public void encodeToWire(Buffer buffer, List<Book> listOfBooks) {
+    public void encodeToWire(Buffer buffer, ArrayList<Book> listOfBooks) {
         String json = Json.encode(listOfBooks);
         
         int length = json.getBytes().length;
@@ -24,7 +24,7 @@ public class ListOfBookEncoder implements MessageCodec<List<Book>, List<Book>> {
     }
 
     @Override
-    public List<Book> decodeFromWire(int pos, Buffer buffer) {
+    public ArrayList<Book> decodeFromWire(int pos, Buffer buffer) {
      // My custom message starting from this *position* of buffer
         int _pos = pos;
 
@@ -36,11 +36,11 @@ public class ListOfBookEncoder implements MessageCodec<List<Book>, List<Book>> {
         String jsonStr = buffer.getString(_pos+=4, _pos+=length);
         
         JsonObject jsonObject = new JsonObject(jsonStr);
-        return Json.mapper.convertValue(jsonObject, new TypeReference<List<Book>>(){});
+        return Json.mapper.convertValue(jsonObject, new TypeReference<ArrayList<Book>>(){});
     }
 
     @Override
-    public List<Book> transform(List<Book> listOfBooks) {
+    public ArrayList<Book> transform(ArrayList<Book> listOfBooks) {
         return listOfBooks;
     }
 

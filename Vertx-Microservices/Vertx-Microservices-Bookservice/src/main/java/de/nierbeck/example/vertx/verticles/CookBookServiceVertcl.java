@@ -17,6 +17,7 @@
 
 package de.nierbeck.example.vertx.verticles;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -83,7 +84,7 @@ public class CookBookServiceVertcl extends AbstractVerticle {
 
         eventBus.registerDefaultCodec(Book.class, new BookEncoder());
         eventBus.registerDefaultCodec(Recipe.class, new RecipeEncoder());
-        eventBus.registerDefaultCodec((Class<List<Book>>) (Class<?>) List.class, new ListOfBookEncoder());
+        eventBus.registerDefaultCodec((Class<ArrayList<Book>>) (Class<?>) ArrayList.class, new ListOfBookEncoder());
 
         // Create a router object.
         Router router = Router.router(getVertx());
@@ -97,10 +98,11 @@ public class CookBookServiceVertcl extends AbstractVerticle {
 
         
         router.route("/cookbook*").handler(BodyHandler.create());
-        router.get("/cookbook/:id").handler(this::receiveCookBook);
-        router.get("/cookbook/:book_id/recipe/:id").handler(this::receiveRecipe);
-        router.post("/cookbook/:book_id/recipe").handler(this::addRecipe);
         router.get("/cookbook").handler(this::handleListBooks);
+        router.get("/cookbook/:id").handler(this::receiveCookBook);
+        router.get("/cookbook/:book_id/recipe").handler(this::listRecipes);
+        router.post("/cookbook/:book_id/recipe").handler(this::addRecipe);
+        router.get("/cookbook/:book_id/recipe/:id").handler(this::receiveRecipe);
         router.post("/cookbook/:book_id/recipe/:id").handler(this::updateRecipe);
         
         getVertx().createHttpServer().requestHandler(router::accept).listen(cfg.port(), result -> {
@@ -180,6 +182,25 @@ public class CookBookServiceVertcl extends AbstractVerticle {
                 LOGGER.log(Level.SEVERE, "message failed to retrieve recipe");
             }
             response.close();
+        });
+    }
+    
+    private void listRecipes(RoutingContext routingContext) {
+        String bookId = routingContext.request().getParam("book_id");
+        
+        eventBus.send("de.nierbeck.vertx.jdbc.read", new Recipe(null, null, null, Long.valueOf(bookId)), message -> {
+            HttpServerResponse response = routingContext.response();
+            if (!message.failed()) {
+                @SuppressWarnings("unchecked")
+                List<Recipe> customMessage = (List<Recipe>) message.result().body();
+                if (customMessage != null) {
+                    response.putHeader("content-type", "application/json; charset=utf-8")
+                            .end(Json.encodePrettily(customMessage));
+                }
+            } else {
+                LOGGER.log(Level.SEVERE, "message failed");
+            }
+            response.closed();
         });
     }
 

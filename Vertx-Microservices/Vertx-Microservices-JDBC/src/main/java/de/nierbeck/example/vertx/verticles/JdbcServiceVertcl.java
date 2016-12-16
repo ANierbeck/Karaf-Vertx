@@ -109,15 +109,27 @@ public class JdbcServiceVertcl extends AbstractVerticle {
             Long id = recipe.getId();
             Long bookId = recipe.getBookId();
             
-            client.getConnection(conn -> {
-                queryWithParams(conn.result(), "select * from recipe where id= ? and book_id= ?", new JsonArray().add(bookId).add(id), rs -> {
-                    for (JsonArray line: rs.getResults()) {
-                        recipe.setName(line.getString(1));
-                        recipe.setIngredients(line.getString(2));
-                        message.reply(recipe);
-                    }
+            if (id != null) {            
+                client.getConnection(conn -> {
+                    queryWithParams(conn.result(), "select * from recipe where id= ? and book_id= ?", new JsonArray().add(bookId).add(id), rs -> {
+                        for (JsonArray line: rs.getResults()) {
+                            recipe.setName(line.getString(1));
+                            recipe.setIngredients(line.getString(2));
+                            message.reply(recipe);
+                        }
+                    });
                 });
-            });
+            } else if (bookId != null) {
+                client.getConnection(conn -> {
+                    queryWithParams(conn.result(), "select * from recipe where book_id= ?", new JsonArray().add(bookId), rs -> {
+                        List<Recipe> recipes = new ArrayList<>();
+                        rs.getResults().stream().forEach(line -> {
+                            recipes.add(new Recipe(line.getLong(0), line.getString(1), line.getString(2), line.getLong(3)));
+                        });
+                        message.reply(recipes);
+                    });
+                });
+            }
         }
     }
     
@@ -283,7 +295,6 @@ public class JdbcServiceVertcl extends AbstractVerticle {
             if (res.failed()) {
                 throw new RuntimeException(res.cause());
             }
-
             done.handle(res.result());
         });
     }

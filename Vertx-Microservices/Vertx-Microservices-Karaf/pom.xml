@@ -155,6 +155,8 @@
 					</installedFeatures>
 					<bootFeatures>
 						<feature>minimal</feature>
+						<feature>Vertx-Core</feature>
+						<feature>Vertx-JDBC</feature>
 						<feartue>Vertx-Microservices-Features</feartue>
 					</bootFeatures>
 				</configuration>
