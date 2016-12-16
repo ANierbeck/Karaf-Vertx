@@ -63,29 +63,10 @@
 		<dependencies>
 			<dependency>
 				<groupId>io.vertx</groupId>
-				<artifactId>vertx-core</artifactId>
+				<artifactId>vertx-dependencies</artifactId>
 				<version>${vertx.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>io.vertx</groupId>
-				<artifactId>vertx-core</artifactId>
-				<version>${vertx.version}</version>
-				<type>test-jar</type>
-			</dependency>
-			<dependency>
-				<groupId>io.vertx</groupId>
-				<artifactId>vertx-web</artifactId>
-				<version>${vertx.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>io.vertx</groupId>
-				<artifactId>vertx-shell</artifactId>
-				<version>${vertx.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>io.vertx</groupId>
-				<artifactId>vertx-jdbc-client</artifactId>
-				<version>${vertx.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
 			</dependency>
 			<dependency>
 				<groupId>org.osgi</groupId>
@@ -118,20 +99,9 @@
 				<version>${netty.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>io.vertx</groupId>
-				<artifactId>vertx-unit</artifactId>
-				<scope>test</scope>
-				<version>${vertx.version}</version>
-			</dependency>
-			<dependency>
 				<groupId>org.osgi</groupId>
 				<artifactId>osgi.cmpn</artifactId>
 				<version>${osgi.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>io.vertx</groupId>
-				<artifactId>vertx-dropwizard-metrics</artifactId>
-				<version>${vertx.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.jetbrains.kotlin</groupId>
