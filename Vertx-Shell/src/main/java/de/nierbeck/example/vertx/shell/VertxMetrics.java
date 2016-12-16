@@ -16,10 +16,6 @@
  */
 package de.nierbeck.example.vertx.shell;
 
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-
 import org.apache.karaf.shell.api.action.Argument;
 import org.apache.karaf.shell.api.action.Command;
 import org.apache.karaf.shell.api.action.lifecycle.Reference;

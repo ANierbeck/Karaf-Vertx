@@ -1,6 +1,5 @@
 package de.nierbeck.example.vertx.encoder;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.core.type.TypeReference;
