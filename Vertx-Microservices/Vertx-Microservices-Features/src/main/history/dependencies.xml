@@ -8,6 +8,7 @@
         <feature prerequisite="false" dependency="false">pax-jdbc-pool-aries</feature>
         <bundle>mvn:de.nierbeck.example.vertx.mircoservices/Vertx-Microservices-Bookservice/0.1.0-SNAPSHOT</bundle>
         <bundle>mvn:de.nierbeck.example.vertx.mircoservices/Vertx-Microservices-Entity/0.1.0-SNAPSHOT</bundle>
+        <bundle>mvn:de.nierbeck.example.vertx.mircoservices/Vertx-Microservices-HttpService/0.1.0-SNAPSHOT</bundle>
         <bundle>mvn:de.nierbeck.example.vertx.mircoservices/Vertx-Microservices-JDBC/0.1.0-SNAPSHOT</bundle>
     </feature>
 </features>

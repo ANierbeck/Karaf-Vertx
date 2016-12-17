@@ -50,6 +50,7 @@ import org.apache.karaf.shell.api.console.Session;
 import org.apache.karaf.shell.api.console.SessionFactory;
 import org.hamcrest.core.IsInstanceOf;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -60,9 +61,12 @@ import org.ops4j.pax.exam.karaf.options.LogLevelOption.LogLevel;
 import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
 import org.ops4j.pax.exam.spi.reactors.PerClass;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceReference;
 
 import de.nierbeck.example.vertx.entity.Book;
 import de.nierbeck.example.vertx.entity.Recipe;
+import de.nierbeck.example.vertx.http.Route;
+import de.nierbeck.example.vertx.http.VertxHttpServer;
 import io.vertx.core.Vertx;
 import io.vertx.core.eventbus.EventBus;
 
@@ -87,6 +91,9 @@ public class MicroservicesTest {
 
     @Inject
     protected SessionFactory sessionFactory;
+    
+//    @Inject
+//    protected VertxHttpServer httpServer;
     
 
     private ExecutorService executor = Executors.newCachedThreadPool();
@@ -115,9 +122,9 @@ public class MicroservicesTest {
                                 .type("tar.gz")
                                 .versionAsInProject())
                 .unpackDirectory(new File("target/paxexam/unpack/"))
-                .useDeployFolder(false),
-//                .runEmbedded(true), //only for debugging
-                configureConsole().ignoreLocalConsole(), logLevel(LogLevel.INFO), keepRuntimeFolder() 
+                .useDeployFolder(false)
+//                .runEmbedded(true) //only for debugging
+                , configureConsole().ignoreLocalConsole(), logLevel(LogLevel.INFO), keepRuntimeFolder() 
             };
     }
     
@@ -153,9 +160,17 @@ public class MicroservicesTest {
     
     @SuppressWarnings("deprecation")
     @Test
+    public void testServerList() throws Exception {
+        awaitRouteAndHttpService();
+        assertThat(executeCommand("vertx:netlist"), containsString("8080"));
+    }
+    
+    @SuppressWarnings("deprecation")
+    @Test
     public void checkMicroserviceVerticlesAvailable() throws Exception {
         assertThat(executeCommand("verticles:list"), containsString("JdbcServiceVertcl"));
         assertThat(executeCommand("verticles:list"), containsString("CookBookServiceVertcl"));
+        assertThat(executeCommand("verticles:list"), containsString("VertxHttpServer"));
     }
 
     @Test
@@ -289,4 +304,27 @@ public class MicroservicesTest {
 
         return response;
     }
+    
+
+    private void awaitRouteAndHttpService() throws Exception {
+        ServiceReference<Route> ref = bc.getServiceReference(Route.class);
+        int count = 0;
+        while (ref == null && count < 10) {
+            Thread.sleep(200);
+            ref = bc.getServiceReference(Route.class);
+            count++;
+        }
+        Assert.assertNotNull("Failed to get Route service", ref);
+        
+//        ServiceReference<VertxHttpServer> ref2 = bc.getServiceReference(VertxHttpServer.class);
+//        count = 0;
+//        while (ref2 == null && count < 10) {
+//            Thread.sleep(200);
+//            ref2 = bc.getServiceReference(VertxHttpServer.class);
+//            count++;
+//        }
+//        
+//        Assert.assertNotNull("Failed to get VertxHttpServer service", ref2);
+    }
+
 }

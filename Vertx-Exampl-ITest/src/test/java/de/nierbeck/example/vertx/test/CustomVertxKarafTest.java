@@ -150,11 +150,6 @@ public class CustomVertxKarafTest {
         assertThat(executeCommand("verticles:list"), containsString("MyVerticle"));
     }
     
-    @Test
-    public void testServerList() throws Exception {
-        assertThat(executeCommand("vertx:netlist"), containsString("8080"));
-    }
-
     public class MyVerticle extends AbstractVerticle {
         private boolean started = false;
 

@@ -18,6 +18,7 @@ package de.nierbeck.example.vertx.http;
 import java.lang.annotation.Annotation;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import io.vertx.core.http.HttpClient;
@@ -25,6 +26,7 @@ import io.vertx.core.http.HttpClientOptions;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.test.core.VertxTestBase;
 
+@Ignore
 public class VertxHttpServerTest extends VertxTestBase {
     @Before
     public void setUpTest() {

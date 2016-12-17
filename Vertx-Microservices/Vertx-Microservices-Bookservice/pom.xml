@@ -50,6 +50,20 @@
 			<groupId>${project.groupId}</groupId>
 			<artifactId>Vertx-Microservices-Entity</artifactId>
 			<version>${project.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		
+		<dependency>
+			<groupId>de.nierbeck.example.vertx</groupId>
+			<artifactId>Vertx-Http</artifactId>
+			<version>${project.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.osgi</groupId>
+			<artifactId>osgi.core</artifactId>
+			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 	

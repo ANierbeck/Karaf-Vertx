@@ -19,7 +19,6 @@
   <modules>
   	<module>Vertx-Microservices-JDBC</module>
   	<module>Vertx-Microservices-Bookservice</module>
-  	
   	<module>Vertx-Microservices-Features</module>
   	<module>Vertx-Microservices-Entity</module>
   	<module>Vertx-Microservices-Karaf</module>

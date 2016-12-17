@@ -17,109 +17,87 @@
 
 package de.nierbeck.example.vertx.verticles;
 
-import java.util.ArrayList;
+import java.util.Dictionary;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
-import org.osgi.service.metatype.annotations.Designate;
-import org.osgi.service.metatype.annotations.ObjectClassDefinition;
 
-import de.nierbeck.example.vertx.encoder.BookEncoder;
-import de.nierbeck.example.vertx.encoder.ListOfBookEncoder;
-import de.nierbeck.example.vertx.encoder.RecipeEncoder;
 import de.nierbeck.example.vertx.entity.Book;
 import de.nierbeck.example.vertx.entity.Recipe;
+import de.nierbeck.example.vertx.http.Route;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
 import io.vertx.core.Verticle;
 import io.vertx.core.eventbus.EventBus;
-import io.vertx.core.http.HttpServer;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.core.json.Json;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.handler.BodyHandler;
 
-@ObjectClassDefinition(name = "Server Configuration")
-@interface ServerConfig {
-    int port() default 8000;
-}
-
 @Component(immediate = true, service = Verticle.class)
-@Designate(ocd = ServerConfig.class)
 public class CookBookServiceVertcl extends AbstractVerticle {
 
     private final static Logger LOGGER = Logger.getLogger(CookBookServiceVertcl.class.getName());
 
-    private ServerConfig cfg;
-
-    private HttpServer server;
-
     @Reference
     private EventBus eventBus;
 
+    private Router router;
+    
+    private BundleContext bc;
+
+    private ServiceRegistration<Route> serviceRegistration;
+
     @Activate
-    public void activate(ServerConfig cfg) {
-        LOGGER.info("Creating vertx HTTP server");
-        this.cfg = cfg;
+    public void activate(BundleContext context) {
+        LOGGER.info("Creating route to register in HttpServer");
+        this.bc = context;
     }
 
     @Deactivate
     public void deActivate() {
         try {
-            stop();
+            if (serviceRegistration != null) {
+                serviceRegistration.unregister();
+                serviceRegistration = null;
+            }
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Caught exception", e);
         }
     }
 
     @Override
-    public void start(Future<Void> future) throws Exception {
+    public void start() throws Exception {
         LOGGER.info("starting rest router");
+        router = Router.router(getVertx());
 
-        eventBus.registerDefaultCodec(Book.class, new BookEncoder());
-        eventBus.registerDefaultCodec(Recipe.class, new RecipeEncoder());
-        eventBus.registerDefaultCodec((Class<ArrayList<Book>>) (Class<?>) ArrayList.class, new ListOfBookEncoder());
-
-        // Create a router object.
-        Router router = Router.router(getVertx());
-
-        // Bind "/" to our hello message - so we are still compatible.
-        router.route("/").handler(routingContext -> {
-            HttpServerResponse response = routingContext.response();
-            response.putHeader("content-type", "text/html")
-                    .end("<h1>Hello from my first Vert.x 3 OSGi application</h1>");
-        });
-
+        router.route("/*").handler(BodyHandler.create());
+        router.get("/").handler(this::handleListBooks);
+        router.get("/:id").handler(this::receiveCookBook);
+        router.get("/:book_id/recipe").handler(this::listRecipes);
+        router.post("/:book_id/recipe").handler(this::addRecipe);
+        router.get("/:book_id/recipe/:id").handler(this::receiveRecipe);
+        router.post("/:book_id/recipe/:id").handler(this::updateRecipe);
         
-        router.route("/cookbook*").handler(BodyHandler.create());
-        router.get("/cookbook").handler(this::handleListBooks);
-        router.get("/cookbook/:id").handler(this::receiveCookBook);
-        router.get("/cookbook/:book_id/recipe").handler(this::listRecipes);
-        router.post("/cookbook/:book_id/recipe").handler(this::addRecipe);
-        router.get("/cookbook/:book_id/recipe/:id").handler(this::receiveRecipe);
-        router.post("/cookbook/:book_id/recipe/:id").handler(this::updateRecipe);
-        
-        getVertx().createHttpServer().requestHandler(router::accept).listen(cfg.port(), result -> {
-            if (result.succeeded()) {
-                future.complete();
-            } else {
-                future.fail(result.cause());
+        Route route = new Route() {
+            @Override
+            public Router getRoute() {
+                return router;
             }
-        });
-
-    }
-
-    @Override
-    public void stop() throws Exception {
-        if (server != null) {
-            server.close();
-        }
+        };
+        
+        Dictionary<String, Object> properties = new Hashtable<>();
+        properties.put(Route.CONTEXT_PATH, "/cookbook");
+        serviceRegistration = bc.registerService(Route.class, route, properties);
     }
     
     private void handleListBooks(RoutingContext routingContext) {
@@ -128,7 +106,7 @@ public class CookBookServiceVertcl extends AbstractVerticle {
             if (!message.failed()) {
                 @SuppressWarnings("unchecked")
                 List<Book> customMessage = (List<Book>) message.result().body();
-                System.out.println("Receiver ->>>>>>>> " + customMessage);
+                LOGGER.log(Level.INFO, "Receiver ->>>>>>>> " + customMessage);
                 if (customMessage != null) {
                     response.putHeader("content-type", "application/json; charset=utf-8")
                             .end(Json.encodePrettily(customMessage));
@@ -215,7 +193,7 @@ public class CookBookServiceVertcl extends AbstractVerticle {
             HttpServerResponse response = routingContext.response();
             if (!message.failed()) {
                 Book customMessage = (Book) message.result().body();
-                System.out.println("Receiver ->>>>>>>> " + customMessage);
+                LOGGER.log(Level.INFO,"Receiver ->>>>>>>> " + customMessage);
                 if (customMessage != null) {
                     response.putHeader("content-type", "application/json; charset=utf-8")
                             .end(Json.encodePrettily(customMessage));

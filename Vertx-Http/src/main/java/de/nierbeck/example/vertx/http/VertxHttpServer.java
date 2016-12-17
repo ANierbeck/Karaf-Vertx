@@ -15,12 +15,17 @@
 */
 package de.nierbeck.example.vertx.http;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicy;
 import org.osgi.service.metatype.annotations.Designate;
 import org.osgi.service.metatype.annotations.ObjectClassDefinition;
 
@@ -29,6 +34,7 @@ import io.vertx.core.Future;
 import io.vertx.core.Verticle;
 import io.vertx.core.http.HttpServer;
 import io.vertx.core.http.HttpServerOptions;
+import io.vertx.ext.web.Router;
 
 @ObjectClassDefinition(name = "Server Configuration")
 @interface ServerConfig {
@@ -44,11 +50,14 @@ public class VertxHttpServer extends AbstractVerticle {
     private HttpServer server;
 
     private ServerConfig cfg;
+    
+    private Map<String, Route> routes;
 
     @Activate
     public void activate(ServerConfig cfg) {
         LOGGER.info("Creating vertx HTTP server");
         this.cfg = cfg;
+        routes = new HashMap<>();
     }
 
      @Deactivate
@@ -61,22 +70,14 @@ public class VertxHttpServer extends AbstractVerticle {
      }
 
     @Override
-    public void start(Future<Void> startFuture) throws Exception {
-        LOGGER.info("starting verticle");
-        server = getVertx().createHttpServer(new HttpServerOptions().setPort(cfg.port())).requestHandler(req -> {
-            req.response().end("Hello from OSGi !");
-        });
-     
-        server.listen(status -> {
-            if (status.succeeded()) {
-                LOGGER.info("status suceeded");
-                startFuture.complete();
-                return;
-            } else {
-                LOGGER.info("status failed");
-                startFuture.fail(status.cause());
-            }
-        });
+    public void start() throws Exception {
+        LOGGER.info("starting rest router");
+
+        server = getVertx().createHttpServer();
+        
+        if (!routes.isEmpty()) {
+            update();
+        }
     }
 
     @Override
@@ -84,6 +85,28 @@ public class VertxHttpServer extends AbstractVerticle {
         if (server != null) {
             server.close();
         }
+    }
+    
+    private void update() {
+        if (server == null || routes.isEmpty())
+            return;
+        
+        Router router = Router.router(getVertx());
+        routes.entrySet().forEach(entry -> router.mountSubRouter(entry.getKey(), entry.getValue().getRoute()));
+
+        server.requestHandler(router::accept).listen(cfg.port());
+    }
+
+    @Reference(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC, unbind = "removeRoute")
+    public void addRoute(Route routeToAdd, Map<String, Object> properties) {
+        this.routes.put((String) properties.get(Route.CONTEXT_PATH), routeToAdd);
+        update();
+    }
+
+    public void removeRoute(Route routToRemove, Map<String, Object> properties) {
+        String key = (String) properties.get("ContextPath");
+        this.routes.remove(key);
+        update();
     }
 
 }

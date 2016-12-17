@@ -19,7 +19,7 @@ public class MicroservicesExternalTest {
     @Before
     public void setUpITest() throws Exception {
         RestAssured.baseURI = "http://localhost";
-        RestAssured.port = Integer.getInteger("http.port", 8000);
+        RestAssured.port = Integer.getInteger("http.port", 8080);
     }
     
     @After

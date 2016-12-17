@@ -25,6 +25,9 @@ import javax.sql.DataSource;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
+import de.nierbeck.example.vertx.encoder.BookEncoder;
+import de.nierbeck.example.vertx.encoder.ListOfBookEncoder;
+import de.nierbeck.example.vertx.encoder.RecipeEncoder;
 import de.nierbeck.example.vertx.entity.Book;
 import de.nierbeck.example.vertx.entity.Recipe;
 import io.vertx.core.AbstractVerticle;
@@ -55,6 +58,11 @@ public class JdbcServiceVertcl extends AbstractVerticle {
     public void start() throws Exception {
         super.start();
         client = JDBCClient.create(vertx, dataSource);
+
+
+        eventBus.registerDefaultCodec(Book.class, new BookEncoder());
+        eventBus.registerDefaultCodec(Recipe.class, new RecipeEncoder());
+        eventBus.registerDefaultCodec((Class<ArrayList<Book>>) (Class<?>) ArrayList.class, new ListOfBookEncoder());
 
         initDb();
 
@@ -268,6 +276,10 @@ public class JdbcServiceVertcl extends AbstractVerticle {
     @Override
     public void stop() throws Exception {
         super.stop();
+        eventBus.unregisterDefaultCodec(Book.class);
+        eventBus.unregisterDefaultCodec(Recipe.class);
+        eventBus.unregisterDefaultCodec((Class<ArrayList<Book>>) (Class<?>) ArrayList.class);
+        
         client.close();
     }
 

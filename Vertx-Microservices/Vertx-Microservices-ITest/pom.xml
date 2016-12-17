@@ -25,6 +25,13 @@
 		</dependency>
 
 		<dependency>
+			<groupId>de.nierbeck.example.vertx</groupId>
+			<artifactId>Vertx-Http</artifactId>
+			<version>${project.version}</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
 			<groupId>io.vertx</groupId>
 			<artifactId>vertx-core</artifactId>
 			<scope>provided</scope>
