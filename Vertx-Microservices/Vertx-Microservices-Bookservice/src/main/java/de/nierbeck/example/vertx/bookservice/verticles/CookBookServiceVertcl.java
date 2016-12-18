@@ -15,7 +15,7 @@
 
  */
 
-package de.nierbeck.example.vertx.verticles;
+package de.nierbeck.example.vertx.bookservice.verticles;
 
 import java.util.Dictionary;
 import java.util.Hashtable;

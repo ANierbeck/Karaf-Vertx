@@ -16,6 +16,8 @@
  */
 package de.nierbeck.example.vertx;
 
+import static de.nierbeck.example.vertx.TcclSwitch.*;
+
 import java.util.logging.Logger;
 
 import org.osgi.framework.BundleContext;
@@ -33,6 +35,7 @@ import io.vertx.core.VertxOptions;
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.spi.VertxMetricsFactory;
 import io.vertx.ext.dropwizard.DropwizardMetricsOptions;
+import io.vertx.ext.dropwizard.MetricsService;
 
 @Component(immediate = true, service = {})
 public class VertxService {
@@ -46,9 +49,10 @@ public class VertxService {
     
     @Reference
     private VertxMetricsFactory metrxFactory;
+    private ServiceRegistration<MetricsService> metricsServiceRegistration;
 
     @Activate
-    public void start(BundleContext context) {
+    public void start(BundleContext context) throws Exception {
         LOGGER.info("Creating Vert.x instance");
         
         VertxOptions options = new VertxOptions().setMetricsOptions(new DropwizardMetricsOptions()
@@ -58,7 +62,7 @@ public class VertxService {
                 .setFactory(metrxFactory)
             );
 
-        vertx = Vertx.vertx(options);
+        vertx = executeWithTCCLSwitch(() -> Vertx.vertx(options));
         
         vertxRegistration = context.registerService(Vertx.class, vertx, null);
         LOGGER.info("Vert.x service registered");
@@ -66,11 +70,18 @@ public class VertxService {
         LOGGER.info("Vert.x Event Bus service registered");
         registry = SharedMetricRegistries.getOrCreate("vertx-karaf-registry");
         metricsRegistration = context.registerService(MetricRegistry.class, registry, null);
+        LOGGER.info("Vert.x MetricsService service registered");
+        MetricsService metricsService = MetricsService.create(vertx);
+        metricsServiceRegistration = context.registerService(MetricsService.class, metricsService, null);
         
     }
 
     @Deactivate
     public void stop(BundleContext context) {
+        if (metricsServiceRegistration != null) {
+            metricsServiceRegistration.unregister();
+            metricsServiceRegistration = null;
+        }
         if (metricsRegistration != null) {
             metricsRegistration.unregister();
             metricsRegistration = null;

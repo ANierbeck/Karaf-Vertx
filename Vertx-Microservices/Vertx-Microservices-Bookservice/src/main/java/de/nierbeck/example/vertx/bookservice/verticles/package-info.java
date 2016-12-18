@@ -14,4 +14,4 @@
    limitations under the License.
 
  */
-package de.nierbeck.example.vertx.verticles;
+package de.nierbeck.example.vertx.bookservice.verticles;

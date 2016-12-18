@@ -50,8 +50,10 @@ public class VertxHttpServer extends AbstractVerticle {
     private HttpServer server;
 
     private ServerConfig cfg;
-    
+
     private Map<String, Route> routes;
+
+    private Router router;
 
     @Activate
     public void activate(ServerConfig cfg) {
@@ -60,21 +62,22 @@ public class VertxHttpServer extends AbstractVerticle {
         routes = new HashMap<>();
     }
 
-     @Deactivate
-     public void deActivate() {
-         try {
+    @Deactivate
+    public void deActivate() {
+        try {
             stop();
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Caught exception", e);
         }
-     }
+    }
 
     @Override
     public void start() throws Exception {
         LOGGER.info("starting rest router");
-
         server = getVertx().createHttpServer();
-        
+        router = Router.router(getVertx());
+        server.requestHandler(router::accept).listen(cfg.port());
+
         if (!routes.isEmpty()) {
             update();
         }
@@ -86,15 +89,11 @@ public class VertxHttpServer extends AbstractVerticle {
             server.close();
         }
     }
-    
-    private void update() {
-        if (server == null || routes.isEmpty())
-            return;
-        
-        Router router = Router.router(getVertx());
-        routes.entrySet().forEach(entry -> router.mountSubRouter(entry.getKey(), entry.getValue().getRoute()));
 
-        server.requestHandler(router::accept).listen(cfg.port());
+    synchronized private void update() {
+        if (routes.isEmpty() || router == null)
+            return;
+        routes.entrySet().forEach(entry -> router.mountSubRouter(entry.getKey(), entry.getValue().getRoute()));
     }
 
     @Reference(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC, unbind = "removeRoute")
@@ -106,6 +105,7 @@ public class VertxHttpServer extends AbstractVerticle {
     public void removeRoute(Route routToRemove, Map<String, Object> properties) {
         String key = (String) properties.get("ContextPath");
         this.routes.remove(key);
+        router.clear();
         update();
     }
 

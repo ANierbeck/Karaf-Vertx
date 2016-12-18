@@ -23,5 +23,6 @@
   	<module>Vertx-Microservices-Entity</module>
   	<module>Vertx-Microservices-Karaf</module>
   	<module>Vertx-Microservices-ITest</module>
+  	<module>Vertx-Microservice-MetricsDashboard</module>
   </modules>
 </project>

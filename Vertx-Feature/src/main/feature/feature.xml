@@ -42,7 +42,8 @@
        <capability>
        	osgi.service;objectClass=io.vertx.core.Vertx,
        	osgi.service;objectClass=io.vertx.core.spi.VertxMetricsFactory,
-       	osgi.service;objectClass=io.vertx.core.eventbus.EventBus
+       	osgi.service;objectClass=io.vertx.core.eventbus.EventBus,
+       	osgi.service;objectClass=io.vertx.ext.dropwizard.MetricsService
        </capability>
 	</feature>
 	

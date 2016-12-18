@@ -34,14 +34,15 @@ public class VertxMetrics extends AbstractVertxCommand {
 
     @Reference
     private MetricRegistry metricsRegistry;
+    
+    @Reference
+    private MetricsService metricsService;
 
     @Argument
     private String metricsBaseName;
 
     @Override
     public Object execute() throws Exception {
-
-        MetricsService metricsService = MetricsService.create(getVertxService());
 
         JsonObject metrics = (metricsBaseName != null) ? metricsService.getMetricsSnapshot(metricsBaseName)
                 : metricsService.getMetricsSnapshot(getVertxService());

@@ -34,6 +34,7 @@ import java.io.PrintStream;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
@@ -92,10 +93,6 @@ public class MicroservicesTest {
     @Inject
     protected SessionFactory sessionFactory;
     
-//    @Inject
-//    protected VertxHttpServer httpServer;
-    
-
     private ExecutorService executor = Executors.newCachedThreadPool();
 
     private ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
@@ -307,24 +304,15 @@ public class MicroservicesTest {
     
 
     private void awaitRouteAndHttpService() throws Exception {
-        ServiceReference<Route> ref = bc.getServiceReference(Route.class);
+        Collection<ServiceReference<Route>> serviceReferences = bc.getServiceReferences(Route.class, null);
         int count = 0;
-        while (ref == null && count < 10) {
+        while (serviceReferences == null && serviceReferences.size() < 2 && count < 10) {
             Thread.sleep(200);
-            ref = bc.getServiceReference(Route.class);
+            serviceReferences = bc.getServiceReferences(Route.class, null);
             count++;
         }
-        Assert.assertNotNull("Failed to get Route service", ref);
         
-//        ServiceReference<VertxHttpServer> ref2 = bc.getServiceReference(VertxHttpServer.class);
-//        count = 0;
-//        while (ref2 == null && count < 10) {
-//            Thread.sleep(200);
-//            ref2 = bc.getServiceReference(VertxHttpServer.class);
-//            count++;
-//        }
-//        
-//        Assert.assertNotNull("Failed to get VertxHttpServer service", ref2);
+        Assert.assertNotNull("Failed to get Route service", serviceReferences);
     }
 
 }
