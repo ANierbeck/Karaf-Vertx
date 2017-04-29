@@ -1,0 +1,21 @@
+<h2>CookBooks</h2>
+<table class="table table-condensed">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>ISBN</th>
+        <th>Recipes</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="book in books">
+        <td>{{book.id}}</td>
+        <td>{{book.name}}</td>
+        <td>{{book.isbn}}</td>
+        <td>{{book.recipes}}</td>
+        <td><a href="#/edit/{{book._id}}" class="btn btn-default btn-sm"><i class="glyphicon glyphicon-pencil"></i></a></td>
+    </tr>
+    </tbody>
+</table>
+<a class="btn btn-primary" href="#/add-user">Add New User</a>

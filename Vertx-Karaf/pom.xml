@@ -169,14 +169,12 @@
 				<groupId>org.apache.karaf.tooling</groupId>
 				<artifactId>karaf-maven-plugin</artifactId>
 				<configuration>
-					<!-- <startupFeatures/> -->
 					<bootFeatures>
-						<!-- standard distribution -->
-<!-- 						<feature>standard</feature> -->
-						<!-- minimal distribution -->
 						<feature>minimal</feature>
-						<feature>Vertx-Feature</feature>
+						<feature>Vertx-Feature</feature>					
 					</bootFeatures>
+					<installedFeatures>
+					</installedFeatures>
 				</configuration>
 			</plugin>
 		</plugins>

@@ -49,6 +49,7 @@ import org.apache.karaf.features.BootFinished;
 import org.apache.karaf.features.FeaturesService;
 import org.apache.karaf.shell.api.console.Session;
 import org.apache.karaf.shell.api.console.SessionFactory;
+import org.hamcrest.CoreMatchers;
 import org.hamcrest.core.IsInstanceOf;
 import org.junit.After;
 import org.junit.Assert;
@@ -67,7 +68,6 @@ import org.osgi.framework.ServiceReference;
 import de.nierbeck.example.vertx.entity.Book;
 import de.nierbeck.example.vertx.entity.Recipe;
 import de.nierbeck.example.vertx.http.Route;
-import de.nierbeck.example.vertx.http.VertxHttpServer;
 import io.vertx.core.Vertx;
 import io.vertx.core.eventbus.EventBus;
 
@@ -155,19 +155,17 @@ public class MicroservicesTest {
         assertThat(vertxService, is(notNullValue()));
     }
     
-    @SuppressWarnings("deprecation")
     @Test
     public void testServerList() throws Exception {
         awaitRouteAndHttpService();
-        assertThat(executeCommand("vertx:netlist"), containsString("8080"));
+        assertThat(executeCommand("vertx:netlist"), CoreMatchers.containsString("8080"));
     }
     
-    @SuppressWarnings("deprecation")
     @Test
     public void checkMicroserviceVerticlesAvailable() throws Exception {
-        assertThat(executeCommand("verticles:list"), containsString("JdbcServiceVertcl"));
-        assertThat(executeCommand("verticles:list"), containsString("CookBookServiceVertcl"));
-        assertThat(executeCommand("verticles:list"), containsString("VertxHttpServer"));
+        assertThat(executeCommand("verticles:list"), CoreMatchers.containsString("JdbcServiceVertcl"));
+        assertThat(executeCommand("verticles:list"), CoreMatchers.containsString("CookBookServiceVertcl"));
+        assertThat(executeCommand("verticles:list"), CoreMatchers.containsString("VertxHttpServer"));
     }
 
     @Test

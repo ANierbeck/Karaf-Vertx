@@ -44,13 +44,13 @@ public class MicroservicesExternalTest {
 
     @Test
     public void checkBooksAvailable() throws Exception {
-        final int id = get("/cookbook/").then()
+        final int id = get("/cookbook-service/").then()
         .assertThat()
         .statusCode(200)
         .extract()
         .jsonPath().getInt("find { it.name=='Java Cookbook' }.id");
         
-        get("/cookbook/" + id).then()
+        get("/cookbook-service/" + id).then()
         .assertThat()
         .statusCode(200)
         .body("name", equalTo("Java Cookbook"))
@@ -60,13 +60,13 @@ public class MicroservicesExternalTest {
     
     @Test
     public void checkRecipesForBook() throws Exception {
-        final int id = get("/cookbook/1/recipe").then()
+        final int id = get("/cookbook-service/1/recipe").then()
         .assertThat()
         .statusCode(200)
         .extract()
         .jsonPath().getInt("find { it.name=='Singletons' }.id");
         
-        get("/cookbook/1/recipe/"+ id).then()
+        get("/cookbook-service/1/recipe/"+ id).then()
         .assertThat()
         .statusCode(200)
         .body("name", equalTo("Singletons"));

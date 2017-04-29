@@ -24,5 +24,6 @@
   	<module>Vertx-Microservices-Karaf</module>
   	<module>Vertx-Microservices-ITest</module>
   	<module>Vertx-Microservice-MetricsDashboard</module>
+  	<module>Vertx-Microservices-CookbookUI</module>
   </modules>
 </project>

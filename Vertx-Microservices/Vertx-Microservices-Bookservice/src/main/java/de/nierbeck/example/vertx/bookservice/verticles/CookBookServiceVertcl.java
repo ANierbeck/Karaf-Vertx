@@ -34,7 +34,6 @@ import de.nierbeck.example.vertx.entity.Book;
 import de.nierbeck.example.vertx.entity.Recipe;
 import de.nierbeck.example.vertx.http.Route;
 import io.vertx.core.AbstractVerticle;
-import io.vertx.core.Future;
 import io.vertx.core.Verticle;
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.http.HttpServerResponse;
@@ -96,7 +95,7 @@ public class CookBookServiceVertcl extends AbstractVerticle {
         };
         
         Dictionary<String, Object> properties = new Hashtable<>();
-        properties.put(Route.CONTEXT_PATH, "/cookbook");
+        properties.put(Route.CONTEXT_PATH, "/cookbook-service");
         serviceRegistration = bc.registerService(Route.class, route, properties);
     }
     
