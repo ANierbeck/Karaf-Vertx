@@ -37,6 +37,13 @@ import io.vertx.core.spi.VertxMetricsFactory;
 import io.vertx.ext.dropwizard.DropwizardMetricsOptions;
 import io.vertx.ext.dropwizard.MetricsService;
 
+@interface VertxConfig {
+    int getWorkerPoolSize();
+    int getEventLoopPoolSize();
+    boolean getHAEnabled() default false;
+    String getHAGroup();
+}
+
 @Component(immediate = true, service = {})
 public class VertxService {
 
@@ -52,7 +59,7 @@ public class VertxService {
     private ServiceRegistration<MetricsService> metricsServiceRegistration;
 
     @Activate
-    public void start(BundleContext context) throws Exception {
+    public void start(BundleContext context, VertxConfig cfg) throws Exception {
         LOGGER.info("Creating Vert.x instance");
         
         VertxOptions options = new VertxOptions().setMetricsOptions(new DropwizardMetricsOptions()
@@ -61,6 +68,21 @@ public class VertxService {
                 .setRegistryName("vertx-karaf-registry")
                 .setFactory(metrxFactory)
             );
+                
+        if (cfg.getWorkerPoolSize() > 0) {
+            options.setWorkerPoolSize(cfg.getWorkerPoolSize());
+        }
+        
+        if (cfg.getEventLoopPoolSize() > 0) {
+            options.setEventLoopPoolSize(cfg.getEventLoopPoolSize());
+        }
+        
+        if (cfg.getHAEnabled()) {
+            options.setHAEnabled(cfg.getHAEnabled());
+            if (cfg.getHAGroup() != null && !cfg.getHAGroup().isEmpty()) {
+                options.setHAGroup(cfg.getHAGroup());
+            }
+        }
 
         vertx = executeWithTCCLSwitch(() -> Vertx.vertx(options));
         
