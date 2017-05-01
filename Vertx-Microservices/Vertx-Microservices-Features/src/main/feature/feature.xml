@@ -34,6 +34,11 @@
 		<feature>pax-jdbc-h2</feature>
 		<feature>pax-jdbc-config</feature>
 		<feature>pax-jdbc-pool-aries</feature>
+		<bundle>mvn:${project.groupId}/Vertx-Microservice-MetricsDashboard/${project.version}</bundle>
+        <bundle>mvn:${project.groupId}/Vertx-Microservices-Bookservice/${project.version}</bundle>
+        <bundle>mvn:${project.groupId}/Vertx-Microservices-CookbookUI/${project.version}</bundle>
+        <bundle>mvn:${project.groupId}/Vertx-Microservices-Entity/${project.version}</bundle>
+        <bundle>mvn:${project.groupId}/Vertx-Microservices-JDBC/${project.version}</bundle>
 	</feature>
 	
 </features>

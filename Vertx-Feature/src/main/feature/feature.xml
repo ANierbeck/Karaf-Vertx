@@ -24,7 +24,7 @@
 	</feature>
 	
 	<feature name="Vertx-Core" version="${project.version}">
-		<feature prerequesit="true">Aries-SPI-Fly</feature>
+		<feature dependency="true">Aries-SPI-Fly</feature>
 		<bundle start-level="80">mvn:io.vertx/vertx-core/${vertx.version}</bundle>
         <bundle start-level="80">mvn:io.vertx/vertx-dropwizard-metrics/${vertx.version}</bundle>
         <bundle start-level="80">mvn:io.dropwizard.metrics/metrics-core/3.1.2</bundle>
@@ -68,6 +68,10 @@
         <feature dependency="true" version="0.1.0.SNAPSHOT">scr</feature>
         <feature dependency="true" version="0.1.0.SNAPSHOT">Vertx-Core</feature>
         <feature dependency="true" version="0.1.0.SNAPSHOT">Vertx-Web</feature>
+        <bundle>mvn:${project.groupId}/Vertx-System/${project.version}</bundle>
+        <bundle>mvn:${project.groupId}/Vertx-Shell/${project.version}</bundle>
+        <bundle>mvn:${project.groupId}/Vertx-Http/${project.version}</bundle>
+        <bundle>mvn:${project.groupId}/Vertx-Verticles/${project.version}</bundle>
     </feature>
 
 </features>

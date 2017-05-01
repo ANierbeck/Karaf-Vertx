@@ -121,13 +121,28 @@
 				<artifactId>karaf-maven-plugin</artifactId>
 
 				<configuration>
-					<startLevel>80</startLevel>
-					<aggregateFeatures>true</aggregateFeatures>
-					<checkDependencyChange>true</checkDependencyChange>
-					<failOnDependencyChange>false</failOnDependencyChange>
 					<logDependencyChanges>true</logDependencyChanges>
 					<overwriteChangedDependencies>true</overwriteChangedDependencies>
 				</configuration>
+				<executions>
+                    <execution>
+                        <id>verify</id>
+                        <goals>
+                            <goal>verify</goal>
+                        </goals>
+                        <configuration>
+                            <descriptors>
+                                <descriptor>mvn:org.apache.karaf.features/framework/4.0.4/xml/features</descriptor>
+                                <descriptor>file:${project.build.directory}/feature/feature.xml</descriptor>
+                            </descriptors>
+                            <distribution>org.apache.karaf.features:framework</distribution>
+                            <javase>1.8</javase>
+                            <framework>
+                                <feature>${project.artifactId}</feature>
+                            </framework>
+                        </configuration>
+                    </execution>
+                </executions>
 			</plugin>
 		</plugins>
 	</build>
