@@ -25,12 +25,12 @@
         <bundle>mvn:io.netty/netty-resolver-dns/4.1.5.Final</bundle>
         <bundle>mvn:io.netty/netty-resolver/4.1.5.Final</bundle>
         <bundle>mvn:io.netty/netty-transport/4.1.5.Final</bundle>
-        <bundle>mvn:io.vertx/vertx-auth-common/3.4.0-SNAPSHOT</bundle>
-        <bundle>mvn:io.vertx/vertx-core/3.4.0-SNAPSHOT</bundle>
-        <bundle>mvn:io.vertx/vertx-dropwizard-metrics/3.4.0-SNAPSHOT</bundle>
-        <bundle>mvn:io.vertx/vertx-jdbc-client/3.4.0-SNAPSHOT</bundle>
-        <bundle>mvn:io.vertx/vertx-sql-common/3.4.0-SNAPSHOT</bundle>
-        <bundle>mvn:io.vertx/vertx-web/3.4.0-SNAPSHOT</bundle>
+        <bundle>mvn:io.vertx/vertx-auth-common/3.4.1</bundle>
+        <bundle>mvn:io.vertx/vertx-core/3.4.1</bundle>
+        <bundle>mvn:io.vertx/vertx-dropwizard-metrics/3.4.1</bundle>
+        <bundle>mvn:io.vertx/vertx-jdbc-client/3.4.1</bundle>
+        <bundle>mvn:io.vertx/vertx-sql-common/3.4.1</bundle>
+        <bundle>mvn:io.vertx/vertx-web/3.4.1</bundle>
         <bundle>mvn:org.apache.aries.spifly/org.apache.aries.spifly.dynamic.bundle/1.0.2</bundle>
         <bundle>mvn:org.apache.aries/org.apache.aries.util/1.1.0</bundle>
         <bundle>mvn:org.jetbrains.kotlin/kotlin-osgi-bundle/1.0.5-2</bundle>

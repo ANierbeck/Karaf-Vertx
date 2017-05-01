@@ -25,6 +25,8 @@ import javax.sql.DataSource;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
+import com.fasterxml.jackson.databind.RuntimeJsonMappingException;
+
 import de.nierbeck.example.vertx.encoder.BookEncoder;
 import de.nierbeck.example.vertx.encoder.ListOfBookEncoder;
 import de.nierbeck.example.vertx.encoder.RecipeEncoder;
@@ -119,7 +121,8 @@ public class JdbcServiceVertcl extends AbstractVerticle {
             
             if (id != null) {            
                 client.getConnection(conn -> {
-                    queryWithParams(conn.result(), "select * from recipe where id= ? and book_id= ?", new JsonArray().add(bookId).add(id), rs -> {
+                    LOGGER.info("querying for recipe with id and bookid");
+                    queryWithParams(conn.result(), "select * from recipe where id= ? and book_id= ?", new JsonArray().add(id).add(bookId), rs -> {
                         for (JsonArray line: rs.getResults()) {
                             recipe.setName(line.getString(1));
                             recipe.setIngredients(line.getString(2));
@@ -146,34 +149,72 @@ public class JdbcServiceVertcl extends AbstractVerticle {
         
         if (message.body() instanceof Recipe) {
             Recipe recipe = (Recipe) message.body();
-            client.getConnection(conn -> {
-                startTx(conn.result(), tx -> {
-                    updateWithParams(conn.result(), "insert into recipe values(?,?,?,?)", new JsonArray().add(recipe.getId()).add(recipe.getName()).add(recipe.getIngredients()).add(recipe.getBookId()), execute -> {
-                        endTx(conn.result(), txDone -> {
-                            conn.result().close(done -> {
-                                if (done.failed()) {
-                                    throw new RuntimeException(done.cause());
-                                }
+            if (recipe.getId() == null) {
+                client.getConnection(conn -> {
+                    startTx(conn.result(), tx -> {
+                        query(conn.result(), "select max(id) from recipe", rs -> {
+                            Integer newId = rs.getResults().get(0).getInteger(0) + 1;
+                            updateWithParams(conn.result(), "insert into recipe values(?,?,?,?)", new JsonArray().add(newId).add(recipe.getName()).add(recipe.getIngredients()).add(recipe.getBookId()), execute -> {
+                                endTx(conn.result(), txDone -> {
+                                    conn.result().close(done -> {
+                                        if (done.failed()) {
+                                            throw new RuntimeException(done.cause());
+                                        } 
+                                    });
+                                });
                             });
                         });
                     });
                 });
-            });
+            } else {
+                client.getConnection(conn -> {
+                    startTx(conn.result(), tx -> {
+                        updateWithParams(conn.result(), "insert into recipe values(?,?,?,?)", new JsonArray().add(recipe.getId()).add(recipe.getName()).add(recipe.getIngredients()).add(recipe.getBookId()), execute -> {
+                            endTx(conn.result(), txDone -> {
+                                conn.result().close(done -> {
+                                    if (done.failed()) {
+                                        throw new RuntimeException(done.cause());
+                                    }
+                                });
+                            });
+                        });
+                    });
+                });
+            }
         } else if (message.body() instanceof Book) {
             Book book = (Book) message.body();
-            client.getConnection(conn -> {
-                startTx(conn.result(), tx -> {
-                    updateWithParams(conn.result(), "insert into book values(?,?,?)", new JsonArray().add(book.getId()).add(book.getName()).add(book.getIsbn()), execute -> {
-                        endTx(conn.result(), txDone -> {
-                            conn.result().close(done -> {
-                                if (done.failed()) {
-                                    throw new RuntimeException(done.cause());
-                                }
+            if (book.getId() == null) {
+                client.getConnection(conn -> {
+                    startTx(conn.result(), tx -> {
+                        query(conn.result(), "select max(id) from book", rs -> {
+                            Integer newId = rs.getResults().get(0).getInteger(0) + 1;
+                            updateWithParams(conn.result(), "insert into book values(?,?,?)", new JsonArray().add(newId).add(book.getName()).add(book.getIsbn()), execute -> {
+                                endTx(conn.result(), txDone -> {
+                                    conn.result().close(done -> {
+                                        if (done.failed()) {
+                                            throw new RuntimeException(done.cause());
+                                        }
+                                    });
+                                });
                             });
                         });
                     });
                 });
-            });
+            } else {
+                client.getConnection(conn -> {
+                    startTx(conn.result(), tx -> {
+                        updateWithParams(conn.result(), "insert into book values(?,?,?)", new JsonArray().add(book.getId()).add(book.getName()).add(book.getIsbn()), execute -> {
+                            endTx(conn.result(), txDone -> {
+                                conn.result().close(done -> {
+                                    if (done.failed()) {
+                                        throw new RuntimeException(done.cause());
+                                    }
+                                });
+                            });
+                        });
+                    });
+                });
+            }
         }
     }
     
@@ -218,7 +259,20 @@ public class JdbcServiceVertcl extends AbstractVerticle {
         LOGGER.info("received delete message: "+message.body());
         
         if (message.body() instanceof Recipe) {
-            //TODO: delete recipe
+            Recipe recipe = (Recipe) message.body();
+            client.getConnection(conn -> {
+                startTx(conn.result(), tx -> {
+                    queryWithParams(conn.result(), "DELETE FROM recipe WHERE id = ? AND book_id = ?", new JsonArray().add(recipe.getId()).add(recipe.getBookId()), execute -> {
+                        endTx(conn.result(), txDone -> {
+                            conn.result().close(done -> {
+                                if (done.failed()) {
+                                    throw new RuntimeException(done.cause());
+                                }
+                            });
+                        });
+                    });
+                });
+            });
         } else if (message.body() instanceof Book) {
             //TODO: delete Book
         }

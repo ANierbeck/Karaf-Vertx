@@ -81,11 +81,13 @@ public class CookBookServiceVertcl extends AbstractVerticle {
 
         router.route("/*").handler(BodyHandler.create());
         router.get("/").handler(this::handleListBooks);
+        router.post("/").handler(this::addBook);
         router.get("/:id").handler(this::receiveCookBook);
         router.get("/:book_id/recipe").handler(this::listRecipes);
         router.post("/:book_id/recipe").handler(this::addRecipe);
         router.get("/:book_id/recipe/:id").handler(this::receiveRecipe);
-        router.post("/:book_id/recipe/:id").handler(this::updateRecipe);
+        router.put("/:book_id/recipe/:id").handler(this::updateRecipe);
+        router.delete("/:book_id/recipe/:id").handler(this::deleteRecipe);
         
         Route route = new Route() {
             @Override
@@ -117,6 +119,16 @@ public class CookBookServiceVertcl extends AbstractVerticle {
         });
     }
 
+    private void addBook(RoutingContext routingContext) {
+        Book book = Json.decodeValue(routingContext.getBodyAsString(), Book.class);
+        
+        HttpServerResponse response = routingContext.response();
+        response.setStatusCode(201)
+                .putHeader("content-type", "application/json; charset=utf-8")
+                .end(Json.encodePrettily(book));
+        eventBus.publish("de.nierbeck.vertx.jdbc.write.add", book);
+    }
+    
     private void addRecipe(RoutingContext routingContext) {
         String bookId = routingContext.request().getParam("book_id");
         Recipe recipe = Json.decodeValue(routingContext.getBodyAsString(), Recipe.class);
@@ -181,6 +193,21 @@ public class CookBookServiceVertcl extends AbstractVerticle {
         });
     }
 
+    private void deleteRecipe(RoutingContext routingContext) {
+        String id = routingContext.request().getParam("id");
+        String bookId = routingContext.request().getParam("book_id");
+        Recipe recipe = new Recipe();
+        recipe.setBookId(Long.valueOf(bookId));
+        recipe.setId(Long.valueOf(id));
+        
+        HttpServerResponse response = routingContext.response();
+        response.setStatusCode(202)
+                .putHeader("content-type", "application/json; charset=utf-8")
+                .end(Json.encodePrettily(recipe));
+        
+        eventBus.send("de.nierbeck.vertx.jdbc.delete", recipe);
+    }
+    
     private void receiveCookBook(RoutingContext routingContext) {
 
         String id = routingContext.request().getParam("id");

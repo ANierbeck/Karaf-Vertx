@@ -2,7 +2,7 @@
 <div class="row">
     <div class="col-md-6">
         <form novalidate name="EditForm" id="edit-form" method="post" action="">
-            <input type="hidden" ng-model="user.id" value="{{book.id}}" />
+            <input type="hidden" ng-model="book.id" value="{{book.id}}" />
             <div class="form-group">
                 <label>Name:</label>
                 <input class="form-control" type="text" ng-model="book.name" value="{{book.name}}" required />
@@ -11,8 +11,30 @@
                 <label>ISBN:</label>
                 <input class="form-control" type="text" ng-model="book.isbn" value="{{book.isbn}}" required />
             </div>
+            <div>
+            	<table class="table table-condensed">
+			    <thead>
+			    <tr>
+			        <th>Name</th>
+			        <th>Ingredients</th>
+			        <th></th>
+			    </tr>
+			    </thead>
+			    <tbody>
+            	<tr ng-repeat="recipe in book.recipes">
+			        <td>{{recipe.name}}</td>
+			        <td>{{recipe.ingredients}}</td>
+			        <td>
+			        	<a href="#/edit/{{recipe.bookId}}/recipe/{{recipe.id}}" class="btn btn-default btn-sm"><i class="glyphicon glyphicon-pencil"></i></a>
+			        	<button class="btn btn-danger" ng-click="delete_recipe(recipe)">Delete <span class="glyphicon glyphicon-trash"></span></button>
+			        </td>
+			    </tr>
+			    </tbody>
+			    </table>
+				<a class="btn btn-primary" href="#/add-recipe/{{book.id}}">Add New Recipe</a>
+            </div>
             <button class="btn btn-primary" ng-disabled="AddNewForm.$invalid || isUnchanged(book)" id="add-new-btn" ng-click="update(book)">Update <span class="glyphicon glyphicon-floppy-disk"></span></button>
-            <button class="btn btn-danger" ng-click="delete(user)">Delete <span class="glyphicon glyphicon-trash"></span></button>
+            <button class="btn btn-danger" ng-click="delete(book)">Delete <span class="glyphicon glyphicon-trash"></span></button>
             <a href="#/" class="btn">Cancel</a>
         </form>
     </div>
