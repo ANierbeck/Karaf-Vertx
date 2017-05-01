@@ -60,8 +60,7 @@
 	<feature name="Vertx-JDBC" version="${project.version}">
 		<bundle start-level="80">mvn:io.vertx/vertx-jdbc-client/${vertx.version}</bundle>
 		<bundle start-level="80">mvn:io.vertx/vertx-sql-common/${vertx.version}</bundle>
-		<bundle start-level="80">wrap:mvn:com.mchange/c3p0/0.9.5.2</bundle>
-		<bundle start-level="80">wrap:mvn:com.mchange/mchange-commons-java/0.2.11</bundle>
+		<bundle start-level="80">mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.c3p0/${c3p0.version}</bundle>
 	</feature>
 
     <feature name='${project.artifactId}' description='${project.name}' version='${project.version}'>
