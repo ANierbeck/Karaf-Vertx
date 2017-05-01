@@ -1,0 +1,19 @@
+<h2>Edit Recipe</h2>
+<div class="row">
+    <div class="col-md-6">
+        <form novalidate name="EditRecipeForm" id="edit-form" method="post" action="">
+            <input type="hidden" ng-model="recipe.id" value="{{recipe.id}}" />
+            <div class="form-group">
+                <label>Name:</label>
+                <input class="form-control" type="text" ng-model="recipe.name" value="{{recipe.name}}" required />
+            </div>
+            <div class="form-group">
+                <label>Ingredients:</label>
+                <input class="form-control" type="text" ng-model="recipe.ingredients" value="{{recipe.ingredients}}" required />
+            </div>
+            <button class="btn btn-primary" ng-disabled="AddNewForm.$invalid || isUnchanged(recipe)" id="add-new-btn" ng-click="update(recipe)">Update <span class="glyphicon glyphicon-floppy-disk"></span></button>
+            <button class="btn btn-danger" ng-click="delete(recipe)">Delete <span class="glyphicon glyphicon-trash"></span></button>
+            <a href="#/edit/{{recipe.bookId}}" class="btn">Cancel</a>
+        </form>
+    </div>
+</div>

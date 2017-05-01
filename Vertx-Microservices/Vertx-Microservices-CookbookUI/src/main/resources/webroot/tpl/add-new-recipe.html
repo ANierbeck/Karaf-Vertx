@@ -1,0 +1,18 @@
+<h2>Add new Recipe</h2>
+<div class="row">
+    <div class="col-md-6">
+        <form novalidate name="AddNewRecipeForm" id="add-new-recipe-form" method="post" action="">
+        	<input type="hidden" ng-model="recipe.bookId" value="{{recipe.bookId}}" />
+            <div class="form-group">
+                <label>Name:</label>
+                <input class="form-control" type="text" ng-model="recipe.name" required />
+            </div>
+            <div class="form-group">
+                <label>Ingredients:</label>
+                <input class="form-control" type="text" ng-model="recipe.ingredients" required />
+            </div>
+            <button class="btn btn-primary" ng-disabled="AddNewForm.$invalid || isUnchanged(recipe)" id="add-new-btn" ng-click="add_new(recipe)">Save!</button>
+            <a href="#/edit/{{recipe.bookId}}" class="btn">Cancel</a>
+        </form>
+    </div>
+</div>
