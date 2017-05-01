@@ -25,8 +25,6 @@ import javax.sql.DataSource;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
-import com.fasterxml.jackson.databind.RuntimeJsonMappingException;
-
 import de.nierbeck.example.vertx.encoder.BookEncoder;
 import de.nierbeck.example.vertx.encoder.ListOfBookEncoder;
 import de.nierbeck.example.vertx.encoder.RecipeEncoder;
