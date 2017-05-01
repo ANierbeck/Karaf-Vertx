@@ -38,7 +38,7 @@
 		<osgi.version>6.0.0</osgi.version>
 		<netty.version>4.1.5.Final</netty.version>
 		<kotlin.version>1.0.5-2</kotlin.version>
-		<pax.exam.version>4.7.0</pax.exam.version>
+		<pax.exam.version>4.10.0</pax.exam.version>
 		<pax.url.version>2.1.0</pax.url.version>
 		<logback.version>1.0.4</logback.version>
 		<slf4j.version>1.7.4</slf4j.version>
