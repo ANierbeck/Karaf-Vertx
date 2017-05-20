@@ -60,12 +60,9 @@ public class VerticleExtenderImpl {
         
         logger.debug("created {} Verticle instances", verticleInstances.size());
         
-        for (Verticle verticle : verticleInstances) {
-            logger.debug("registering verticle instances as service: {}", verticleInstances);
-            ServiceRegistration<Verticle> registerService = verticleBundleContext.registerService(Verticle.class, verticle, null);
-            logger.debug("registered service {}", registerService);
-            verticleServices.add(registerService);
-        }
+        verticleServices = verticleInstances.stream()
+            .map(verticle -> verticleBundleContext.registerService(Verticle.class, verticle, null))
+            .collect(Collectors.toList());
         
         logger.info("Registered {} Verticle services", verticleServices.size());
     }
