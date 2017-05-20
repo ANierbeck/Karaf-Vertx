@@ -29,6 +29,8 @@
 		<module>Vertx-Http</module>
 		<module>Vertx-Microservices</module>
 		<!-- <module>Vertx-Slideshow</module> -->
+		<module>Vertx-Extender</module>
+		<module>Vertx-Extended-Verticles</module>
 	</modules>
 
 	<properties>
@@ -38,13 +40,14 @@
 		<osgi.version>6.0.0</osgi.version>
 		<netty.version>4.1.5.Final</netty.version>
 		<kotlin.version>1.0.5-2</kotlin.version>
-		<pax.exam.version>4.10.0</pax.exam.version>
+		<pax.exam.version>4.11.0</pax.exam.version>
 		<pax.url.version>2.1.0</pax.url.version>
 		<logback.version>1.0.4</logback.version>
 		<slf4j.version>1.7.4</slf4j.version>
 		<junit.version>4.12</junit.version>
 		<hamcrest.version>1.3</hamcrest.version>
 		<c3p0.version>0.9.5.2_1</c3p0.version>
+		<pax.swissbox.version>1.8.3</pax.swissbox.version>
 	</properties>
 
 	<repositories>
@@ -113,6 +116,17 @@
 				<groupId>org.apache.servicemix.bundles</groupId>
 				<artifactId>org.apache.servicemix.bundles.c3p0</artifactId>
 				<version>${c3p0.version}</version>
+			</dependency>
+			
+			<dependency>
+				<groupId>org.ops4j.pax.swissbox</groupId>
+				<artifactId>pax-swissbox-extender</artifactId>
+				<version>${pax.swissbox.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.ops4j.pax.swissbox</groupId>
+				<artifactId>pax-swissbox-core</artifactId>
+				<version>${pax.swissbox.version}</version>
 			</dependency>
 				
 		</dependencies>

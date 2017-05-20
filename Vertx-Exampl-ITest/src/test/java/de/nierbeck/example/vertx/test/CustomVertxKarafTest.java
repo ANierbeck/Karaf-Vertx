@@ -99,7 +99,7 @@ public class CustomVertxKarafTest {
                                 .versionAsInProject())
                 .unpackDirectory(new File("target/paxexam/unpack/"))
                 .useDeployFolder(false)
-                /* .runEmbedded(true), //only for debugging */,
+                .runEmbedded(false), //only for debugging 
                 configureConsole().ignoreLocalConsole(), 
                 logLevel(LogLevel.INFO), keepRuntimeFolder()
             };

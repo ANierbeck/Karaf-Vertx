@@ -63,6 +63,11 @@
 			<artifactId>Vertx-Verticles</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>Vertx-Extender</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 
 		<dependency>
 			<groupId>io.vertx</groupId>
@@ -110,6 +115,12 @@
 		    <groupId>org.jetbrains.kotlin</groupId>
 		    <artifactId>kotlin-osgi-bundle</artifactId>
 		    <scope>provided</scope>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.ops4j.pax.swissbox</groupId>
+			<artifactId>pax-swissbox-extender</artifactId>
+			<scope>provided</scope>
 		</dependency>
 
 	</dependencies>

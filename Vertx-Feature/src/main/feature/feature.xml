@@ -68,7 +68,11 @@
         <feature dependency="true" version="0.1.0.SNAPSHOT">scr</feature>
         <feature dependency="true" version="0.1.0.SNAPSHOT">Vertx-Core</feature>
         <feature dependency="true" version="0.1.0.SNAPSHOT">Vertx-Web</feature>
+        <bundle dependency="true">mvn:org.ops4j.pax.swissbox/pax-swissbox-extender/${pax.swissbox.version}</bundle>
+        <bundle dependency="true">mvn:org.ops4j.pax.swissbox/pax-swissbox-lifecycle/${pax.swissbox.version}</bundle>
+        <bundle dependency="true">mvn:org.ops4j.base/ops4j-base-lang/1.5.0</bundle>
         <bundle>mvn:${project.groupId}/Vertx-System/${project.version}</bundle>
+        <bundle>mvn:${project.groupId}/Vertx-Extender/${project.version}</bundle>
         <bundle>mvn:${project.groupId}/Vertx-Shell/${project.version}</bundle>
         <bundle>mvn:${project.groupId}/Vertx-Http/${project.version}</bundle>
         <bundle>mvn:${project.groupId}/Vertx-Verticles/${project.version}</bundle>
