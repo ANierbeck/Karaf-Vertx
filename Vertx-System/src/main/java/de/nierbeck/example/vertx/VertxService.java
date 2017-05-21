@@ -18,6 +18,9 @@ package de.nierbeck.example.vertx;
 
 import static de.nierbeck.example.vertx.TcclSwitch.*;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.osgi.framework.BundleContext;
@@ -26,6 +29,8 @@ import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicy;
 
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.SharedMetricRegistries;
@@ -34,6 +39,7 @@ import io.vertx.core.Vertx;
 import io.vertx.core.VertxOptions;
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.spi.VertxMetricsFactory;
+import io.vertx.core.spi.cluster.ClusterManager;
 import io.vertx.ext.dropwizard.DropwizardMetricsOptions;
 import io.vertx.ext.dropwizard.MetricsService;
 
@@ -56,12 +62,31 @@ public class VertxService {
     
     @Reference
     private VertxMetricsFactory metrxFactory;
+    
+    @Reference(cardinality=ReferenceCardinality.OPTIONAL, policy=ReferencePolicy.DYNAMIC, bind="bindClusterManager", unbind="unbindClusterManager")
+    private volatile ClusterManager clusterManager;
+    
     private ServiceRegistration<MetricsService> metricsServiceRegistration;
+    private BundleContext bundleContext;
+    private VertxConfig cfg;
 
     @Activate
     public void start(BundleContext context, VertxConfig cfg) throws Exception {
         LOGGER.info("Creating Vert.x instance");
         
+        this.bundleContext = context;
+        this.cfg = cfg;
+        
+        createAndRegisterVertx();
+        
+    }
+
+    @Deactivate
+    public void stop(BundleContext context) {
+        deregisterVertx();
+    }
+
+    private void createAndRegisterVertx() {
         VertxOptions options = new VertxOptions().setMetricsOptions(new DropwizardMetricsOptions()
                 .setJmxEnabled(true)
                 .setJmxDomain("vertx-metrics")
@@ -83,23 +108,31 @@ public class VertxService {
                 options.setHAGroup(cfg.getHAGroup());
             }
         }
-
-        vertx = executeWithTCCLSwitch(() -> Vertx.vertx(options));
         
-        vertxRegistration = context.registerService(Vertx.class, vertx, null);
+        if (clusterManager != null) {
+            LOGGER.info("Starting vertx with cluster manager");
+            options.setClusterManager(clusterManager);
+        }
+
+        try {
+            vertx = executeWithTCCLSwitch(() -> Vertx.vertx(options));
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Error while creating vertx system", e);
+            return;
+        }
+        
+        vertxRegistration = bundleContext.registerService(Vertx.class, vertx, null);
         LOGGER.info("Vert.x service registered");
-        ebRegistration = context.registerService(EventBus.class, vertx.eventBus(), null);
+        ebRegistration = bundleContext.registerService(EventBus.class, vertx.eventBus(), null);
         LOGGER.info("Vert.x Event Bus service registered");
         registry = SharedMetricRegistries.getOrCreate("vertx-karaf-registry");
-        metricsRegistration = context.registerService(MetricRegistry.class, registry, null);
+        metricsRegistration = bundleContext.registerService(MetricRegistry.class, registry, null);
         LOGGER.info("Vert.x MetricsService service registered");
         MetricsService metricsService = MetricsService.create(vertx);
-        metricsServiceRegistration = context.registerService(MetricsService.class, metricsService, null);
-        
+        metricsServiceRegistration = bundleContext.registerService(MetricsService.class, metricsService, null);
     }
-
-    @Deactivate
-    public void stop(BundleContext context) {
+    
+    private void deregisterVertx() {
         if (metricsServiceRegistration != null) {
             metricsServiceRegistration.unregister();
             metricsServiceRegistration = null;
@@ -122,6 +155,18 @@ public class VertxService {
         if (registry != null) {
             registry = null;
         }
+    }
+    
+    public void bindClusterManager(ClusterManager clusterManager) {
+        this.clusterManager = clusterManager;
+        deregisterVertx();
+        createAndRegisterVertx();
+    }
+    
+    public void unbindClusterManager(ClusterManager clusterManager) {
+        this.clusterManager = null;
+        deregisterVertx();
+        createAndRegisterVertx();
     }
 
 }

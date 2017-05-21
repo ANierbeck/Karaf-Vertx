@@ -17,6 +17,8 @@
 
 <features name="${project.artifactId}-${project.version}" xmlns="http://karaf.apache.org/xmlns/features/v1.4.0">
 	
+	<repository>mvn:org.apache.karaf.cellar/apache-karaf-cellar/${karaf.cellar.version}/xml/features</repository>
+	
 	<feature name="Aries-SPI-Fly">
         <bundle dependency="true" start-level="30">mvn:org.ow2.asm/asm-all/5.0.2</bundle>
         <bundle dependency="true" start-level="30">mvn:org.apache.aries.spifly/org.apache.aries.spifly.dynamic.bundle/1.0.2</bundle>
@@ -61,6 +63,12 @@
 		<bundle start-level="80">mvn:io.vertx/vertx-jdbc-client/${vertx.version}</bundle>
 		<bundle start-level="80">mvn:io.vertx/vertx-sql-common/${vertx.version}</bundle>
 		<bundle start-level="80">mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.c3p0/${c3p0.version}</bundle>
+	</feature>
+	
+	<feature name="Vertx-Cluster" version="${project.version}">
+		<feature dependency="true">cellar</feature>
+		<bundle start-level="80">wrap:mvn:io.vertx/vertx-hazelcast/${vertx.version}</bundle>
+		<bundle start-level="80">mvn:${project.groupId}/Vertx-Cluster/${project.version}</bundle>
 	</feature>
 
     <feature name='${project.artifactId}' description='${project.name}' version='${project.version}'>

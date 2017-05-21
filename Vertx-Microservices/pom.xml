@@ -25,5 +25,7 @@
   	<module>Vertx-Microservices-ITest</module>
   	<module>Vertx-Microservice-MetricsDashboard</module>
   	<module>Vertx-Microservices-CookbookUI</module>
+  	<module>Vertx-Microservices-Cluster-Karaf</module>
+  	<module>Vertx-Microservices-Cluster-Docker</module>
   </modules>
 </project>

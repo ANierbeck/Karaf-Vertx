@@ -157,7 +157,7 @@
 						<feature>minimal</feature>
 						<feature>Vertx-Core</feature>
 						<feature>Vertx-JDBC</feature>
-						<feartue>Vertx-Microservices-Features</feartue>
+						<feature>Vertx-Microservices-Features</feature>
 					</bootFeatures>
 				</configuration>
 			</plugin>
