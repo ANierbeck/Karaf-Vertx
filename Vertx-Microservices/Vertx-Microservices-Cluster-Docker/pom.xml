@@ -51,9 +51,9 @@
 									<basedir>/opt/karaf</basedir>
 									<descriptor>assembly.xml</descriptor>
 								</assembly>
-								<cmd>
-									<shell>/opt/karaf/apache-karaf/bin/karaf</shell>
-								</cmd>
+								<entryPoint>
+									<shell>/opt/karaf/entrypoint.sh</shell>
+								</entryPoint>
 							</build>
 							<run>
 								<ports>
