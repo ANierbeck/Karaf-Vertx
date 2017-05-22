@@ -43,38 +43,23 @@
 								<from>jeanblanchard/java:jdk-8</from>
 								<ports>
 									<port>1099</port>
-									<port>5005</port>
 									<port>8101</port>
-									<port>8181</port>
+									<port>8080</port>
 									<port>44444</port>
 								</ports>
-								<volumes>
-									<volume>/opt/karaf/maven-repo</volume>
-									<volume>/opt/karaf/karaf-data</volume>
-								</volumes>
 								<assembly>
 									<basedir>/opt/karaf</basedir>
 									<descriptor>assembly.xml</descriptor>
 								</assembly>
-								<env>
-									<KARAF_DATA>/opt/karaf/karaf-data/</KARAF_DATA>
-								</env>
 								<cmd>
-									<shell>/opt/karaf/apache-karaf/bin/karaf debug</shell>
+									<shell>/opt/karaf/apache-karaf/bin/karaf</shell>
 								</cmd>
 							</build>
 							<run>
-								<volumes>
-									<bind>
-										<volumne>${user.home}/.m2/repository:/opt/karaf/maven-repo</volumne>
-									</bind>
-								</volumes>
-								<user>root</user>
 								<ports>
 									<port>1099:1099</port>
-									<port>5005:5005</port>
 									<port>8101:8101</port>
-									<port>8181:8181</port>
+									<port>8080:8080</port>
 									<port>44444:44444</port>
 								</ports>
 							</run>
