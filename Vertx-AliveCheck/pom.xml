@@ -11,11 +11,11 @@
 
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<groupId>de.nierbeck.example.vertx.mircoservices</groupId>
-		<artifactId>Vertx-Microservices</artifactId>
+		<groupId>de.nierbeck.example.vertx</groupId>
+		<artifactId>vertx-parent</artifactId>
 		<version>0.1.0-SNAPSHOT</version>
 	</parent>
-	<artifactId>Vertx-Microservices-Bookservice</artifactId>
+	<artifactId>Vertx-AliveCheck</artifactId>
 	<packaging>bundle</packaging>
 
 	<dependencies>
@@ -31,28 +31,35 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
+			<groupId>io.vertx</groupId>
+			<artifactId>vertx-health-check</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>io.vertx</groupId>
+			<artifactId>vertx-dropwizard-metrics</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
 			<groupId>org.osgi</groupId>
 			<artifactId>osgi.cmpn</artifactId>
 			<scope>provided</scope>
 		</dependency>
-
 		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>Vertx-Microservices-Entity</artifactId>
+			<groupId>org.osgi</groupId>
+			<artifactId>osgi.core</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>de.nierbeck.example.vertx</groupId>
+			<artifactId>Vertx-System</artifactId>
 			<version>${project.version}</version>
 			<scope>provided</scope>
 		</dependency>
-
 		<dependency>
 			<groupId>de.nierbeck.example.vertx</groupId>
 			<artifactId>Vertx-Http</artifactId>
 			<version>${project.version}</version>
-			<scope>provided</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>org.osgi</groupId>
-			<artifactId>osgi.core</artifactId>
 			<scope>provided</scope>
 		</dependency>
 
@@ -66,6 +73,11 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>io.rest-assured</groupId>
+			<artifactId>rest-assured</artifactId>
+			<version>3.0.3</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>

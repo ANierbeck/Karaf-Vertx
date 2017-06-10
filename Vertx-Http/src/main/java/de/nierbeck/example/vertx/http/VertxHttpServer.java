@@ -91,7 +91,10 @@ public class VertxHttpServer extends AbstractVerticle {
     synchronized private void update() {
         if (routes.isEmpty() || router == null)
             return;
-        routes.entrySet().forEach(entry -> router.mountSubRouter(entry.getKey(), entry.getValue().getRoute()));
+        routes.entrySet().forEach(entry -> {
+            LOGGER.info("adding routes for subroute: " + entry.getKey());
+            router.mountSubRouter(entry.getKey(), entry.getValue().getRoute());
+        });
     }
 
     @Reference(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC, unbind = "removeRoute")

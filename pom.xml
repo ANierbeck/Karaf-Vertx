@@ -32,15 +32,16 @@
 		<module>Vertx-Extender</module>
 		<module>Vertx-Extended-Verticles</module>
 		<module>Vertx-Cluster</module>
+		<module>Vertx-AliveCheck</module>
 	</modules>
 
 	<properties>
-		<vertx.version>3.4.1</vertx.version>
+		<vertx.version>3.4.2-SNAPSHOT</vertx.version>
 		<karaf.version>4.1.1</karaf.version>
 		<karaf.cellar.version>4.1.0</karaf.cellar.version>
 		<maven-bundle-plugin.version>3.0.1</maven-bundle-plugin.version>
 		<osgi.version>6.0.0</osgi.version>
-		<netty.version>4.1.5.Final</netty.version>
+		<netty.version>4.1.8.Final</netty.version>
 		<kotlin.version>1.0.5-2</kotlin.version>
 		<pax.exam.version>4.11.0</pax.exam.version>
 		<pax.url.version>2.1.0</pax.url.version>
@@ -136,6 +137,13 @@
 				<groupId>com.hazelcast</groupId>
 				<artifactId>hazelcast-all</artifactId>
 				<version>${hazelcast.version}</version>
+			</dependency>
+			
+			<dependency>
+				<groupId>junit</groupId>
+				<artifactId>junit</artifactId>
+				<version>${junit.version}</version>
+				<scope>test</scope>
 			</dependency>
 				
 		</dependencies>

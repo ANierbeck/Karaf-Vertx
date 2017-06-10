@@ -72,6 +72,12 @@
 		<bundle start-level="80">mvn:${project.groupId}/Vertx-Cluster/${project.version}</bundle>
 	</feature>
 
+	<feature name="Vertx-AliveCheck" version="${project.version}">
+		<bundle>mvn:io.vertx/vertx-health-check/${vertx.version}</bundle>
+		<bundle>mvn:io.vertx/vertx-codegen/${vertx.version}</bundle>
+        <bundle>mvn:${project.groupId}/Vertx-AliveCheck/${project.version}</bundle>
+	</feature>
+
     <feature name='${project.artifactId}' description='${project.name}' version='${project.version}'>
         <details>${project.description}</details>
         <feature dependency="true" version="0.1.0.SNAPSHOT">scr</feature>

@@ -165,6 +165,7 @@
 						<feature>Vertx-JDBC</feature>
 						<feature>Vertx-Microservices-Features</feature>
 						<feature>Vertx-Cluster</feature>
+						<feature>Vertx-AliveCheck</feature>
 					</bootFeatures>
 				</configuration>
 			</plugin>

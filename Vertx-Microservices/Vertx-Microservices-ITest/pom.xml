@@ -23,6 +23,16 @@
 			<version>${project.version}</version>
 			<scope>provided</scope>
 		</dependency>
+		
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>Vertx-Microservices-Features</artifactId>
+			<version>${project.version}</version>
+			<type>xml</type>
+			<classifier>features</classifier>
+			<scope>test</scope>
+		</dependency>
+		
 
 		<dependency>
 			<groupId>de.nierbeck.example.vertx</groupId>
@@ -35,6 +45,12 @@
 			<groupId>io.vertx</groupId>
 			<artifactId>vertx-core</artifactId>
 			<scope>provided</scope>
+		</dependency>
+		
+		<dependency>
+			<groupId>io.vertx</groupId>
+			<artifactId>vertx-unit</artifactId>
+			<scope>test</scope>
 		</dependency>
 
 		<dependency>

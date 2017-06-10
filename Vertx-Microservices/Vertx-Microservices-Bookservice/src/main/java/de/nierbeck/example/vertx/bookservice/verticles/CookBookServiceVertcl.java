@@ -47,11 +47,8 @@ public class CookBookServiceVertcl extends AbstractVerticle {
 
     private final static Logger LOGGER = Logger.getLogger(CookBookServiceVertcl.class.getName());
 
-    @Reference
     private EventBus eventBus;
 
-    private Router router;
-    
     private BundleContext bc;
 
     private ServiceRegistration<Route> serviceRegistration;
@@ -76,8 +73,12 @@ public class CookBookServiceVertcl extends AbstractVerticle {
 
     @Override
     public void start() throws Exception {
+        completeStartup(startWebRoutes());
+    }
+    
+    protected Router startWebRoutes() {
         LOGGER.info("starting rest router");
-        router = Router.router(getVertx());
+        Router router = Router.router(getVertx());
 
         router.route("/*").handler(BodyHandler.create());
         router.get("/").handler(this::handleListBooks);
@@ -89,6 +90,10 @@ public class CookBookServiceVertcl extends AbstractVerticle {
         router.put("/:book_id/recipe/:id").handler(this::updateRecipe);
         router.delete("/:book_id/recipe/:id").handler(this::deleteRecipe);
         
+        return router;
+    }
+    
+    private void completeStartup(Router router) {
         Route route = new Route() {
             @Override
             public Router getRoute() {
@@ -231,4 +236,14 @@ public class CookBookServiceVertcl extends AbstractVerticle {
 
         });
     }
+    
+    @Reference(unbind="unbindEventBus")
+    public void bindEventBus(EventBus eventBus) {
+        this.eventBus = eventBus;
+    }
+    
+    private void unbindEventBus(EventBus eventBus) {
+        this.eventBus = null;
+    }
+    
 }
