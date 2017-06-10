@@ -68,7 +68,7 @@
 	<feature name="Vertx-Cluster" version="${project.version}">
 		<feature dependency="true">cellar</feature>
 		<feature dependency="true">cellar-shell</feature>
-		<bundle start-level="80">wrap:mvn:io.vertx/vertx-hazelcast/${vertx.version}</bundle>
+		<bundle start-level="80">mvn:io.vertx/vertx-hazelcast/${vertx.version}</bundle>
 		<bundle start-level="80">mvn:${project.groupId}/Vertx-Cluster/${project.version}</bundle>
 	</feature>
 

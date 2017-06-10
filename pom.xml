@@ -33,6 +33,7 @@
 		<module>Vertx-Extended-Verticles</module>
 		<module>Vertx-Cluster</module>
 		<module>Vertx-AliveCheck</module>
+		<module>Vertx-Karaf-Cluster</module>
 	</modules>
 
 	<properties>
