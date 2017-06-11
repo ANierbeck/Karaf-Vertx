@@ -1,0 +1,73 @@
+#   Copyright 2016 Achim Nierbeck
+#
+#   Licensed under the Apache License, Version 2.0 (the "License");
+#   you may not use this file except in compliance with the License.
+#   You may obtain a copy of the License at
+#
+#       http://www.apache.org/licenses/LICENSE-2.0
+#
+#   Unless required by applicable law or agreed to in writing, software
+#   distributed under the License is distributed on an "AS IS" BASIS,
+#   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#   See the License for the specific language governing permissions and
+#   limitations under the License.
+version: '3'
+services:
+
+   db:
+     image: postgres:9.6.1
+     ports:
+      # We'll bind our host's port 5432 to postgres's port 5432, so we can use
+      # our database IDEs with it:
+      - 5432:5432
+     environment:
+      POSTGRES_PASSWORD: simple
+
+   node1:
+     image: anierbeck/karaf-vertx-cluster-docker:0.1
+     depends_on:
+       - db
+     links:
+       - db
+     ports:
+       - 18101:8101
+     expose:
+       - "8080"
+
+   node2:
+     image: anierbeck/karaf-vertx-cluster-docker:0.1
+     depends_on:
+       - db
+     links:
+       - db
+     ports:
+       - 28101:8101
+     expose:
+       - "8080"
+
+   node3:
+     image: anierbeck/karaf-vertx-cluster-docker:0.1
+     depends_on:
+       - db
+     links:
+       - db
+     ports:
+       - 38101:8101
+     expose:
+       - "8080"
+
+   haproxy:
+     image: haproxy
+     volumes:
+       - ./haproxy:/usr/local/etc/haproxy:ro
+     links:
+       - node1
+       - node2
+       - node3
+     depends_on:
+       - node1
+       - node2
+       - node3
+     ports:
+       - "80:80"
+       - "70:70"
