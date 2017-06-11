@@ -34,7 +34,6 @@
 		<module>Vertx-Cluster</module>
 		<module>Vertx-AliveCheck</module>
 		<module>Vertx-Karaf-Cluster</module>
-		<module>Vertx-Karaf-Cluster-Docker</module>
 	</modules>
 
 	<properties>
