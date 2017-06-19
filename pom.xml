@@ -34,10 +34,11 @@
 		<module>Vertx-Cluster</module>
 		<module>Vertx-AliveCheck</module>
 		<module>Vertx-Karaf-Cluster</module>
+		<module>Vertx-Management-Console</module>
 	</modules>
 
 	<properties>
-		<vertx.version>3.4.2-SNAPSHOT</vertx.version>
+		<vertx.version>3.4.2</vertx.version>
 		<karaf.version>4.1.1</karaf.version>
 		<karaf.cellar.version>4.1.0</karaf.cellar.version>
 		<maven-bundle-plugin.version>3.0.1</maven-bundle-plugin.version>
