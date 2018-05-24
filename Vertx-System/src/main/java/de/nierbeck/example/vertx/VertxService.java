@@ -16,25 +16,8 @@
  */
 package de.nierbeck.example.vertx;
 
-import static de.nierbeck.example.vertx.TcclSwitch.*;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import org.osgi.framework.BundleContext;
-import org.osgi.framework.ServiceRegistration;
-import org.osgi.service.component.annotations.Activate;
-import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Deactivate;
-import org.osgi.service.component.annotations.Reference;
-import org.osgi.service.component.annotations.ReferenceCardinality;
-import org.osgi.service.component.annotations.ReferencePolicy;
-
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.SharedMetricRegistries;
-
 import io.vertx.core.Vertx;
 import io.vertx.core.VertxOptions;
 import io.vertx.core.eventbus.EventBus;
@@ -42,6 +25,14 @@ import io.vertx.core.spi.VertxMetricsFactory;
 import io.vertx.core.spi.cluster.ClusterManager;
 import io.vertx.ext.dropwizard.DropwizardMetricsOptions;
 import io.vertx.ext.dropwizard.MetricsService;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceRegistration;
+import org.osgi.service.component.annotations.*;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import static de.nierbeck.example.vertx.TcclSwitch.executeWithTCCLSwitch;
 
 @interface VertxConfig {
     int getWorkerPoolSize();
@@ -71,7 +62,7 @@ public class VertxService {
     private VertxConfig cfg;
 
     @Activate
-    public void start(BundleContext context, VertxConfig cfg) throws Exception {
+    public void start(BundleContext context, VertxConfig cfg) {
         LOGGER.info("Creating Vert.x instance");
         
         this.bundleContext = context;

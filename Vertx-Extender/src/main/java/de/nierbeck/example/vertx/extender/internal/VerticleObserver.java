@@ -15,14 +15,8 @@
 */
 package de.nierbeck.example.vertx.extender.internal;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
-
+import io.vertx.core.Verticle;
 import org.ops4j.lang.NullArgumentException;
-import org.ops4j.pax.swissbox.core.BundleClassLoader;
 import org.ops4j.pax.swissbox.extender.BundleManifestScanner;
 import org.ops4j.pax.swissbox.extender.ManifestEntry;
 import org.ops4j.pax.swissbox.extender.ManifestFilter;
@@ -33,7 +27,10 @@ import org.osgi.framework.wiring.BundleWiring;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.vertx.core.Verticle;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class VerticleObserver {
 

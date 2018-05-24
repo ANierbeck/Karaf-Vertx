@@ -15,22 +15,11 @@
 */
 package de.nierbeck.example.vertx.microservices.test;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
-import static org.ops4j.pax.exam.CoreOptions.maven;
-import static org.ops4j.pax.exam.CoreOptions.mavenBundle;
-import static org.ops4j.pax.exam.karaf.options.KarafDistributionOption.configureConsole;
-import static org.ops4j.pax.exam.karaf.options.KarafDistributionOption.features;
-import static org.ops4j.pax.exam.karaf.options.KarafDistributionOption.karafDistributionConfiguration;
-import static org.ops4j.pax.exam.karaf.options.KarafDistributionOption.keepRuntimeFolder;
-import static org.ops4j.pax.exam.karaf.options.KarafDistributionOption.logLevel;
-
-import java.io.File;
-
-import javax.inject.Inject;
-
+import io.vertx.core.Vertx;
+import io.vertx.core.eventbus.EventBus;
+import io.vertx.ext.unit.Async;
+import io.vertx.ext.unit.TestContext;
+import io.vertx.ext.unit.junit.VertxUnitRunner;
 import org.apache.karaf.features.BootFinished;
 import org.apache.karaf.features.FeaturesService;
 import org.junit.BeforeClass;
@@ -38,7 +27,6 @@ import org.junit.Test;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
 import org.junit.runner.RunWith;
-import org.junit.runner.notification.RunNotifier;
 import org.ops4j.pax.exam.Configuration;
 import org.ops4j.pax.exam.Option;
 import org.ops4j.pax.exam.junit.PaxExam;
@@ -46,11 +34,16 @@ import org.ops4j.pax.exam.karaf.options.LogLevelOption.LogLevel;
 import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
 import org.ops4j.pax.exam.spi.reactors.PerClass;
 
-import io.vertx.core.Vertx;
-import io.vertx.core.eventbus.EventBus;
-import io.vertx.ext.unit.Async;
-import io.vertx.ext.unit.TestContext;
-import io.vertx.ext.unit.junit.VertxUnitRunner;
+import javax.inject.Inject;
+import java.io.File;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
+import static org.ops4j.pax.exam.CoreOptions.maven;
+import static org.ops4j.pax.exam.CoreOptions.mavenBundle;
+import static org.ops4j.pax.exam.karaf.options.KarafDistributionOption.*;
 
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerClass.class)
@@ -73,7 +66,7 @@ public class AliveCheckInternalTest {
     BootFinished bootFinished;
 
     @Configuration
-    public Option[] configuration() throws Exception {
+    public Option[] configuration() {
         return new Option[] { karafDistributionConfiguration()
                 .frameworkUrl(
                             maven()
@@ -97,7 +90,7 @@ public class AliveCheckInternalTest {
 
 
     @Test
-    public void subRunner() throws Exception {
+    public void subRunner() {
         System.out.println("Calling sub-runner!!");
         Result result = JUnitCore.runClasses(SubTestWithRunner.class);
 //        assertThat(result.wasSuccessful(), is(true));
@@ -113,7 +106,7 @@ public class AliveCheckInternalTest {
     }
     
     @Test 
-    public void checkVertxNotNull() throws Exception {
+    public void checkVertxNotNull() {
         assertThat(vertxService, notNullValue());
     }
     
@@ -121,12 +114,12 @@ public class AliveCheckInternalTest {
     public static class SubTestWithRunner {
         
         @BeforeClass
-        public static void init() throws Exception {
+        public static void init() {
             System.out.println("Before test");
         }
         
         @Test
-        public void checkAliveCheckNavigable(TestContext context) throws Exception {
+        public void checkAliveCheckNavigable(TestContext context) {
             System.out.println("testing");
             Async async = context.async();
             System.out.println("vertxService: "+vertxService);

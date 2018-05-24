@@ -15,30 +15,10 @@
 */
 package de.nierbeck.example.vertx.test;
 
-import static org.junit.Assert.assertTrue;
-import static org.ops4j.pax.exam.CoreOptions.maven;
-import static org.ops4j.pax.exam.karaf.options.KarafDistributionOption.configureConsole;
-import static org.ops4j.pax.exam.karaf.options.KarafDistributionOption.karafDistributionConfiguration;
-import static org.ops4j.pax.exam.karaf.options.KarafDistributionOption.keepRuntimeFolder;
-import static org.ops4j.pax.exam.karaf.options.KarafDistributionOption.logLevel;
-
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.PrintStream;
-import java.util.Collection;
-import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.stream.Collectors;
-
-import javax.inject.Inject;
-
+import io.vertx.core.Verticle;
+import io.vertx.core.Vertx;
 import org.apache.karaf.features.BootFinished;
 import org.apache.karaf.features.FeaturesService;
-import org.apache.karaf.shell.api.console.Session;
-import org.apache.karaf.shell.api.console.SessionFactory;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.ops4j.pax.exam.Configuration;
@@ -53,8 +33,15 @@ import org.osgi.framework.ServiceReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.vertx.core.Verticle;
-import io.vertx.core.Vertx;
+import javax.inject.Inject;
+import java.io.File;
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static org.junit.Assert.assertTrue;
+import static org.ops4j.pax.exam.CoreOptions.maven;
+import static org.ops4j.pax.exam.karaf.options.KarafDistributionOption.*;
 
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerClass.class)
@@ -80,7 +67,7 @@ public class VertxExtenderKarafTest {
 
     @Configuration
     // @formatter:off
-    public static Option[] configuration() throws Exception {
+    public static Option[] configuration() {
         return new Option[] {
                 karafDistributionConfiguration()
                         .frameworkUrl(
