@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="Vertx-AliveCheck" />
+        <module name="Vertx-Cluster" />
+        <module name="Vertx-Exampl-ITest" />
+        <module name="Vertx-Extended-Verticles" />
+        <module name="Vertx-Extender" />
+        <module name="Vertx-Feature" />
+        <module name="Vertx-Http" />
+        <module name="Vertx-Karaf" />
+        <module name="Vertx-Karaf-Cluster" />
+        <module name="Vertx-Karaf-Cluster-Docker" />
+        <module name="Vertx-Microservice-MetricsDashboard" />
+        <module name="Vertx-Microservices-Bookservice" />
+        <module name="Vertx-Microservices-Cluster-Docker" />
+        <module name="Vertx-Microservices-Cluster-Karaf" />
+        <module name="Vertx-Microservices-CookbookUI" />
+        <module name="Vertx-Microservices-Entity" />
+        <module name="Vertx-Microservices-Features" />
+        <module name="Vertx-Microservices-ITest" />
+        <module name="Vertx-Microservices-JDBC" />
+        <module name="Vertx-Microservices-Karaf" />
+        <module name="Vertx-Shell" />
+        <module name="Vertx-System" />
+        <module name="Vertx-Verticles" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="Vertx-AliveCheck" target="1.8" />
+      <module name="Vertx-Cluster" target="1.8" />
+      <module name="Vertx-Exampl-ITest" target="1.8" />
+      <module name="Vertx-Extended-Verticles" target="1.8" />
+      <module name="Vertx-Extender" target="1.8" />
+      <module name="Vertx-Feature" target="1.8" />
+      <module name="Vertx-Http" target="1.8" />
+      <module name="Vertx-Karaf" target="1.8" />
+      <module name="Vertx-Karaf-Cluster" target="1.8" />
+      <module name="Vertx-Karaf-Cluster-Docker" target="1.8" />
+      <module name="Vertx-Microservice-MetricsDashboard" target="1.8" />
+      <module name="Vertx-Microservices" target="1.8" />
+      <module name="Vertx-Microservices-Bookservice" target="1.8" />
+      <module name="Vertx-Microservices-Cluster-Docker" target="1.8" />
+      <module name="Vertx-Microservices-Cluster-Karaf" target="1.8" />
+      <module name="Vertx-Microservices-CookbookUI" target="1.8" />
+      <module name="Vertx-Microservices-Entity" target="1.8" />
+      <module name="Vertx-Microservices-Features" target="1.8" />
+      <module name="Vertx-Microservices-ITest" target="1.8" />
+      <module name="Vertx-Microservices-JDBC" target="1.8" />
+      <module name="Vertx-Microservices-Karaf" target="1.8" />
+      <module name="vertx-parent" target="1.8" />
+      <module name="Vertx-Shell" target="1.8" />
+      <module name="Vertx-System" target="1.8" />
+      <module name="Vertx-Verticles" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+</project>
