@@ -42,7 +42,7 @@
 		<vertx.version>3.5.1</vertx.version>
 		<netty.version>4.1.19.Final</netty.version>
 
-		<karaf.version>4.1.1</karaf.version>
+		<karaf.version>4.1.5</karaf.version>
 		<karaf.cellar.version>4.1.0</karaf.cellar.version>
 		<maven-bundle-plugin.version>3.0.1</maven-bundle-plugin.version>
 		<osgi.version>6.0.0</osgi.version>
