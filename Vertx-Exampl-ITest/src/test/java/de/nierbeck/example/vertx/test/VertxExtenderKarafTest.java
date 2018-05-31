@@ -89,7 +89,7 @@ public class VertxExtenderKarafTest {
     @Test
     public void installExtendedBundle() throws Exception {
         logger.info("testing extender ... ");
-        String bundlePath = "mvn:de.nierbeck.example.vertx/Vertx-Extended-Verticles/0.1.0-SNAPSHOT";
+        String bundlePath = "mvn:de.nierbeck.example.vertx/Vertx-Extended-Verticles/0.2.0-SNAPSHOT";
         logger.info("installing bundle with url: {}", bundlePath);
         Bundle bundle = bc.installBundle(bundlePath);
         bundle.start();
