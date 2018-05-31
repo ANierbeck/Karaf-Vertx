@@ -21,7 +21,7 @@
 	<description>A Docker image for the customized Vertx Karaf Cluster </description>
 	
 	<properties>
-		<karaf.docker.version>0.1</karaf.docker.version>
+		<karaf.docker.version>0.2</karaf.docker.version>
 	</properties>
 
 	<dependencies>
@@ -38,7 +38,7 @@
 			<plugin>
 				<groupId>io.fabric8</groupId>
 				<artifactId>docker-maven-plugin</artifactId>
-				<version>0.21.0</version>
+				<version>0.26.0</version>
 				<configuration>
 					<images>
 						<image>
