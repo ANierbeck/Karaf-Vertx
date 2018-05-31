@@ -29,7 +29,7 @@
 		<feature dependency="true">Aries-SPI-Fly</feature>
 		<bundle start-level="80">mvn:io.vertx/vertx-core/${vertx.version}</bundle>
         <bundle start-level="80">mvn:io.vertx/vertx-dropwizard-metrics/${vertx.version}</bundle>
-        <bundle start-level="80">mvn:io.dropwizard.metrics/metrics-core/3.1.2</bundle>
+        <bundle start-level="80">mvn:io.dropwizard.metrics/metrics-core/${dropwizard.version}</bundle>
         <bundle start-level="80">mvn:io.netty/netty-buffer/${netty.version}</bundle>
         <bundle start-level="80">mvn:io.netty/netty-handler-proxy/${netty.version}</bundle>
         <bundle start-level="80">mvn:io.netty/netty-codec-socks/${netty.version}</bundle>
@@ -37,9 +37,12 @@
         <bundle start-level="80">mvn:io.netty/netty-resolver/${netty.version}</bundle>
         <bundle start-level="80">mvn:io.netty/netty-resolver-dns/${netty.version}</bundle>
         <bundle start-level="80">mvn:io.netty/netty-codec-dns/${netty.version}</bundle>
-        <bundle start-level="80">mvn:com.fasterxml.jackson.core/jackson-core/2.7.4</bundle>
-        <bundle start-level="80">mvn:com.fasterxml.jackson.core/jackson-databind/2.7.4</bundle>
-        <bundle start-level="80">mvn:com.fasterxml.jackson.core/jackson-annotations/2.7.0</bundle>
+        <bundle start-level="80">mvn:com.fasterxml.jackson.core/jackson-core/${jackson.version}</bundle>
+        <bundle start-level="80">mvn:com.fasterxml.jackson.core/jackson-databind/${jackson.version}</bundle>
+        <bundle start-level="80">mvn:com.fasterxml.jackson.core/jackson-annotations/${jackson.version}</bundle>
+        <bundle start-level="80">mvn:io.vertx/vertx-rx-java2/${vertx.version}</bundle>
+        <bundle start-level="80">mvn:io.reactivex.rxjava2/rxjava/2.1.9</bundle>
+        <bundle start-level="80">mvn:org.reactivestreams/reactive-streams/1.0.2</bundle>
         <bundle start-level="80">mvn:org.jetbrains.kotlin/kotlin-osgi-bundle/${kotlin.version}</bundle>
        <capability>
        	osgi.service;objectClass=io.vertx.core.Vertx,
@@ -52,6 +55,8 @@
 	<feature name="Vertx-Web" version="${project.version}">
 		<bundle start-level="80">mvn:io.vertx/vertx-web/${vertx.version}</bundle>
         <bundle start-level="80">mvn:io.vertx/vertx-auth-common/${vertx.version}</bundle>
+        <bundle start-level="80">mvn:io.vertx/vertx-jwt/${vertx.version}</bundle>
+        <bundle start-level="80">mvn:io.vertx/vertx-bridge-common/${vertx.version}</bundle>
         <bundle start-level="80">mvn:io.netty/netty-transport/${netty.version}</bundle>
         <bundle start-level="80">mvn:io.netty/netty-handler/${netty.version}</bundle>
         <bundle start-level="80">mvn:io.netty/netty-codec/${netty.version}</bundle>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/Vertx-AliveCheck/Vertx-AliveCheck.iml" filepath="$PROJECT_DIR$/Vertx-AliveCheck/Vertx-AliveCheck.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Vertx-Cluster/Vertx-Cluster.iml" filepath="$PROJECT_DIR$/Vertx-Cluster/Vertx-Cluster.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Vertx-Exampl-ITest/Vertx-Exampl-ITest.iml" filepath="$PROJECT_DIR$/Vertx-Exampl-ITest/Vertx-Exampl-ITest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Vertx-Extended-Verticles/Vertx-Extended-Verticles.iml" filepath="$PROJECT_DIR$/Vertx-Extended-Verticles/Vertx-Extended-Verticles.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Vertx-Extender/Vertx-Extender.iml" filepath="$PROJECT_DIR$/Vertx-Extender/Vertx-Extender.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Vertx-Feature/Vertx-Feature.iml" filepath="$PROJECT_DIR$/Vertx-Feature/Vertx-Feature.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Vertx-Http/Vertx-Http.iml" filepath="$PROJECT_DIR$/Vertx-Http/Vertx-Http.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Vertx-Karaf/Vertx-Karaf.iml" filepath="$PROJECT_DIR$/Vertx-Karaf/Vertx-Karaf.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Vertx-Karaf-Cluster/Vertx-Karaf-Cluster.iml" filepath="$PROJECT_DIR$/Vertx-Karaf-Cluster/Vertx-Karaf-Cluster.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Vertx-Karaf-Cluster-Docker/Vertx-Karaf-Cluster-Docker.iml" filepath="$PROJECT_DIR$/Vertx-Karaf-Cluster-Docker/Vertx-Karaf-Cluster-Docker.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Vertx-Microservices/Vertx-Microservice-MetricsDashboard/Vertx-Microservice-MetricsDashboard.iml" filepath="$PROJECT_DIR$/Vertx-Microservices/Vertx-Microservice-MetricsDashboard/Vertx-Microservice-MetricsDashboard.iml" group="Vertx-Microservices and modules" />
+      <module fileurl="file://$PROJECT_DIR$/Vertx-Microservices/Vertx-Microservices.iml" filepath="$PROJECT_DIR$/Vertx-Microservices/Vertx-Microservices.iml" group="Vertx-Microservices and modules" />
+      <module fileurl="file://$PROJECT_DIR$/Vertx-Microservices/Vertx-Microservices-Bookservice/Vertx-Microservices-Bookservice.iml" filepath="$PROJECT_DIR$/Vertx-Microservices/Vertx-Microservices-Bookservice/Vertx-Microservices-Bookservice.iml" group="Vertx-Microservices and modules" />
+      <module fileurl="file://$PROJECT_DIR$/Vertx-Microservices/Vertx-Microservices-Cluster-Docker/Vertx-Microservices-Cluster-Docker.iml" filepath="$PROJECT_DIR$/Vertx-Microservices/Vertx-Microservices-Cluster-Docker/Vertx-Microservices-Cluster-Docker.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Vertx-Microservices/Vertx-Microservices-Cluster-Karaf/Vertx-Microservices-Cluster-Karaf.iml" filepath="$PROJECT_DIR$/Vertx-Microservices/Vertx-Microservices-Cluster-Karaf/Vertx-Microservices-Cluster-Karaf.iml" group="Vertx-Microservices and modules" />
+      <module fileurl="file://$PROJECT_DIR$/Vertx-Microservices/Vertx-Microservices-CookbookUI/Vertx-Microservices-CookbookUI.iml" filepath="$PROJECT_DIR$/Vertx-Microservices/Vertx-Microservices-CookbookUI/Vertx-Microservices-CookbookUI.iml" group="Vertx-Microservices and modules" />
+      <module fileurl="file://$PROJECT_DIR$/Vertx-Microservices/Vertx-Microservices-Entity/Vertx-Microservices-Entity.iml" filepath="$PROJECT_DIR$/Vertx-Microservices/Vertx-Microservices-Entity/Vertx-Microservices-Entity.iml" group="Vertx-Microservices and modules" />
+      <module fileurl="file://$PROJECT_DIR$/Vertx-Microservices/Vertx-Microservices-Features/Vertx-Microservices-Features.iml" filepath="$PROJECT_DIR$/Vertx-Microservices/Vertx-Microservices-Features/Vertx-Microservices-Features.iml" group="Vertx-Microservices and modules" />
+      <module fileurl="file://$PROJECT_DIR$/Vertx-Microservices/Vertx-Microservices-ITest/Vertx-Microservices-ITest.iml" filepath="$PROJECT_DIR$/Vertx-Microservices/Vertx-Microservices-ITest/Vertx-Microservices-ITest.iml" group="Vertx-Microservices and modules" />
+      <module fileurl="file://$PROJECT_DIR$/Vertx-Microservices/Vertx-Microservices-JDBC/Vertx-Microservices-JDBC.iml" filepath="$PROJECT_DIR$/Vertx-Microservices/Vertx-Microservices-JDBC/Vertx-Microservices-JDBC.iml" group="Vertx-Microservices and modules" />
+      <module fileurl="file://$PROJECT_DIR$/Vertx-Microservices/Vertx-Microservices-Karaf/Vertx-Microservices-Karaf.iml" filepath="$PROJECT_DIR$/Vertx-Microservices/Vertx-Microservices-Karaf/Vertx-Microservices-Karaf.iml" group="Vertx-Microservices and modules" />
+      <module fileurl="file://$PROJECT_DIR$/Vertx-Shell/Vertx-Shell.iml" filepath="$PROJECT_DIR$/Vertx-Shell/Vertx-Shell.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Vertx-System/Vertx-System.iml" filepath="$PROJECT_DIR$/Vertx-System/Vertx-System.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Vertx-Verticles/Vertx-Verticles.iml" filepath="$PROJECT_DIR$/Vertx-Verticles/Vertx-Verticles.iml" />
+      <module fileurl="file://$PROJECT_DIR$/vertx-parent.iml" filepath="$PROJECT_DIR$/vertx-parent.iml" />
+    </modules>
+  </component>
+</project>

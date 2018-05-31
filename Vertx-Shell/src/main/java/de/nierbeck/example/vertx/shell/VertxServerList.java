@@ -16,25 +16,23 @@
  */
 package de.nierbeck.example.vertx.shell;
 
-import java.util.Map;
-import java.util.Map.Entry;
-
+import io.vertx.core.http.impl.HttpServerImpl;
+import io.vertx.core.impl.VertxInternal;
+import io.vertx.core.net.impl.NetServerImpl;
+import io.vertx.core.net.impl.ServerID;
 import org.apache.karaf.shell.api.action.Command;
 import org.apache.karaf.shell.api.action.lifecycle.Service;
 import org.apache.karaf.shell.support.table.ShellTable;
 
-import io.vertx.core.http.impl.HttpServerImpl;
-import io.vertx.core.impl.VertxInternal;
-import io.vertx.core.net.impl.NetServerBase;
-import io.vertx.core.net.impl.NetServerImpl;
-import io.vertx.core.net.impl.ServerID;
+import java.util.Map;
+import java.util.Map.Entry;
 
 @Command(scope = "vertx", name = "netlist", description = "Lists all running Servers")
 @Service
 public class VertxServerList extends AbstractVertxCommand {
 
     @Override
-    public Object execute() throws Exception {
+    public Object execute() {
 
         ShellTable table = new ShellTable();
 
@@ -44,7 +42,7 @@ public class VertxServerList extends AbstractVertxCommand {
         table.column("Port");
         
         VertxInternal vertx = (VertxInternal) getVertxService();
-        for (Entry<ServerID, NetServerBase> server : vertx.sharedNetServers().entrySet()) {
+        for (Entry<ServerID, NetServerImpl> server : vertx.sharedNetServers().entrySet()) {
             table.addRow().addContent("", "X", server.getKey().host, server.getKey().port);
         }
         for (Map.Entry<ServerID, HttpServerImpl> server : vertx.sharedHttpServers().entrySet()) {
