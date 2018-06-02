@@ -34,7 +34,7 @@
 		<module>Vertx-Cluster</module>
 		<module>Vertx-AliveCheck</module>
 		<module>Vertx-Karaf-Cluster</module>
-		<!-- module>Vertx-Management-Console</module-->
+		<module>Vertx-Management-Console</module>
 	</modules>
 
 	<properties>

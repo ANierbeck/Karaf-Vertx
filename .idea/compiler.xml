@@ -16,6 +16,7 @@
         <module name="Vertx-Karaf" />
         <module name="Vertx-Karaf-Cluster" />
         <module name="Vertx-Karaf-Cluster-Docker" />
+        <module name="Vertx-Management-Console" />
         <module name="Vertx-Microservice-MetricsDashboard" />
         <module name="Vertx-Microservices-Bookservice" />
         <module name="Vertx-Microservices-Cluster-Docker" />
@@ -42,6 +43,7 @@
       <module name="Vertx-Karaf" target="1.8" />
       <module name="Vertx-Karaf-Cluster" target="1.8" />
       <module name="Vertx-Karaf-Cluster-Docker" target="1.8" />
+      <module name="Vertx-Management-Console" target="1.8" />
       <module name="Vertx-Microservice-MetricsDashboard" target="1.8" />
       <module name="Vertx-Microservices" target="1.8" />
       <module name="Vertx-Microservices-Bookservice" target="1.8" />

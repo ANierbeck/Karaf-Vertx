@@ -1,0 +1,25 @@
+<ul class="nav nav-tabs">
+	<li role="presentation"><a href="#/!">Verticles</a></li>
+	<li role="presentation" class="active"><a href="#!metrics">Metrics</a></li>
+  <li role="presentation"><a href="#!bus">Event Bus</a></li>
+</ul>
+<table class="table table-condensed">
+    <thead>
+    <tr>
+        <th style="width: 30px;"></th>
+        <th>Key</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat-start="metric in metrics">
+        <td>
+            <button ng-if="metric.expanded" ng-click="metric.expanded = false">-</button>
+            <button ng-if="!metric.expanded" ng-click="expandSelected(metric)">+</button>
+        </td>
+        <td>{{metric.id}}</td>
+    </tr>
+    <tr ng-if="metric.expanded" ng-repeat-end="">
+        <td colspan="3">{{metric.meta}}</td>
+    </tr>
+    </tbody>
+</table>
