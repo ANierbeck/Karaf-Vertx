@@ -19,7 +19,133 @@
         <td>{{metric.id}}</td>
     </tr>
     <tr ng-if="metric.expanded" ng-repeat-end="">
-        <td colspan="3">{{metric.meta}}</td>
+        <td colspan="3">
+            <div ng-switch="metric.meta.type">
+                <div ng-switch-when="counter">
+                    Count: {{metric.meta.count}}
+                </div>
+                <div ng-switch-when="gauge">
+                    {{metric.meta.value}}
+                </div>
+                <div ng-switch-when="meter">
+                    <table class="table table-condensed">
+                        <tr>
+                            <td>onSecondRate</td><td>{{metric.meta.onSecondRate}}</td>
+                        </tr>
+                        <tr>
+                            <td>count</td><td>{{metric.meta.count}}</td>
+                        </tr>
+                        <tr>
+                            <td>meanRate</td><td>{{metric.meta.meanRate}}</td>
+                        </tr>
+                        <tr>
+                            <td>fiveMinuteRate</td><td>{{metric.meta.fiveMinuteRate}}</td>
+                        </tr>
+                        <tr>
+                            <td>fifteenMinuteRate</td><td>{{metric.meta.fifteenMinuteRate}}</td>
+                        </tr>
+                        <tr>
+                            <td>rate</td><td>{{metric.meta.rate}}</td>
+                        </tr>
+                    </table>
+                </div>
+                <div ng-switch-when="timer">
+                    <table class="table table-condensed">
+                        <tr>
+                            <td>onSecondRate</td><td>{{metric.meta.onSecondRate}}</td>
+                        </tr>
+                        <tr>
+                            <td>count</td><td>{{metric.meta.count}}</td>
+                        </tr>
+                        <tr>
+                            <td>meanRate</td><td>{{metric.meta.meanRate}}</td>
+                        </tr>
+                        <tr>
+                            <td>fiveMinuteRate</td><td>{{metric.meta.fiveMinuteRate}}</td>
+                        </tr>
+                        <tr>
+                            <td>fifteenMinuteRate</td><td>{{metric.meta.fifteenMinuteRate}}</td>
+                        </tr>
+                        <tr>
+                            <td>rate</td><td>{{metric.meta.rate}}</td>
+                        </tr>
+                        <tr>
+                            <td>min</td><td>{{metric.meta.min}}</td>
+                        </tr>
+                        <tr>
+                            <td>max</td><td>{{metric.meta.max}}</td>
+                        </tr>
+                        <tr>
+                            <td>mean</td><td>{{metric.meta.mean}}</td>
+                        </tr>
+                        <tr>
+                            <td>stddev</td><td>{{metric.meta.stddev}}</td>
+                        </tr>
+                        <tr>
+                            <td>median</td><td>{{metric.meta.median}}</td>
+                        </tr>
+                        <tr>
+                            <td>75%</td><td>{{metric.meta.percentile75}}</td>
+                        </tr>
+                        <tr>
+                            <td>95%</td><td>{{metric.meta.percentile95}}</td>
+                        </tr>
+                        <tr>
+                            <td>98%</td><td>{{metric.meta.percentile98}}</td>
+                        </tr>
+                        <tr>
+                            <td>99%</td><td>{{metric.meta.percentile99}}</td>
+                        </tr>
+                        <tr>
+                            <td>99.9%</td><td>{{metric.meta.percentile999}}</td>
+                        </tr>
+                        <tr>
+                            <td>durationRate</td><td>{{metric.meta.durationRate}}</td>
+                        </tr>
+                    </table>
+                </div>
+                <div ng-switch-when="histogram">
+                    <table class="table table-condensed">
+                        <tr>
+                            <td>count</td><td>{{metric.meta.count}}</td>
+                        </tr>
+                        <tr>
+                            <td>min</td><td>{{metric.meta.min}}</td>
+                        </tr>
+                        <tr>
+                            <td>max</td><td>{{metric.meta.max}}</td>
+                        </tr>
+                        <tr>
+                            <td>mean</td><td>{{metric.meta.mean}}</td>
+                        </tr>
+                        <tr>
+                            <td>stddev</td><td>{{metric.meta.stddev}}</td>
+                        </tr>
+                        <tr>
+                            <td>median</td><td>{{metric.meta.median}}</td>
+                        </tr>
+                        <tr>
+                            <td>75%</td><td>{{metric.meta.percentile75}}</td>
+                        </tr>
+                        <tr>
+                            <td>95%</td><td>{{metric.meta.percentile95}}</td>
+                        </tr>
+                        <tr>
+                            <td>98%</td><td>{{metric.meta.percentile98}}</td>
+                        </tr>
+                        <tr>
+                            <td>99%</td><td>{{metric.meta.percentile99}}</td>
+                        </tr>
+                        <tr>
+                            <td>99.9%</td><td>{{metric.meta.percentile999}}</td>
+                        </tr>
+                    </table>
+                </div>
+                <div ng-switch-default>
+                    {{metric.meta}}
+                </div>
+            </div>
+        </td>
     </tr>
     </tbody>
 </table>

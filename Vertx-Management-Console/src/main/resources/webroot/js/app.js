@@ -1,4 +1,26 @@
-var app = angular.module('MetricsApp', ['ng', 'ngRoute', 'knalli.angular-vertxbus']);
+var module_route = angular.module('route', ['ngRoute']);
+module_route.config(['$routeProvider', function ($routeProvider) {
+    console.log("configuring routes");
+    $routeProvider.
+         when('/', {templateUrl: './tpl/overview.html', controller: 'OverviewCtrl'}).
+         when('/metrics', {templateUrl: './tpl/metrics.html', controller: 'MetricsCtrl'}).
+         when('/bus', {templateUrl: './tpl/bus.html', controller: 'BusCtrl'}).
+         otherwise({redirectTo: '/'});
+ }]);
+/*
+var module_eventbus = angular.module('eventbus', [knalli.angular-vertxbus]);
+module_eventbus.config(function(vertxEventBusProvider, vertxEventBusServiceProvider) {
+    console.log("configuring eventbus");
+    vertxEventBusProvider
+        .useDebug(true)
+        .useUrlServer("http://" + location.host + "/managment-service/eventbus");
+    vertxEventBusServiceProvider
+        .useDebug(true)
+        .authHandler('myCustomAuthHandler');
+});
+*/
+var app = angular.module('MetricsApp', ['ng', 'route'/*, 'eventbus'*/]);
+/*
 app.config(['$routeProvider', function ($routeProvider) {
 	console.log("configuring routes");
     $routeProvider.
@@ -7,7 +29,9 @@ app.config(['$routeProvider', function ($routeProvider) {
         when('/bus', {templateUrl: './tpl/bus.html', controller: 'BusCtrl'}).
         otherwise({redirectTo: '/'});
 }]);
+*/
 /*
+
 app.config(function(vertxEventBusProvider, vertxEventBusServiceProvider) {
 	console.log("configuring eventbus");
 	vertxEventBusProvider
@@ -17,7 +41,9 @@ app.config(function(vertxEventBusProvider, vertxEventBusServiceProvider) {
 	.useDebug(true)
 	.authHandler('myCustomAuthHandler');
 });
+*/
 
+/*
 app.run(function ($rootScope, vertxEventBus, vertxEventBusService, $interval) {
 	console.log("eventbus run method");
     $rootScope.sessionIsValid = false;
@@ -37,7 +63,7 @@ app.run(function ($rootScope, vertxEventBus, vertxEventBusService, $interval) {
       } catch (e) {}
     }, 1000);
   });
-  
+
 app.filter('eventBusState', function () {
 	console.log("adding filtering");
     var states = ['CONNECTING', 'OPEN', 'CLOSING', 'CLOSED'];
@@ -74,6 +100,14 @@ app.service('myCustomAuthHandler', function (vertxEventBus, $q) {
 		  });
 
 app.controller('EventBusCtrl', function($scope, vertxEventBus, vertxEventBusService, myCustomAuthHandler){
+    console.log("configuring eventbus");
+    	vertxEventBusProvider
+    	.useDebug(true)
+    	.useUrlServer("http://" + location.host + "/managment-service/bus");
+    vertxEventBusServiceProvider
+    	.useDebug(true)
+    	.authHandler('myCustomAuthHandler');
+
 	console.log("eventbus ctrl: registering listener");
 	vertxEventBusService.on('metrics', function(err, message) {
 	  console.log('Received a message: ', message);

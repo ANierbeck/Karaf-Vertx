@@ -143,7 +143,15 @@ public class Management extends AbstractVerticle {
     private void receiveMetric(RoutingContext routingContext) {
         HttpServerResponse response = routingContext.response();
         String metricsId = routingContext.request().getParam("id");
-        JsonObject metricsSnapshot = metricsService.getMetricsSnapshot(metricsId);
+        JsonObject metricsSnapshot = metricsService.getMetricsSnapshot(metricsId).getJsonObject(metricsId);
+        String type = metricsSnapshot.getString("type");
+        if (type.equalsIgnoreCase("histogram")||type.equalsIgnoreCase("timer")) {
+            metricsSnapshot.put("percentile75", metricsSnapshot.getValue("75%"));
+            metricsSnapshot.put("percentile95", metricsSnapshot.getValue("95%"));
+            metricsSnapshot.put("percentile98", metricsSnapshot.getValue("98%"));
+            metricsSnapshot.put("percentile99", metricsSnapshot.getValue("99%"));
+            metricsSnapshot.put("percentile999", metricsSnapshot.getValue("99.9%"));
+        }
         MetricsMeta meta = new MetricsMeta(metricsId, metricsSnapshot);
         response.putHeader("content-type", "application/json; charset=utf-8").end(Json.encodePrettily(meta));
     }

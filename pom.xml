@@ -266,7 +266,11 @@
                                 <exclude>**/*.bundles</exclude>
                                 <!-- js script files in samples -->
                                 <exclude>**/*.js</exclude>
+                                <exclude>**/vue.runtime.js</exclude>
+                                <exclude>**/vue-echarts.js</exclude>
+                                <exclude>**/vue-vertx3-eventbus-client.js</exclude>
                                 <exclude>**/*.html</exclude>
+                                <exclude>**/package.json</exclude>
                                 <!-- feature history files -->
                                 <exclude>**/history/dependencies.xml</exclude>
                             </excludes>

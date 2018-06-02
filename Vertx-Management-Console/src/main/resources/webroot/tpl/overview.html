@@ -15,7 +15,28 @@
     <tr ng-repeat="verticle in verticles">
         <td>{{verticle.id}}</td>
         <td>{{verticle.identifier}}</td>
-        <td>{{verticle.options}}</td>
+        <td>
+            <table class="table table-condensed">
+                <tr>
+                    <td>HA:</td><td>{{verticle.options.ha}}</td>
+                </tr>
+                <tr>
+                    <td>Instances:</td><td>{{verticle.options.instances}}</td>
+                </tr>
+                <tr>
+                    <td>Max Worker Execution Time:</td><td>{{verticle.options.maxWorkerExecutionTime}}</td>
+                </tr>
+                <tr>
+                    <td>Multi Threaded:</td><td>{{verticle.options.multiThreaded}}</td>
+                </tr>
+                <tr>
+                    <td>Worker:</td><td>{{verticle.options.worker}}</td>
+                </tr>
+                <tr>
+                    <td>Worker Pool Size:</td><td>{{verticle.options.workerPoolSize}}</td>
+                </tr>
+            </table>
+        </td>
     </tr>
     </tbody>
 </table>
