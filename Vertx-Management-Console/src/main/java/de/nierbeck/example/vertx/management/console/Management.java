@@ -26,6 +26,8 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import de.nierbeck.example.vertx.management.console.internal.MetricsMeta;
+import io.vertx.core.DeploymentOptions;
+import io.vertx.ext.web.handler.BodyHandler;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.annotations.Activate;
@@ -105,8 +107,9 @@ public class Management extends AbstractVerticle {
         Router router = Router.router(vertx);
         BridgeOptions options = new BridgeOptions().addOutboundPermitted(new PermittedOptions().setAddress("metrics"));
 
-        router.route("/eventbus/*").handler(SockJSHandler.create(vertx).bridge(options));
+        //router.route("/eventbus/*").handler(SockJSHandler.create(vertx).bridge(options));
         router.route("/overview/").handler(this::overview);
+        //router.route("/metrics/*").handler(BodyHandler.create());
         router.route("/metrics/").handler(this::metrics);
         router.get("/metrics/:id").handler(this::receiveMetric);
 
@@ -155,7 +158,7 @@ public class Management extends AbstractVerticle {
         MetricsMeta meta = new MetricsMeta(metricsId, metricsSnapshot);
         response.putHeader("content-type", "application/json; charset=utf-8").end(Json.encodePrettily(meta));
     }
-    
+
     @Reference
     public void bindVertx(Vertx vertx) {
         this.vertx = vertx;

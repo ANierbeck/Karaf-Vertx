@@ -16,13 +16,18 @@
  */
 package de.nierbeck.example.vertx;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Dictionary;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import io.vertx.core.DeploymentOptions;
+import org.osgi.service.cm.Configuration;
+import org.osgi.service.cm.ConfigurationAdmin;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
@@ -42,6 +47,9 @@ public class VertxVerticleHost {
     private List<Verticle> verticles = new ArrayList<>();
     
     private Map<Verticle, String> deployedVerticles = new ConcurrentHashMap<>();
+
+    @Reference
+    private ConfigurationAdmin ca;
     
     @Deactivate
     public void stop() {
@@ -75,13 +83,16 @@ public class VertxVerticleHost {
     }
      
     @Reference(unbind = "removeVerticle", policy=ReferencePolicy.DYNAMIC, cardinality = ReferenceCardinality.MULTIPLE)
-    public void addVerticle(Verticle verticle) {
+    public void addVerticle(Verticle verticle) throws IOException {
         LOGGER.info("Deploying verticle " + verticle);
         verticles.add(verticle);
         if (verticle == null)
             return;
+
+        //DeploymentOptions options = createOrRetrieveDeploymentOptions(verticle);
+
         if (vertxService != null)
-            vertxService.deployVerticle(verticle, deploy -> {
+            vertxService.deployVerticle(verticle, /*options, */deploy -> {
                 if (deploy.succeeded()) {
                     LOGGER.info("Deployment of verticle succeeded");
                     String id = deploy.result();
@@ -91,7 +102,25 @@ public class VertxVerticleHost {
                 }
             });
     }
-    
+
+    private DeploymentOptions createOrRetrieveDeploymentOptions(Verticle verticle) throws IOException {
+        DeploymentOptions deploymentOptions = new DeploymentOptions();
+        String className = verticle.getClass().getCanonicalName();
+        Configuration configuration = null;
+        configuration = ca.getConfiguration(className);
+        Dictionary<String, Object> properties = configuration.getProperties();
+        if (properties.isEmpty()) {
+            properties.put("ha", deploymentOptions.isHa());
+            properties.put("worker", deploymentOptions.isWorker());
+            properties.put("multiThreaded", deploymentOptions.isMultiThreaded());
+        } else {
+            deploymentOptions.setHa((Boolean) (properties.get("ha")));
+            deploymentOptions.setWorker((Boolean) properties.get("worker"));
+            deploymentOptions.setMultiThreaded((Boolean) properties.get("multiThreaded"));
+        }
+        return deploymentOptions;
+    }
+
     public void removeVerticle(Verticle verticle) {
         LOGGER.info("Undeploying verticle " + verticle);
         verticles.remove(verticle);
