@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="FrameworkDetectionExcludesConfiguration">
+    <file type="Osmorc" url="file://$PROJECT_DIR$/Vertx-AliveCheck" />
+    <file type="Osmorc" url="file://$PROJECT_DIR$/Vertx-Cluster" />
+    <file type="Osmorc" url="file://$PROJECT_DIR$/Vertx-Extended-Verticles" />
+    <file type="Osmorc" url="file://$PROJECT_DIR$/Vertx-Extender" />
+    <file type="Osmorc" url="file://$PROJECT_DIR$/Vertx-Http" />
+    <file type="Osmorc" url="file://$PROJECT_DIR$/Vertx-Management-Console" />
+    <file type="Osmorc" url="file://$PROJECT_DIR$/Vertx-Microservices/Vertx-Microservice-MetricsDashboard" />
+    <file type="Osmorc" url="file://$PROJECT_DIR$/Vertx-Microservices/Vertx-Microservices-Bookservice" />
+    <file type="Osmorc" url="file://$PROJECT_DIR$/Vertx-Microservices/Vertx-Microservices-CookbookUI" />
+    <file type="Osmorc" url="file://$PROJECT_DIR$/Vertx-Microservices/Vertx-Microservices-Entity" />
+    <file type="Osmorc" url="file://$PROJECT_DIR$/Vertx-Microservices/Vertx-Microservices-JDBC" />
+    <file type="Osmorc" url="file://$PROJECT_DIR$/Vertx-Shell" />
+    <file type="Osmorc" url="file://$PROJECT_DIR$/Vertx-System" />
+    <file type="Osmorc" url="file://$PROJECT_DIR$/Vertx-Verticles" />
+  </component>
   <component name="MavenProjectsManager">
     <option name="originalFiles">
       <list>
@@ -9,5 +25,8 @@
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="false" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/classes" />
+  </component>
+  <component name="RustProjectSettings">
+    <option name="toolchainHomeDirectory" value="/usr/local/bin" />
   </component>
 </project>

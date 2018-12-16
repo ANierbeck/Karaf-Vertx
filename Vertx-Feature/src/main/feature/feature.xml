@@ -54,6 +54,7 @@
 	
 	<feature name="Vertx-Web" version="${project.version}">
 		<bundle start-level="80">mvn:io.vertx/vertx-web/${vertx.version}</bundle>
+        <bundle start-level="80">mvn:io.vertx/vertx-web-common/${vertx.version}</bundle>
         <bundle start-level="80">mvn:io.vertx/vertx-auth-common/${vertx.version}</bundle>
         <bundle start-level="80">mvn:io.vertx/vertx-jwt/${vertx.version}</bundle>
         <bundle start-level="80">mvn:io.vertx/vertx-bridge-common/${vertx.version}</bundle>

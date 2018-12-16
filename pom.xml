@@ -14,7 +14,7 @@
 
 	<groupId>de.nierbeck.example.vertx</groupId>
 	<artifactId>vertx-parent</artifactId>
-	<version>0.2.0-SNAPSHOT</version>
+	<version>0.3.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<name>Vertx-Parent</name>
@@ -39,12 +39,11 @@
 
 	<properties>
 
-		<vertx.version>3.5.1</vertx.version>
-		<netty.version>4.1.19.Final</netty.version>
-
+		<vertx.version>3.6.0</vertx.version>
+		<netty.version>4.1.30.Final</netty.version>
 		<karaf.version>4.2.1</karaf.version>
 		<karaf.cellar.version>4.1.0</karaf.cellar.version>
-		<maven-bundle-plugin.version>3.0.1</maven-bundle-plugin.version>
+		<maven-bundle-plugin.version>3.5.0</maven-bundle-plugin.version>
 		<osgi.version>6.0.0</osgi.version>
 		<kotlin.version>1.0.5-2</kotlin.version>
 		<jackson.version>2.9.3</jackson.version>
@@ -92,26 +91,26 @@
 				<artifactId>osgi.enterprise</artifactId>
 				<version>${osgi.version}</version>
 			</dependency>
-			<dependency>
+			<!--<dependency>
 				<groupId>io.netty</groupId>
 				<artifactId>netty-transport</artifactId>
-				<version>${netty.version}</version>
+				<scope>provided</scope>
 			</dependency>
 			<dependency>
 				<groupId>io.netty</groupId>
 				<artifactId>netty-handler</artifactId>
-				<version>${netty.version}</version>
+				<scope>provided</scope>
 			</dependency>
 			<dependency>
 				<groupId>io.netty</groupId>
 				<artifactId>netty-common</artifactId>
-				<version>${netty.version}</version>
+				<scope>provided</scope>
 			</dependency>
 			<dependency>
 				<groupId>io.netty</groupId>
 				<artifactId>netty-codec-http</artifactId>
-				<version>${netty.version}</version>
-			</dependency>
+				<scope>provided</scope>
+			</dependency>-->
 			<dependency>
 				<groupId>org.osgi</groupId>
 				<artifactId>osgi.cmpn</artifactId>

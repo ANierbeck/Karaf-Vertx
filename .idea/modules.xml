@@ -12,7 +12,6 @@
       <module fileurl="file://$PROJECT_DIR$/Vertx-Karaf/Vertx-Karaf.iml" filepath="$PROJECT_DIR$/Vertx-Karaf/Vertx-Karaf.iml" />
       <module fileurl="file://$PROJECT_DIR$/Vertx-Karaf-Cluster/Vertx-Karaf-Cluster.iml" filepath="$PROJECT_DIR$/Vertx-Karaf-Cluster/Vertx-Karaf-Cluster.iml" />
       <module fileurl="file://$PROJECT_DIR$/Vertx-Karaf-Cluster-Docker/Vertx-Karaf-Cluster-Docker.iml" filepath="$PROJECT_DIR$/Vertx-Karaf-Cluster-Docker/Vertx-Karaf-Cluster-Docker.iml" />
-      <module fileurl="file://$PROJECT_DIR$/Vertx-Karaf-Cluster-Docker/Vertx-Karaf-Cluster-Docker.iml" filepath="$PROJECT_DIR$/Vertx-Karaf-Cluster-Docker/Vertx-Karaf-Cluster-Docker.iml" />
       <module fileurl="file://$PROJECT_DIR$/Vertx-Management-Console/Vertx-Management-Console.iml" filepath="$PROJECT_DIR$/Vertx-Management-Console/Vertx-Management-Console.iml" />
       <module fileurl="file://$PROJECT_DIR$/Vertx-Microservices/Vertx-Microservice-MetricsDashboard/Vertx-Microservice-MetricsDashboard.iml" filepath="$PROJECT_DIR$/Vertx-Microservices/Vertx-Microservice-MetricsDashboard/Vertx-Microservice-MetricsDashboard.iml" group="Vertx-Microservices and modules" />
       <module fileurl="file://$PROJECT_DIR$/Vertx-Microservices/Vertx-Microservices.iml" filepath="$PROJECT_DIR$/Vertx-Microservices/Vertx-Microservices.iml" group="Vertx-Microservices and modules" />
