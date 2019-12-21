@@ -29,6 +29,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.net.URL;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -48,7 +49,9 @@ import org.junit.runner.RunWith;
 import org.ops4j.pax.exam.Configuration;
 import org.ops4j.pax.exam.Option;
 import org.ops4j.pax.exam.junit.PaxExam;
+import org.ops4j.pax.exam.karaf.options.KarafDistributionOption;
 import org.ops4j.pax.exam.karaf.options.LogLevelOption.LogLevel;
+import org.ops4j.pax.exam.options.extra.VMOption;
 import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
 import org.ops4j.pax.exam.spi.reactors.PerClass;
 import org.osgi.framework.BundleContext;
@@ -89,7 +92,7 @@ public class CustomVertxKarafTest {
     BootFinished bootFinished;
 
     @Configuration
-    public static Option[] configuration() throws Exception {
+    public Option[] configuration() throws Exception {
         return new Option[] { karafDistributionConfiguration()
                 .frameworkUrl(
                             maven()
@@ -100,7 +103,26 @@ public class CustomVertxKarafTest {
                 .unpackDirectory(new File("target/paxexam/unpack/"))
                 .useDeployFolder(false)
                 .runEmbedded(false), //only for debugging 
-                configureConsole().ignoreLocalConsole(), 
+                configureConsole().ignoreLocalConsole(),
+                KarafDistributionOption.replaceConfigurationFile("etc/org.ops4j.pax.logging.cfg", getConfigFile("/etc/org.ops4j.pax.logging.cfg")),
+
+                new VMOption("--add-opens"),
+                new VMOption("java.base/java.security=ALL-UNNAMED"),
+                new VMOption("--add-opens"),
+                new VMOption("java.base/java.net=ALL-UNNAMED"),
+                new VMOption("--add-opens"),
+                new VMOption("java.base/java.lang=ALL-UNNAMED"),
+                new VMOption("--add-opens"),
+                new VMOption("java.base/java.util=ALL-UNNAMED"),
+                new VMOption("--add-opens"),
+                new VMOption("java.naming/javax.naming.spi=ALL-UNNAMED"),
+                new VMOption("--add-opens"),
+                new VMOption("java.rmi/sun.rmi.transport.tcp=ALL-UNNAMED"),
+                new VMOption("--add-exports=java.base/sun.net.www.protocol.http=ALL-UNNAMED"),
+                new VMOption("--add-exports=java.base/sun.net.www.protocol.https=ALL-UNNAMED"),
+                new VMOption("--add-exports=java.base/sun.net.www.protocol.jar=ALL-UNNAMED"),
+                new VMOption("--add-exports=jdk.naming.rmi/com.sun.jndi.url.rmi=ALL-UNNAMED"),
+
                 logLevel(LogLevel.INFO), keepRuntimeFolder()
             };
     }
@@ -193,5 +215,13 @@ public class CustomVertxKarafTest {
         System.err.println(response);
 
         return response;
+    }
+
+    public File getConfigFile(String path) {
+        URL res = this.getClass().getResource(path);
+        if (res == null) {
+            throw new RuntimeException("Config resource " + path + " not found");
+        }
+        return new File(res.getFile());
     }
 }

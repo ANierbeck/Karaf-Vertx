@@ -24,7 +24,9 @@ import org.junit.runner.RunWith;
 import org.ops4j.pax.exam.Configuration;
 import org.ops4j.pax.exam.Option;
 import org.ops4j.pax.exam.junit.PaxExam;
+import org.ops4j.pax.exam.karaf.options.KarafDistributionOption;
 import org.ops4j.pax.exam.karaf.options.LogLevelOption.LogLevel;
+import org.ops4j.pax.exam.options.extra.VMOption;
 import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
 import org.ops4j.pax.exam.spi.reactors.PerClass;
 import org.osgi.framework.Bundle;
@@ -35,6 +37,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.io.File;
+import java.net.URL;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -67,7 +70,7 @@ public class VertxExtenderKarafTest {
 
     @Configuration
     // @formatter:off
-    public static Option[] configuration() {
+    public Option[] configuration() {
         return new Option[] {
                 karafDistributionConfiguration()
                         .frameworkUrl(
@@ -79,7 +82,26 @@ public class VertxExtenderKarafTest {
                         .unpackDirectory(new File("target/paxexam/unpack/"))
                         .useDeployFolder(false)
                         .runEmbedded(false), // only for debugging
-                configureConsole().ignoreLocalConsole(), 
+                configureConsole().ignoreLocalConsole(),
+                KarafDistributionOption.replaceConfigurationFile("etc/org.ops4j.pax.logging.cfg", getConfigFile("/etc/org.ops4j.pax.logging.cfg")),
+
+                new VMOption("--add-opens"),
+                new VMOption("java.base/java.security=ALL-UNNAMED"),
+                new VMOption("--add-opens"),
+                new VMOption("java.base/java.net=ALL-UNNAMED"),
+                new VMOption("--add-opens"),
+                new VMOption("java.base/java.lang=ALL-UNNAMED"),
+                new VMOption("--add-opens"),
+                new VMOption("java.base/java.util=ALL-UNNAMED"),
+                new VMOption("--add-opens"),
+                new VMOption("java.naming/javax.naming.spi=ALL-UNNAMED"),
+                new VMOption("--add-opens"),
+                new VMOption("java.rmi/sun.rmi.transport.tcp=ALL-UNNAMED"),
+                new VMOption("--add-exports=java.base/sun.net.www.protocol.http=ALL-UNNAMED"),
+                new VMOption("--add-exports=java.base/sun.net.www.protocol.https=ALL-UNNAMED"),
+                new VMOption("--add-exports=java.base/sun.net.www.protocol.jar=ALL-UNNAMED"),
+                new VMOption("--add-exports=jdk.naming.rmi/com.sun.jndi.url.rmi=ALL-UNNAMED"),
+
                 logLevel(LogLevel.DEBUG), 
                 keepRuntimeFolder()
        };
@@ -89,7 +111,7 @@ public class VertxExtenderKarafTest {
     @Test
     public void installExtendedBundle() throws Exception {
         logger.info("testing extender ... ");
-        String bundlePath = "mvn:de.nierbeck.example.vertx/Vertx-Extended-Verticles/0.2.0-SNAPSHOT";
+        String bundlePath = "mvn:de.nierbeck.example.vertx/Vertx-Extended-Verticles/0.3.0-SNAPSHOT";
         logger.info("installing bundle with url: {}", bundlePath);
         Bundle bundle = bc.installBundle(bundlePath);
         bundle.start();
@@ -109,5 +131,13 @@ public class VertxExtenderKarafTest {
         logger.info("found {} services", serviceReferences.size());
         List<ServiceReference<Verticle>> collect = serviceReferences.stream().filter(serviceReference -> serviceReference.getBundle() == bundle).collect(Collectors.toList());
         assertTrue(collect.size() > 0);
+    }
+
+    public File getConfigFile(String path) {
+        URL res = this.getClass().getResource(path);
+        if (res == null) {
+            throw new RuntimeException("Config resource " + path + " not found");
+        }
+        return new File(res.getFile());
     }
 }

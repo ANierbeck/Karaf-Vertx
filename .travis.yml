@@ -5,7 +5,7 @@ before_install:
   - "sh -e /etc/init.d/xvfb start"
 script: mvn --quiet clean install
 jdk:
-  - oraclejdk8
+  - openjdk11
 notifications:
   email:
       - bcanhome@googlemail.com

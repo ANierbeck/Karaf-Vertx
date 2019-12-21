@@ -45,12 +45,12 @@ import io.vertx.core.impl.Deployment;
 import io.vertx.core.impl.VertxInternal;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
+import io.vertx.ext.bridge.PermittedOptions;
 import io.vertx.ext.dropwizard.MetricsService;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.handler.StaticHandler;
 import io.vertx.ext.web.handler.sockjs.BridgeOptions;
-import io.vertx.ext.web.handler.sockjs.PermittedOptions;
 import io.vertx.ext.web.handler.sockjs.SockJSHandler;
 
 @Component(immediate=true, service=Verticle.class)
@@ -128,6 +128,7 @@ public class Management extends AbstractVerticle {
         HttpServerResponse response = routingContext.response();
         List<VerticleMeta> list = vertx.deploymentIDs().stream().map((id) -> { 
             Deployment deployment = ((VertxInternal)vertx).getDeployment(id);
+            
             VerticleMeta vm =  new VerticleMeta(id, deployment.verticleIdentifier(), deployment.deploymentOptions().toJson());
             return vm;
         }).collect(Collectors.toList());
