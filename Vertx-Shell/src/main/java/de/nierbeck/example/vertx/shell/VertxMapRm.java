@@ -25,7 +25,7 @@ import org.apache.karaf.shell.api.action.lifecycle.Service;
 import io.vertx.core.shareddata.LocalMap;
 import io.vertx.core.shareddata.SharedData;
 
-@Command(scope = "vertx", name = "local-map-get", description = "Get values from a local map")
+@Command(scope = "vertx", name = "local-map-rm", description = "Get values from a local map")
 @Service
 public class VertxMapRm extends AbstractVertxCommand {
 
