@@ -46,4 +46,8 @@ enables cluster ability via Hazelcast
 
 ### Vertx-AliveCheck
 
-special verticle which is registered as http service to check if the instance is available. 
+special verticle which is registered as http service to check if the instance is available.
+
+##  Vertx based Microservices
+
+The Vertx Microservices sub-module, consists of a simple Example application. 
