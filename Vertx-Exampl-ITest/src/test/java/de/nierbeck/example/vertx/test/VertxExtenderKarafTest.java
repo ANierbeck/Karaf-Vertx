@@ -16,12 +16,12 @@
 package de.nierbeck.example.vertx.test;
 
 import io.vertx.core.Verticle;
-import io.vertx.core.Vertx;
 import org.apache.karaf.features.BootFinished;
-import org.apache.karaf.features.FeaturesService;
+import org.apache.karaf.itests.KarafTestSupport;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.ops4j.pax.exam.Configuration;
+import org.ops4j.pax.exam.CoreOptions;
 import org.ops4j.pax.exam.Option;
 import org.ops4j.pax.exam.junit.PaxExam;
 import org.ops4j.pax.exam.karaf.options.KarafDistributionOption;
@@ -37,10 +37,10 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.io.File;
-import java.net.URL;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.junit.Assert.assertTrue;
 import static org.ops4j.pax.exam.CoreOptions.maven;
@@ -48,19 +48,13 @@ import static org.ops4j.pax.exam.karaf.options.KarafDistributionOption.*;
 
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerClass.class)
-public class VertxExtenderKarafTest {
+public class VertxExtenderKarafTest extends KarafTestSupport {
 
-    private Logger logger = LoggerFactory.getLogger(getClass());
-    
     @Inject
     private BundleContext bc;
 
-    @Inject
-    protected FeaturesService featuresService;
-
-    @Inject
-    protected Vertx vertxService;
-
+    private Logger logger = LoggerFactory.getLogger(getClass());
+    
     /**
      * To make sure the tests run only when the boot features are fully
      * installed
@@ -70,21 +64,33 @@ public class VertxExtenderKarafTest {
 
     @Configuration
     // @formatter:off
-    public Option[] configuration() {
+    public Option[] config() {
         return new Option[] {
                 karafDistributionConfiguration()
                         .frameworkUrl(
                                 maven()
-                                    .groupId("de.nierbeck.example.vertx")
-                                    .artifactId("Vertx-Karaf")
-                                    .type("tar.gz").versionAsInProject()
-                                )
+                                        .groupId("de.nierbeck.example.vertx")
+                                        .artifactId("Vertx-Karaf")
+                                        .type("tar.gz")
+                                        .versionAsInProject())
                         .unpackDirectory(new File("target/paxexam/unpack/"))
                         .useDeployFolder(false)
-                        .runEmbedded(false), // only for debugging
+                        .runEmbedded(false), //only for debugging
                 configureConsole().ignoreLocalConsole(),
                 KarafDistributionOption.replaceConfigurationFile("etc/org.ops4j.pax.logging.cfg", getConfigFile("/etc/org.ops4j.pax.logging.cfg")),
-
+                logLevel(LogLevel.INFO),
+                keepRuntimeFolder(),
+                KarafDistributionOption.configureSecurity().disableKarafMBeanServerBuilder(),
+                CoreOptions.mavenBundle().groupId("org.awaitility").artifactId("awaitility").versionAsInProject(),
+                CoreOptions.mavenBundle().groupId("org.apache.servicemix.bundles").artifactId("org.apache.servicemix.bundles.hamcrest").versionAsInProject(),
+                CoreOptions.mavenBundle().groupId("org.apache.karaf.itests").artifactId("common").versionAsInProject(),
+                CoreOptions.mavenBundle().groupId("javax.annotation").artifactId("javax.annotation-api").versionAsInProject(),
+                new VMOption("--add-reads=java.xml=java.logging"),
+                new VMOption("--add-exports=java.base/org.apache.karaf.specs.locator=java.xml,ALL-UNNAMED"),
+                new VMOption("--patch-module"),
+                new VMOption("java.base=lib/endorsed/org.apache.karaf.specs.locator-" + System.getProperty("karaf.version") + ".jar"),
+                new VMOption("--patch-module"),
+                new VMOption("java.xml=lib/endorsed/org.apache.karaf.specs.java.xml-" + System.getProperty("karaf.version") + ".jar"),
                 new VMOption("--add-opens"),
                 new VMOption("java.base/java.security=ALL-UNNAMED"),
                 new VMOption("--add-opens"),
@@ -101,10 +107,9 @@ public class VertxExtenderKarafTest {
                 new VMOption("--add-exports=java.base/sun.net.www.protocol.https=ALL-UNNAMED"),
                 new VMOption("--add-exports=java.base/sun.net.www.protocol.jar=ALL-UNNAMED"),
                 new VMOption("--add-exports=jdk.naming.rmi/com.sun.jndi.url.rmi=ALL-UNNAMED"),
-
-                logLevel(LogLevel.DEBUG), 
-                keepRuntimeFolder()
-       };
+                new VMOption("-classpath"),
+                new VMOption("lib/jdk9plus/*" + File.pathSeparator + "lib/boot/*")
+        };
     }
     // @formatter:on
 
@@ -131,13 +136,5 @@ public class VertxExtenderKarafTest {
         logger.info("found {} services", serviceReferences.size());
         List<ServiceReference<Verticle>> collect = serviceReferences.stream().filter(serviceReference -> serviceReference.getBundle() == bundle).collect(Collectors.toList());
         assertTrue(collect.size() > 0);
-    }
-
-    public File getConfigFile(String path) {
-        URL res = this.getClass().getResource(path);
-        if (res == null) {
-            throw new RuntimeException("Config resource " + path + " not found");
-        }
-        return new File(res.getFile());
     }
 }

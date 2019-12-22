@@ -25,30 +25,21 @@ import static org.ops4j.pax.exam.karaf.options.KarafDistributionOption.karafDist
 import static org.ops4j.pax.exam.karaf.options.KarafDistributionOption.keepRuntimeFolder;
 import static org.ops4j.pax.exam.karaf.options.KarafDistributionOption.logLevel;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.IOException;
-import java.io.PrintStream;
-import java.net.URL;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.FutureTask;
-import java.util.concurrent.TimeUnit;
+import java.util.stream.Stream;
 
 import javax.inject.Inject;
 
 import org.apache.karaf.features.BootFinished;
 import org.apache.karaf.features.FeaturesService;
-import org.apache.karaf.shell.api.console.Session;
-import org.apache.karaf.shell.api.console.SessionFactory;
-import org.junit.After;
-import org.junit.Before;
+import org.apache.karaf.itests.KarafTestSupport;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.ops4j.pax.exam.Configuration;
+import org.ops4j.pax.exam.CoreOptions;
 import org.ops4j.pax.exam.Option;
 import org.ops4j.pax.exam.junit.PaxExam;
+import org.ops4j.pax.exam.karaf.container.internal.JavaVersionUtil;
 import org.ops4j.pax.exam.karaf.options.KarafDistributionOption;
 import org.ops4j.pax.exam.karaf.options.LogLevelOption.LogLevel;
 import org.ops4j.pax.exam.options.extra.VMOption;
@@ -62,7 +53,7 @@ import io.vertx.core.Vertx;
 
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerClass.class)
-public class CustomVertxKarafTest {
+public class CustomVertxKarafTest extends KarafTestSupport {
 
     @Inject
     private BundleContext bc;
@@ -73,17 +64,6 @@ public class CustomVertxKarafTest {
     @Inject
     protected Vertx vertxService;
 
-    @Inject
-    protected SessionFactory sessionFactory;
-    
-
-    private ExecutorService executor = Executors.newCachedThreadPool();
-
-    private ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    private PrintStream printStream = new PrintStream(byteArrayOutputStream);
-    private PrintStream errStream = new PrintStream(byteArrayOutputStream);
-    private Session session;
-
     /**
      * To make sure the tests run only when the boot features are fully
      * installed
@@ -92,9 +72,10 @@ public class CustomVertxKarafTest {
     BootFinished bootFinished;
 
     @Configuration
-    public Option[] configuration() throws Exception {
-        return new Option[] { karafDistributionConfiguration()
-                .frameworkUrl(
+    public Option[] config() {
+        return new Option[] {
+                karafDistributionConfiguration()
+                    .frameworkUrl(
                             maven()
                                 .groupId("de.nierbeck.example.vertx")
                                 .artifactId("Vertx-Karaf")
@@ -105,7 +86,19 @@ public class CustomVertxKarafTest {
                 .runEmbedded(false), //only for debugging 
                 configureConsole().ignoreLocalConsole(),
                 KarafDistributionOption.replaceConfigurationFile("etc/org.ops4j.pax.logging.cfg", getConfigFile("/etc/org.ops4j.pax.logging.cfg")),
-
+                logLevel(LogLevel.INFO),
+                keepRuntimeFolder(),
+                KarafDistributionOption.configureSecurity().disableKarafMBeanServerBuilder(),
+                CoreOptions.mavenBundle().groupId("org.awaitility").artifactId("awaitility").versionAsInProject(),
+                CoreOptions.mavenBundle().groupId("org.apache.servicemix.bundles").artifactId("org.apache.servicemix.bundles.hamcrest").versionAsInProject(),
+                CoreOptions.mavenBundle().groupId("org.apache.karaf.itests").artifactId("common").versionAsInProject(),
+                CoreOptions.mavenBundle().groupId("javax.annotation").artifactId("javax.annotation-api").versionAsInProject(),
+                new VMOption("--add-reads=java.xml=java.logging"),
+                new VMOption("--add-exports=java.base/org.apache.karaf.specs.locator=java.xml,ALL-UNNAMED"),
+                new VMOption("--patch-module"),
+                new VMOption("java.base=lib/endorsed/org.apache.karaf.specs.locator-" + System.getProperty("karaf.version") + ".jar"),
+                new VMOption("--patch-module"),
+                new VMOption("java.xml=lib/endorsed/org.apache.karaf.specs.java.xml-" + System.getProperty("karaf.version") + ".jar"),
                 new VMOption("--add-opens"),
                 new VMOption("java.base/java.security=ALL-UNNAMED"),
                 new VMOption("--add-opens"),
@@ -122,19 +115,9 @@ public class CustomVertxKarafTest {
                 new VMOption("--add-exports=java.base/sun.net.www.protocol.https=ALL-UNNAMED"),
                 new VMOption("--add-exports=java.base/sun.net.www.protocol.jar=ALL-UNNAMED"),
                 new VMOption("--add-exports=jdk.naming.rmi/com.sun.jndi.url.rmi=ALL-UNNAMED"),
-
-                logLevel(LogLevel.INFO), keepRuntimeFolder()
+                new VMOption("-classpath"),
+                new VMOption("lib/jdk9plus/*" + File.pathSeparator + "lib/boot/*")
             };
-    }
-    
-    @Before
-    public void setUpITest() throws Exception {
-        session = sessionFactory.create(System.in, printStream, errStream);
-    }
-
-    @After
-    public void cleanupITest() throws Exception {
-        session = null;
     }
     
     @Test
@@ -184,44 +167,5 @@ public class CustomVertxKarafTest {
             started = true;
         }
     }
-    
-    protected String executeCommand(final String command) throws IOException {
-        byteArrayOutputStream.flush();
-        byteArrayOutputStream.reset();
 
-        String response;
-        FutureTask<String> commandFuture = new FutureTask<String>(new Callable<String>() {
-            public String call() {
-                try {
-                    System.err.println(command);
-                    session.execute(command);
-                } catch (Exception e) {
-                    e.printStackTrace(System.err);
-                }
-                printStream.flush();
-                errStream.flush();
-                return byteArrayOutputStream.toString();
-            }
-        });
-
-        try {
-            executor.submit(commandFuture);
-            response = commandFuture.get(10000L, TimeUnit.MILLISECONDS);
-        } catch (Exception e) {
-            e.printStackTrace(System.err);
-            response = "SHELL COMMAND TIMED OUT: ";
-        }
-
-        System.err.println(response);
-
-        return response;
-    }
-
-    public File getConfigFile(String path) {
-        URL res = this.getClass().getResource(path);
-        if (res == null) {
-            throw new RuntimeException("Config resource " + path + " not found");
-        }
-        return new File(res.getFile());
-    }
 }

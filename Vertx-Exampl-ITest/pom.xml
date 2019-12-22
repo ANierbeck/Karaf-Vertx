@@ -134,6 +134,11 @@
 			<version>${karaf.version}</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.apache.karaf.itests</groupId>
+			<artifactId>common</artifactId>
+			<version>${karaf.version}</version>
+		</dependency>
 
 		<dependency>
 			<groupId>org.apache.karaf.shell</groupId>
@@ -174,6 +179,22 @@
 			<artifactId>Vertx-Extended-Verticles</artifactId>
 			<version>${project.version}</version>
 			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>javax.annotation</groupId>
+			<artifactId>javax.annotation-api</artifactId>
+			<version>${javax.annotation.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.awaitility</groupId>
+			<artifactId>awaitility</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.servicemix.bundles</groupId>
+			<artifactId>org.apache.servicemix.bundles.hamcrest</artifactId>
+			<version>1.3_1</version>
+			<scope>runtime</scope>
 		</dependency>
 
 	</dependencies>
