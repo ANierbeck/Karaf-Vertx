@@ -83,8 +83,8 @@ public class MetricsDashboard extends AbstractVerticle {
             // Allow outbound traffic to the news-feed address
     
             BridgeOptions options = new BridgeOptions().addOutboundPermitted(new PermittedOptions().setAddress("metrics"));
-    
-            router.route("/eventbus/*").handler(SockJSHandler.create(vertx).bridge(options));
+
+            router.route("/eventbus/*").handler(SockJSHandler.create(vertx));
     
             // Serve the static resources
             router.route("/*").handler(StaticHandler.create("webroot", this.getClass().getClassLoader()));
