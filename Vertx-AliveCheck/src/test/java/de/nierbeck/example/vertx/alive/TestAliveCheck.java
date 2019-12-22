@@ -68,7 +68,7 @@ public class TestAliveCheck {
         
         router.route("/ping").handler(pingHandler);
         
-        vertx.createHttpServer().requestHandler(router::accept).listen(8080, context.asyncAssertSuccess());
+        vertx.createHttpServer().requestHandler(router).listen(8080, context.asyncAssertSuccess());
         
     }
 

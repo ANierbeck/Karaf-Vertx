@@ -113,15 +113,9 @@
 		</dependency>
 
 		<dependency>
-			<groupId>ch.qos.logback</groupId>
-			<artifactId>logback-core</artifactId>
-			<version>${logback.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>ch.qos.logback</groupId>
-			<artifactId>logback-classic</artifactId>
-			<version>${logback.version}</version>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<scope>test</scope>
 		</dependency>
 
 		<dependency>
@@ -139,6 +133,11 @@
 		<dependency>
 			<groupId>org.apache.karaf.system</groupId>
 			<artifactId>org.apache.karaf.system.core</artifactId>
+			<version>${karaf.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.karaf.itests</groupId>
+			<artifactId>common</artifactId>
 			<version>${karaf.version}</version>
 		</dependency>
 
@@ -179,6 +178,22 @@
             <artifactId>assertj-core</artifactId>
             <version>1.7.0</version>
 			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>javax.annotation</groupId>
+			<artifactId>javax.annotation-api</artifactId>
+			<version>${javax.annotation.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.awaitility</groupId>
+			<artifactId>awaitility</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.servicemix.bundles</groupId>
+			<artifactId>org.apache.servicemix.bundles.hamcrest</artifactId>
+			<version>1.3_1</version>
+			<scope>runtime</scope>
 		</dependency>
 
 	</dependencies>

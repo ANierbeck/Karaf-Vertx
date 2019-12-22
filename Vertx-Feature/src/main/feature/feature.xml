@@ -41,7 +41,7 @@
         <bundle start-level="80">mvn:com.fasterxml.jackson.core/jackson-databind/${jackson.version}</bundle>
         <bundle start-level="80">mvn:com.fasterxml.jackson.core/jackson-annotations/${jackson.version}</bundle>
         <bundle start-level="80">mvn:io.vertx/vertx-rx-java2/${vertx.version}</bundle>
-        <bundle start-level="80">mvn:io.reactivex.rxjava2/rxjava/2.1.9</bundle>
+        <bundle start-level="80">mvn:io.reactivex.rxjava2/rxjava/2.2.4</bundle>
         <bundle start-level="80">mvn:org.reactivestreams/reactive-streams/1.0.2</bundle>
         <bundle start-level="80">mvn:org.jetbrains.kotlin/kotlin-osgi-bundle/${kotlin.version}</bundle>
        <capability>

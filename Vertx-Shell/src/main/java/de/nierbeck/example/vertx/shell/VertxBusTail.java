@@ -18,12 +18,11 @@ package de.nierbeck.example.vertx.shell;
 
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.Base64;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
-
-import javax.xml.bind.DatatypeConverter;
 
 import org.apache.karaf.shell.api.action.Argument;
 import org.apache.karaf.shell.api.action.Command;
@@ -120,7 +119,7 @@ public class VertxBusTail extends AbstractVertxCommand {
                     Object body = msg.body();
                     String bodyString = null;
                     if (body instanceof Buffer) {
-                        bodyString = DatatypeConverter.printHexBinary(((Buffer) body).getBytes());
+                        bodyString = Base64.getEncoder().encodeToString(((Buffer) body).getBytes());
                     } else {
                         bodyString = String.valueOf(body);
                     }
