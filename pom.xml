@@ -325,6 +325,7 @@
 								<exclude>**/versions.properties</exclude>
 								<!-- README -->
 								<exclude>README.md</exclude>
+                                <exclude>**/README.md</exclude>
 								<exclude>**/Readme.md</exclude>
 								<!-- archetype resources -->
 								<exclude>**/archetype-resources/**/*</exclude>
