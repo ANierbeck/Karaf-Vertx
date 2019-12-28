@@ -277,6 +277,7 @@
 								<exclude>**/target/**/*</exclude>
 								<!-- GIT files -->
 								<exclude>**/.git/**/*</exclude>
+								<exclude>**/.github/**/*</exclude>
 								<!-- IDEA files -->
 								<exclude>**/.idea/**/*</exclude>
 								<exclude>**/*.iml</exclude>
