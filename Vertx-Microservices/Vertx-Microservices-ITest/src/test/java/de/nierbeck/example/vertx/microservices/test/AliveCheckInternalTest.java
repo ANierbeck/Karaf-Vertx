@@ -129,7 +129,6 @@ public class AliveCheckInternalTest extends KarafTestSupport {
     public void subRunner() {
         System.out.println("Calling sub-runner!!");
         Result result = JUnitCore.runClasses(SubTestWithRunner.class);
-//        assertThat(result.wasSuccessful(), is(true));
         if(!result.wasSuccessful()) {
             result.getFailures().stream().forEach(failure -> fail(failure.getMessage()));
         }

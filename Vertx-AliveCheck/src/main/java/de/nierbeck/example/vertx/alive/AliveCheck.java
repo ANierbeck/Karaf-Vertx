@@ -79,12 +79,9 @@ public class AliveCheck extends AbstractVerticle {
         hc.register("metrics-handler",
                 future -> future.complete(Status.OK(metricsService.getMetricsSnapshot(getVertx()))));
 
-//        router.route("/*");
-        // Populate the router with routes...
-        // Register the health check handler
-        router.get("/health/status").handler(hc);
+        router.get("/status").handler(hc);
         // Or
-        router.get("/health/ping").handler(pingHandler);
+        router.get("/ping").handler(pingHandler);
 
         Route route = new Route() {
             @Override
@@ -94,7 +91,7 @@ public class AliveCheck extends AbstractVerticle {
         };
 
         Dictionary<String, Object> properties = new Hashtable<>();
-        properties.put(Route.CONTEXT_PATH, "/");
+        properties.put(Route.CONTEXT_PATH, "/health");
         serviceRegistration = bc.registerService(Route.class, route, properties);
     }
 }

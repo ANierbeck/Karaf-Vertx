@@ -6,29 +6,29 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="Vertx-Microservices-ITest" />
-        <module name="Vertx-Http" />
+        <module name="Vertx-Microservices-Cluster-Docker" />
         <module name="Vertx-Shell" />
         <module name="Vertx-Cluster" />
-        <module name="Vertx-Microservices-Cluster-Docker" />
-        <module name="Vertx-Microservices-JDBC" />
+        <module name="Vertx-Http" />
         <module name="Vertx-Microservices-Bookservice" />
         <module name="Vertx-System" />
         <module name="Vertx-Microservices-Features" />
         <module name="Vertx-Management-Console" />
         <module name="Vertx-Extender" />
         <module name="Vertx-Microservices-Karaf" />
+        <module name="Vertx-Microservices-Cluster-Karaf" />
         <module name="Vertx-Feature" />
         <module name="Vertx-Microservices-CookbookUI" />
         <module name="Vertx-Microservices-Entity" />
         <module name="Vertx-Exampl-ITest" />
         <module name="Vertx-Karaf-Cluster-Docker" />
+        <module name="Vertx-Microservices-JDBC" />
         <module name="Vertx-AliveCheck" />
-        <module name="Vertx-Microservices-Cluster-Karaf" />
+        <module name="Vertx-Microservices-ITest" />
         <module name="Vertx-Karaf-Cluster" />
-        <module name="Vertx-Extended-Verticles" />
         <module name="Vertx-Microservice-MetricsDashboard" />
         <module name="Vertx-Verticles" />
+        <module name="Vertx-Extended-Verticles" />
         <module name="Vertx-Karaf" />
       </profile>
     </annotationProcessing>
@@ -52,7 +52,7 @@
       <module name="Vertx-Microservices-CookbookUI" target="11" />
       <module name="Vertx-Microservices-Entity" target="11" />
       <module name="Vertx-Microservices-Features" target="11" />
-      <module name="Vertx-Microservices-ITest" target="1.8" />
+      <module name="Vertx-Microservices-ITest" target="11" />
       <module name="Vertx-Microservices-JDBC" target="11" />
       <module name="Vertx-Microservices-Karaf" target="11" />
       <module name="vertx-parent" target="11" />

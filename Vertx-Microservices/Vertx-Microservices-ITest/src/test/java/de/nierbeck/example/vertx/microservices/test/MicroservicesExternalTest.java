@@ -16,8 +16,12 @@
 package de.nierbeck.example.vertx.microservices.test;
 
 import static io.restassured.RestAssured.get;
+import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 
+import io.restassured.http.ContentType;
+import org.apache.karaf.features.BootFinished;
+import org.awaitility.Awaitility;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.ClassRule;
@@ -26,11 +30,14 @@ import org.ops4j.pax.exam.junit.PaxExamServer;
 
 import io.restassured.RestAssured;
 
+import javax.inject.Inject;
+import java.util.concurrent.TimeUnit;
+
 public class MicroservicesExternalTest {
 
     @ClassRule
     public static PaxExamServer exam = new PaxExamServer(MicroservicesTest.class);
-    
+
     @Before
     public void setUpITest() throws Exception {
         RestAssured.baseURI = "http://localhost";
@@ -44,6 +51,7 @@ public class MicroservicesExternalTest {
 
     @Test
     public void checkBooksAvailable() throws Exception {
+        awaitReady();
         final int id = get("/cookbook-service/").then()
         .assertThat()
         .statusCode(200)
@@ -60,6 +68,7 @@ public class MicroservicesExternalTest {
     
     @Test
     public void checkRecipesForBook() throws Exception {
+        awaitReady();
         final int id = get("/cookbook-service/1/recipe").then()
         .assertThat()
         .statusCode(200)
@@ -71,5 +80,13 @@ public class MicroservicesExternalTest {
         .statusCode(200)
         .body("name", equalTo("Singletons"));
     }
-    
+
+    private void awaitReady() {
+        Awaitility.await().atMost(5, TimeUnit.SECONDS).until(() -> given()
+                .accept(ContentType.JSON)
+                .get("/cookbook-service/")
+                .then()
+                .extract()
+                .statusCode() == 200);
+    }
 }
