@@ -28,6 +28,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import io.vertx.core.Vertx;
+import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.healthchecks.HealthCheckHandler;
 import io.vertx.ext.healthchecks.Status;
@@ -36,6 +37,8 @@ import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.Timeout;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
 import io.vertx.ext.web.Router;
+import io.vertx.ext.web.client.HttpResponse;
+import io.vertx.ext.web.client.WebClient;
 
 @RunWith(VertxUnitRunner.class)
 public class TestAliveCheck {
@@ -45,71 +48,77 @@ public class TestAliveCheck {
     @Rule
     public Timeout rule = Timeout.seconds(2);
     private Vertx vertx;
+    private WebClient client;
 
     @Before
-    public void setUp(TestContext context) throws IOException {
+    public void setUp(final TestContext context) throws IOException {
         LOGGER.info("Starting Vertx");
         vertx = Vertx.vertx();
-        
-        Router router = Router.router(vertx);
+
+        final Router router = Router.router(vertx);
         router.route("/").handler(routingContext -> {
 
             // This handler will be called for every request
-            HttpServerResponse response = routingContext.response();
+            final HttpServerResponse response = routingContext.response();
             response.putHeader("content-type", "text/plain");
 
             // Write to the response and end it
             response.end("Hello World from Vert.x-Web!");
         });
 
-        HealthCheckHandler pingHandler = HealthCheckHandler.create(vertx);
+        final HealthCheckHandler pingHandler = HealthCheckHandler.create(vertx);
 
         pingHandler.register("my-procedure", future -> future.complete(Status.OK()));
-        
+
         router.route("/ping").handler(pingHandler);
-        
+
         vertx.createHttpServer().requestHandler(router).listen(8080, context.asyncAssertSuccess());
-        
+
+        client = WebClient.create(vertx);
+
     }
 
     @After
-    public void tearDown(TestContext context) {
+    public void tearDown(final TestContext context) {
         vertx.close(context.asyncAssertSuccess());
     }
 
     @Test
-    public void checkStatus(TestContext context) {
+    public void checkStatus(final TestContext context) {
         LOGGER.info("testing ... ");
         given().port(8080).baseUri("http://localhost").when().get("/").then().assertThat().statusCode(200);
     }
 
     @Test
-    public void checkThatTheIndexPageIsServed(TestContext context) {
+    public void checkThatTheIndexPageIsServed(final TestContext context) {
         LOGGER.info("testing ... ");
-        Async async = context.async();
-        vertx.createHttpClient().getNow(8080, "localhost", "/", response -> {
+        final Async async = context.async();
+        client.get(8080, "localhost", "/").send(ar -> {
+            context.assertTrue(ar.succeeded());
+            final HttpResponse<Buffer> response = ar.result();
             LOGGER.info("received response ... ");
             context.assertEquals(response.statusCode(), 200);
             context.assertEquals(response.headers().get("content-type"), "text/plain");
-            response.bodyHandler(body -> {
-                context.assertTrue(body.toString().contains("Hello World from Vert.x-Web!"));
-                async.complete();
-            });
+            final String body = response.bodyAsString();
+            context.assertTrue(body.toString().contains("Hello World from Vert.x-Web!"));
+            async.complete();
         });
     }
-    
+
     @Test
-    public void testPing(TestContext context) {
+    public void testPing(final TestContext context) {
         LOGGER.info("testing ... ");
-        Async async = context.async();
-        vertx.createHttpClient().getNow(8080, "localhost", "/ping", response -> {
+        final Async async = context.async();
+        client.get(8080, "localhost", "/ping").send(ar -> {
             LOGGER.info("received response ... ");
+            context.assertTrue(ar.succeeded());
+            final HttpResponse<Buffer> response = ar.result();
             context.assertEquals(response.statusCode(), 200);
             context.assertEquals(response.headers().get("content-type"), "application/json;charset=UTF-8");
-            response.bodyHandler(body -> {
-                context.assertTrue(body.toString().contains("{\"checks\":[{\"id\":\"my-procedure\",\"status\":\"UP\"}],\"outcome\":\"UP\"}"));
-                async.complete();
-            });
+            final String body = response.bodyAsString();
+            context.assertTrue(body.toString()
+                    .contains("{\"checks\":[{\"id\":\"my-procedure\",\"status\":\"UP\"}],\"outcome\":\"UP\"}"));
+            async.complete();
         });
     }
 
