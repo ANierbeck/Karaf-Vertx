@@ -345,6 +345,10 @@
 								<exclude>**/package.json</exclude>
 								<!-- feature history files -->
 								<exclude>**/history/dependencies.xml</exclude>
+								<!-- tmp test folder for vue.js stuff-->
+								<exclude>**/mgmt-console/**/*</exclude>
+								<!-- exclude visual studio code workspace file-->
+								<exclude>vertx-karaf.code-workspace</exclude>
 							</excludes>
 						</configuration>
 					</plugin>
