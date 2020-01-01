@@ -74,7 +74,7 @@ public class VertxHttpServer extends AbstractVerticle {
         LOGGER.info("starting rest router");
         server = getVertx().createHttpServer();
         router = Router.router(getVertx());
-        server.requestHandler(router::accept).listen(cfg.port());
+        server.requestHandler(router).listen(cfg.port());
 
         if (!routes.isEmpty()) {
             update();

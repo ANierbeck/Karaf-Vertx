@@ -15,6 +15,7 @@
 */
 package de.nierbeck.example.vertx.extender.internal;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,16 +29,16 @@ import org.slf4j.LoggerFactory;
 import io.vertx.core.Verticle;
 
 public class VerticleExtenderImpl {
-    
+
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    private Bundle verticleBundle;
+    private final Bundle verticleBundle;
     private List<ServiceRegistration<Verticle>> verticleServices;
-    private BundleContext verticleBundleContext;
+    private final BundleContext verticleBundleContext;
 
     private List<Class> verticles;
 
-    public VerticleExtenderImpl(Bundle bundle, List<Class> verticles) {
+    public VerticleExtenderImpl(final Bundle bundle, final List<Class> verticles) {
         this.verticleBundle = bundle;
         verticleBundleContext = bundle.getBundleContext();
         verticleServices = new ArrayList<>();
@@ -47,12 +48,13 @@ public class VerticleExtenderImpl {
     public void start() {
         logger.debug("VerticleExtender started for bundle {}", verticleBundle);
         logger.debug("found {} verticles", verticles.size());
-        
-        List<Verticle> verticleInstances = verticles.stream().map(verticleClass -> {
+
+        final List<Verticle> verticleInstances = verticles.stream().map(verticleClass -> {
             Verticle verticle = null;
             try {
-                verticle = (Verticle) verticleClass.newInstance();
-            } catch (InstantiationException | IllegalAccessException e) {
+                verticle = (Verticle) verticleClass.getDeclaredConstructor().newInstance();
+            } catch (InstantiationException | IllegalAccessException | IllegalArgumentException
+                    | InvocationTargetException | NoSuchMethodException | SecurityException e) {
                 // munch
             }
             return verticle;
