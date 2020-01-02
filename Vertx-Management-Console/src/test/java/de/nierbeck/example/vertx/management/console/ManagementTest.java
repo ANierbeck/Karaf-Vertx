@@ -30,12 +30,14 @@ import org.junit.runner.RunWith;
 import de.nierbeck.example.vertx.management.console.internal.VerticleMeta;
 import de.nierbeck.example.vertx.verticles.VertxHttpClientVerticle;
 import io.vertx.core.Vertx;
-import io.vertx.core.json.Json;
+import io.vertx.core.buffer.Buffer;
 import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.Timeout;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
 import io.vertx.ext.web.Router;
+import io.vertx.ext.web.client.HttpResponse;
+import io.vertx.ext.web.client.WebClient;
 
 
 @RunWith(VertxUnitRunner.class)
@@ -45,6 +47,7 @@ public class ManagementTest {
     public Timeout rule = Timeout.seconds(2);
     private Vertx vertx;
     private int port;
+    private WebClient client;
     
     @Before
     public void setUp(TestContext context) throws Exception {
@@ -57,7 +60,9 @@ public class ManagementTest {
         Management management = new Management();
         management.bindVertx(vertx);
         Router startWebRoutes = management.startWebRoutes();
-        vertx.createHttpServer().requestHandler(startWebRoutes::accept).listen(port, context.asyncAssertSuccess());
+        vertx.createHttpServer().requestHandler(startWebRoutes).listen(port, context.asyncAssertSuccess());
+
+        client = WebClient.create(vertx);
     }
     
     @After
@@ -68,7 +73,9 @@ public class ManagementTest {
     @Test
     public void testAccessibleOverview(TestContext context) {
         Async async = context.async();
-        vertx.createHttpClient().getNow(port, "localhost", "/overview/", response -> {
+        client.get(port, "localhost", "/overview/").send(ar -> {
+            context.assertTrue(ar.succeeded());
+            final HttpResponse<Buffer> response = ar.result();
             context.assertEquals(response.statusCode(), 200);
             async.complete();
         });
@@ -77,14 +84,14 @@ public class ManagementTest {
     @Test
     public void testPayloadEmptyOverview(TestContext context) {
         Async async = context.async();
-        vertx.createHttpClient().getNow(port, "localhost", "/overview/", response -> {
+        client.get(port, "localhost", "/overview/").send(ar -> {
+            context.assertTrue(ar.succeeded());
+            final HttpResponse<Buffer> response = ar.result();
             context.assertEquals(response.statusCode(), 200);
-            response.bodyHandler(body -> {
-                ArrayList<VerticleMeta> list = Json.decodeValue(body.toString(), (Class<ArrayList<VerticleMeta>>) (Class<?>) ArrayList.class);
-                context.assertNotNull(list);
-                context.assertTrue(list.isEmpty());
-                async.complete();
-          });
+            ArrayList<VerticleMeta> list = response.bodyAsJson((Class<ArrayList<VerticleMeta>>) (Class<?>) ArrayList.class);
+            context.assertNotNull(list);
+            context.assertTrue(list.isEmpty());
+            async.complete();
         });
     }
     
@@ -103,17 +110,16 @@ public class ManagementTest {
         });
         
         Thread.sleep(1000);
-        
-        vertx.createHttpClient().getNow(port, "localhost", "/overview/", response -> {
+        client.get(port, "localhost", "/overview/").send(ar -> {
+            context.assertTrue(ar.succeeded());
+            final HttpResponse<Buffer> response = ar.result();
             context.assertEquals(response.statusCode(), 200);
-            response.bodyHandler(body -> {
-                ArrayList<VerticleMeta> list = Json.decodeValue(body.toString(), (Class<ArrayList<VerticleMeta>>) (Class<?>) ArrayList.class);
-                context.assertNotNull(list);
-                context.assertFalse(list.isEmpty());
-                context.assertEquals(list.size(), 1);
-                context.assertTrue(list.get(0).getIdentifier().equalsIgnoreCase(ids.get(0)));
-                async.complete();
-          });
+            ArrayList<VerticleMeta> list = response.bodyAsJson((Class<ArrayList<VerticleMeta>>) (Class<?>) ArrayList.class);
+            context.assertNotNull(list);
+            context.assertFalse(list.isEmpty());
+            context.assertEquals(list.size(), 1);
+            context.assertTrue(list.get(0).getIdentifier().equalsIgnoreCase(ids.get(0)));
+            async.complete();
         });
     }
 }

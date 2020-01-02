@@ -20,14 +20,10 @@ package de.nierbeck.example.vertx.management.console;
 import java.util.Dictionary;
 import java.util.Hashtable;
 import java.util.List;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-import de.nierbeck.example.vertx.management.console.internal.MetricsMeta;
-import io.vertx.core.DeploymentOptions;
-import io.vertx.ext.web.handler.BodyHandler;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.annotations.Activate;
@@ -36,6 +32,7 @@ import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 
 import de.nierbeck.example.vertx.http.Route;
+import de.nierbeck.example.vertx.management.console.internal.MetricsMeta;
 import de.nierbeck.example.vertx.management.console.internal.VerticleMeta;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Verticle;
@@ -45,13 +42,10 @@ import io.vertx.core.impl.Deployment;
 import io.vertx.core.impl.VertxInternal;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
-import io.vertx.ext.bridge.PermittedOptions;
 import io.vertx.ext.dropwizard.MetricsService;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.handler.StaticHandler;
-import io.vertx.ext.web.handler.sockjs.BridgeOptions;
-import io.vertx.ext.web.handler.sockjs.SockJSHandler;
 
 @Component(immediate=true, service=Verticle.class)
 public class Management extends AbstractVerticle {
@@ -105,7 +99,7 @@ public class Management extends AbstractVerticle {
     protected final Router startWebRoutes() {
         LOGGER.info("starting rest router");
         Router router = Router.router(vertx);
-        BridgeOptions options = new BridgeOptions().addOutboundPermitted(new PermittedOptions().setAddress("metrics"));
+        //BridgeOptions options = new BridgeOptions().addOutboundPermitted(new PermittedOptions().setAddress("metrics"));
 
         //router.route("/eventbus/*").handler(SockJSHandler.create(vertx).bridge(options));
         router.route("/overview/").handler(this::overview);

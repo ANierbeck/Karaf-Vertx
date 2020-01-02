@@ -22,7 +22,7 @@ import org.ops4j.pax.swissbox.extender.ManifestEntry;
 import org.ops4j.pax.swissbox.extender.ManifestFilter;
 import org.ops4j.pax.swissbox.extender.RegexKeyManifestFilter;
 import org.osgi.framework.Bundle;
-import org.osgi.framework.wiring.BundleCapability;
+// import org.osgi.framework.wiring.BundleCapability;
 import org.osgi.framework.wiring.BundleWiring;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,13 +61,13 @@ public class VerticleObserver {
 
         BundleWiring bundleWiring = bundle.adapt(BundleWiring.class);
         
-        List<BundleCapability> capabilities = bundleWiring.getCapabilities("osgi.wiring.package");
-        List<String> packages = capabilities.stream()
-               .map(cap -> cap.getAttributes().get("osgi.wiring.package"))
-               .map(o -> ((String)o))
-               .distinct()
-               .filter(packageName -> Verticle.class.getPackage().getName().equalsIgnoreCase(packageName))
-               .collect(Collectors.toList());
+        // List<BundleCapability> capabilities = bundleWiring.getCapabilities("osgi.wiring.package");
+        // List<String> packages = capabilities.stream()
+        //        .map(cap -> cap.getAttributes().get("osgi.wiring.package"))
+        //        .map(o -> ((String)o))
+        //        .distinct()
+        //        .filter(packageName -> Verticle.class.getPackage().getName().equalsIgnoreCase(packageName))
+        //        .collect(Collectors.toList());
             
 //        if (packages.size() == 0) {
 //            logger.debug("No import for Verticle package found, skipping in bundle {}", bundle);
@@ -90,7 +90,7 @@ public class VerticleObserver {
         
         List<String> failedClassNames = new ArrayList<>();
         
-        List<Class> verticleAssignables = classes.stream()
+        List<Class> verticleAssignable = classes.stream()
             .map(clazzName -> clazzName.replace('/', '.'))
             .map(clazzName -> clazzName.replace(".class", ""))
             .map(clazzName -> {
@@ -106,13 +106,13 @@ public class VerticleObserver {
             .filter(clazz -> Verticle.class.isAssignableFrom(clazz))
             .collect(Collectors.toList());
         
-        if (verticleAssignables.isEmpty()) {
+        if (verticleAssignable.isEmpty()) {
             logger.debug("Ignoring bundle {}, no Verticle assignable classes found", bundle);
             logger.debug("following list of class names couldn't be loaded from bundle: {}", failedClassNames);
             return null;
         }
         
-        return new VerticleExtenderImpl(bundle, verticleAssignables);
+        return new VerticleExtenderImpl(bundle, verticleAssignable);
     }
 
 }

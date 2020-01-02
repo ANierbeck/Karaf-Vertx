@@ -38,8 +38,6 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.ext.dropwizard.MetricsService;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.StaticHandler;
-import io.vertx.ext.web.handler.sockjs.BridgeOptions;
-import io.vertx.ext.web.handler.sockjs.PermittedOptions;
 import io.vertx.ext.web.handler.sockjs.SockJSHandler;
 
 @Component(immediate = true, service = Verticle.class)
@@ -82,12 +80,12 @@ public class MetricsDashboard extends AbstractVerticle {
     
             // Allow outbound traffic to the news-feed address
     
-            BridgeOptions options = new BridgeOptions().addOutboundPermitted(new PermittedOptions().setAddress("metrics"));
+            //BridgeOptions options = new BridgeOptions().addOutboundPermitted(new PermittedOptions().setAddress("metrics"));
 
             router.route("/eventbus/*").handler(SockJSHandler.create(vertx));
     
             // Serve the static resources
-            router.route("/*").handler(StaticHandler.create("webroot", this.getClass().getClassLoader()));
+            router.route("/*").handler(StaticHandler.create("webroot"));//, this.getClass().getClassLoader()));
     
             getVertx().setPeriodic(1000, t -> {
                 JsonObject metrics = metricsService.getMetricsSnapshot(eventBus);
