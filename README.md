@@ -1,6 +1,6 @@
 # Vertex example project running on Apache Karaf
 
-![](https://github.com/ANierbeck/Karaf-Vertx/workflows/maven/badge.svg)
+![](https://github.com/ANierbeck/Karaf-Vertx/workflows/Java%20CI/badge.svg)
 
 
 This is a simple sample showing how to run Vertx applications on Apache Karaf. 
