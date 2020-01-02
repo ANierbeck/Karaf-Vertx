@@ -47,7 +47,7 @@ public class VertxBusSend extends AbstractVertxCommand {
     @Override
     public Object execute() throws Exception {
         if (reply) {
-            getEventBusService().send(address, body, new DeliveryOptions(), ar -> {
+            getEventBusService().request(address, body, new DeliveryOptions(), ar -> {
                 if (ar.succeeded()) {
                     Message<Object> reply = ar.result();
                     if (verbose) {

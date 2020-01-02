@@ -17,10 +17,10 @@ package de.nierbeck.example.vertx.microservices.test;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
-import static org.junit.matchers.JUnitMatchers.containsString;
 import static org.ops4j.pax.exam.CoreOptions.maven;
 import static org.ops4j.pax.exam.karaf.options.KarafDistributionOption.configureConsole;
 import static org.ops4j.pax.exam.karaf.options.KarafDistributionOption.karafDistributionConfiguration;
@@ -268,7 +268,7 @@ public class MicroservicesTest extends KarafTestSupport {
     @Test
     public void readDataPerBus() throws Exception {
         
-        eventBus.send("de.nierbeck.vertx.jdbc.read", new Book(1l, null, null), message -> {
+        eventBus.request("de.nierbeck.vertx.jdbc.read", new Book(1l, null, null), message -> {
             assertThat(message.result().body(), IsInstanceOf.instanceOf(Book.class));
             Book book = (Book) message.result().body();
             assertThat(book.getId(), is(1l));
@@ -279,7 +279,7 @@ public class MicroservicesTest extends KarafTestSupport {
 
     @Test
     public void readBooksFromBus() throws Exception {
-        eventBus.send("de.nierbeck.vertx.jdbc.read", new Book(), message -> { 
+        eventBus.request("de.nierbeck.vertx.jdbc.read", new Book(), message -> { 
             assertFalse(message.failed());
             assertThat(message.result().body(), IsInstanceOf.instanceOf(List.class));
             
@@ -340,7 +340,7 @@ public class MicroservicesTest extends KarafTestSupport {
     private void awaitRouteAndHttpService() throws Exception {
         Collection<ServiceReference<Route>> serviceReferences = bc.getServiceReferences(Route.class, null);
         int count = 0;
-        while (serviceReferences == null && serviceReferences.size() < 2 && count < 10) {
+        while (serviceReferences != null && serviceReferences.size() < 2 && count < 10) {
             Thread.sleep(200);
             serviceReferences = bc.getServiceReferences(Route.class, null);
             count++;

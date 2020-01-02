@@ -23,7 +23,6 @@ import org.osgi.service.component.annotations.Component;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Handler;
 import io.vertx.core.Verticle;
-import io.vertx.core.eventbus.MessageProducer;
 
 @Component(immediate=true, service=Verticle.class)
 public class VertxBusProducerVerticle extends AbstractVerticle{
@@ -34,14 +33,14 @@ public class VertxBusProducerVerticle extends AbstractVerticle{
     @Override
     public void start() throws Exception {
         LOGGER.info("starting VertxBusProducerVerticle");
-        MessageProducer<Object> publisher = getVertx().eventBus().publisher("localhost");
+        var sender = getVertx().eventBus().sender("localhost");
         
         timerId = getVertx().setPeriodic(2000, new Handler<Long>() {
             int count = 0;
             
             @Override
             public void handle(Long event) {
-                publisher.send("Message "+count++);
+                sender.write("Message "+count++);
             }
         });
     }

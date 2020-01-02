@@ -11,6 +11,7 @@
 			"**/.settings": true,
 			"**/.factorypath": true
 		},
-		"java.configuration.updateBuildConfiguration": "automatic"
+		"java.configuration.updateBuildConfiguration": "automatic",
+		"java.home": "/Library/Java/JavaVirtualMachines/amazon-corretto-11.jdk/Contents/Home/",
 	}
 }

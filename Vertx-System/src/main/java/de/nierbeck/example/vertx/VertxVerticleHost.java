@@ -18,15 +18,12 @@ package de.nierbeck.example.vertx;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Dictionary;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import io.vertx.core.DeploymentOptions;
-import org.osgi.service.cm.Configuration;
 import org.osgi.service.cm.ConfigurationAdmin;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
@@ -103,6 +100,7 @@ public class VertxVerticleHost {
             });
     }
 
+    /*
     private DeploymentOptions createOrRetrieveDeploymentOptions(Verticle verticle) throws IOException {
         DeploymentOptions deploymentOptions = new DeploymentOptions();
         String className = verticle.getClass().getCanonicalName();
@@ -116,10 +114,10 @@ public class VertxVerticleHost {
         } else {
             deploymentOptions.setHa((Boolean) (properties.get("ha")));
             deploymentOptions.setWorker((Boolean) properties.get("worker"));
-            deploymentOptions.setMultiThreaded((Boolean) properties.get("multiThreaded"));
         }
         return deploymentOptions;
     }
+    */
 
     public void removeVerticle(Verticle verticle) {
         LOGGER.info("Undeploying verticle " + verticle);

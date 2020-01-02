@@ -36,6 +36,7 @@ import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.Timeout;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
 import io.vertx.ext.web.Router;
+import io.vertx.ext.web.client.WebClient;
 
 @RunWith(VertxUnitRunner.class)
 public class CookBookServiceVertclTest {
@@ -45,33 +46,36 @@ public class CookBookServiceVertclTest {
     @Rule
     public Timeout rule = Timeout.seconds(2);
     private Vertx vertx;
+    private WebClient client;
     
     @Before
-    public void setUp(TestContext context) throws Exception {
-        
+    public void setUp(final TestContext context) throws Exception {
+
         vertx = Vertx.vertx();
-        
+
         vertx.eventBus().registerDefaultCodec(Book.class, new BookEncoder());
         vertx.eventBus().registerDefaultCodec(Recipe.class, new RecipeEncoder());
-        vertx.eventBus().registerDefaultCodec((Class<ArrayList<Book>>) (Class<?>) ArrayList.class, new ListOfBookEncoder());
-        
+        vertx.eventBus().registerDefaultCodec((Class<ArrayList<Book>>) (Class<?>) ArrayList.class,
+                new ListOfBookEncoder());
+
         LOGGER.info("setup of eventbus ...");
         vertx.eventBus().consumer("de.nierbeck.vertx.jdbc.read").handler(message -> {
             LOGGER.info("reply a book");
-            Book book = new Book(1l, "test", "me");
-            ArrayList<Book> arrayList = new ArrayList<>();
+            final Book book = new Book(1l, "test", "me");
+            final ArrayList<Book> arrayList = new ArrayList<>();
             arrayList.add(book);
             message.reply(arrayList);
         });
-        
+
         LOGGER.info("deploying verticle ...");
-        CookBookServiceVertcl cookBookServiceVertcl = new CookBookServiceVertcl();
+        final CookBookServiceVertcl cookBookServiceVertcl = new CookBookServiceVertcl();
         cookBookServiceVertcl.bindEventBus(vertx.eventBus());
-        Router startWebRoutes = cookBookServiceVertcl.startWebRoutes();
-        
-        
-        vertx.createHttpServer().requestHandler(startWebRoutes::accept).listen(8080, context.asyncAssertSuccess());
-        
+        final Router startWebRoutes = cookBookServiceVertcl.startWebRoutes();
+
+        vertx.createHttpServer().requestHandler(startWebRoutes).listen(8080, context.asyncAssertSuccess());
+
+        client = WebClient.create(vertx);
+
         LOGGER.info("deploying done ...");
     }
 
@@ -80,10 +84,12 @@ public class CookBookServiceVertclTest {
     }
 
     @Test
-    public void test(TestContext context) {
+    public void test(final TestContext context) {
         LOGGER.info("testing ...");
-        Async async = context.async();
-        vertx.createHttpClient().getNow(8080, "localhost", "/", response -> {
+        final Async async = context.async();
+        client.get(8080, "localhost", "/").send(ar -> {
+            context.assertTrue(ar.succeeded());
+            final var response = ar.result();
             context.assertEquals(response.statusCode(), 200);
             async.complete();
         });

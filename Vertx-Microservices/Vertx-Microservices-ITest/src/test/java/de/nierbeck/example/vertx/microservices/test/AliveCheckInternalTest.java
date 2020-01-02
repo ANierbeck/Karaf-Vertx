@@ -15,11 +15,22 @@
 */
 package de.nierbeck.example.vertx.microservices.test;
 
-import io.vertx.core.Vertx;
-import io.vertx.core.eventbus.EventBus;
-import io.vertx.ext.unit.Async;
-import io.vertx.ext.unit.TestContext;
-import io.vertx.ext.unit.junit.VertxUnitRunner;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
+import static org.ops4j.pax.exam.CoreOptions.maven;
+import static org.ops4j.pax.exam.CoreOptions.mavenBundle;
+import static org.ops4j.pax.exam.karaf.options.KarafDistributionOption.configureConsole;
+import static org.ops4j.pax.exam.karaf.options.KarafDistributionOption.features;
+import static org.ops4j.pax.exam.karaf.options.KarafDistributionOption.karafDistributionConfiguration;
+import static org.ops4j.pax.exam.karaf.options.KarafDistributionOption.keepRuntimeFolder;
+import static org.ops4j.pax.exam.karaf.options.KarafDistributionOption.logLevel;
+
+import java.io.File;
+
+import javax.inject.Inject;
+
 import org.apache.karaf.features.BootFinished;
 import org.apache.karaf.features.FeaturesService;
 import org.apache.karaf.itests.KarafTestSupport;
@@ -38,16 +49,15 @@ import org.ops4j.pax.exam.options.extra.VMOption;
 import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
 import org.ops4j.pax.exam.spi.reactors.PerClass;
 
-import javax.inject.Inject;
-import java.io.File;
-
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
-import static org.ops4j.pax.exam.CoreOptions.maven;
-import static org.ops4j.pax.exam.CoreOptions.mavenBundle;
-import static org.ops4j.pax.exam.karaf.options.KarafDistributionOption.*;
+import io.vertx.core.Vertx;
+import io.vertx.core.buffer.Buffer;
+import io.vertx.core.http.HttpServerResponse;
+import io.vertx.core.eventbus.EventBus;
+import io.vertx.ext.unit.Async;
+import io.vertx.ext.unit.TestContext;
+import io.vertx.ext.unit.junit.VertxUnitRunner;
+import io.vertx.ext.web.client.HttpResponse;
+import io.vertx.ext.web.client.WebClient;
 
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerClass.class)
@@ -147,7 +157,7 @@ public class AliveCheckInternalTest extends KarafTestSupport {
     
     @RunWith(VertxUnitRunner.class)
     public static class SubTestWithRunner {
-        
+
         @BeforeClass
         public static void init() {
             System.out.println("Before test");
@@ -158,16 +168,19 @@ public class AliveCheckInternalTest extends KarafTestSupport {
             System.out.println("testing");
             Async async = context.async();
             System.out.println("vertxService: "+vertxService);
-            vertxService.createHttpClient().getNow(8080, "localhost", "/health/ping", response -> {
+
+            WebClient client = WebClient.create(vertxService);
+            client.get(8080, "localhost", "/health/ping").send(ar -> {
+                context.assertTrue(ar.succeeded());
+                final HttpResponse<Buffer> response = ar.result();
                 System.out.println("response: "+response);
                 System.out.println("Status-Code: "+response.statusCode());
                 context.assertEquals(response.statusCode(), 200);
                 System.out.println("status code: "+response.statusCode());
                 context.assertEquals(response.headers().get("content-type"), "application/json;charset=UTF-8");
-                response.bodyHandler(body -> {
-                    context.assertTrue(body.toString().contains("{\"checks\":[{\"id\":\"ping-handler\",\"status\":\"UP\"}],\"outcome\":\"UP\"}"));
-                    async.complete();
-                });
+                String body = response.bodyAsString();
+                context.assertTrue(body.toString().contains("{\"checks\":[{\"id\":\"ping-handler\",\"status\":\"UP\"}],\"outcome\":\"UP\"}"));
+                async.complete();
             });
         }
     }

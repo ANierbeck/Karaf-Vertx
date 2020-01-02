@@ -19,8 +19,8 @@ import static io.restassured.RestAssured.get;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 
-import io.restassured.http.ContentType;
-import org.apache.karaf.features.BootFinished;
+import java.util.concurrent.TimeUnit;
+
 import org.awaitility.Awaitility;
 import org.junit.After;
 import org.junit.Before;
@@ -29,9 +29,7 @@ import org.junit.Test;
 import org.ops4j.pax.exam.junit.PaxExamServer;
 
 import io.restassured.RestAssured;
-
-import javax.inject.Inject;
-import java.util.concurrent.TimeUnit;
+import io.restassured.http.ContentType;
 
 public class MicroservicesExternalTest {
 

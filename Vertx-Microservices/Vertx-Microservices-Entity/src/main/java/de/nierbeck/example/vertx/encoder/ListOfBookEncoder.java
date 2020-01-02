@@ -24,6 +24,7 @@ import io.vertx.core.buffer.Buffer;
 import io.vertx.core.eventbus.MessageCodec;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
+import io.vertx.core.json.jackson.DatabindCodec;
 
 public class ListOfBookEncoder implements MessageCodec<ArrayList<Book>, ArrayList<Book>> {
 
@@ -51,7 +52,7 @@ public class ListOfBookEncoder implements MessageCodec<ArrayList<Book>, ArrayLis
         String jsonStr = buffer.getString(_pos+=4, _pos+=length);
         
         JsonObject jsonObject = new JsonObject(jsonStr);
-        return Json.mapper.convertValue(jsonObject, new TypeReference<ArrayList<Book>>(){});
+        return DatabindCodec.mapper().convertValue(jsonObject, new TypeReference<ArrayList<Book>>(){});
     }
 
     @Override
