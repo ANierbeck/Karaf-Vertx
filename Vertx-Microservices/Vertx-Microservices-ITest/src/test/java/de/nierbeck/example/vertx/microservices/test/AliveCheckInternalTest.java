@@ -51,7 +51,6 @@ import org.ops4j.pax.exam.spi.reactors.PerClass;
 
 import io.vertx.core.Vertx;
 import io.vertx.core.buffer.Buffer;
-import io.vertx.core.http.HttpServerResponse;
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
@@ -107,6 +106,7 @@ public class AliveCheckInternalTest extends KarafTestSupport {
                 CoreOptions.mavenBundle().groupId("org.apache.servicemix.bundles").artifactId("org.apache.servicemix.bundles.hamcrest").versionAsInProject(),
                 CoreOptions.mavenBundle().groupId("org.apache.karaf.itests").artifactId("common").versionAsInProject(),
                 CoreOptions.mavenBundle().groupId("javax.annotation").artifactId("javax.annotation-api").versionAsInProject(),
+                CoreOptions.mavenBundle().groupId("io.vertx").artifactId("vertx-web-client").versionAsInProject(),
                 new VMOption("--add-reads=java.xml=java.logging"),
                 new VMOption("--add-exports=java.base/org.apache.karaf.specs.locator=java.xml,ALL-UNNAMED"),
                 new VMOption("--patch-module"),
