@@ -1,6 +1,7 @@
 # Vertex example project running on Apache Karaf
 
-[![Build Status](https://travis-ci.org/ANierbeck/Karaf-Vertx.svg)](https://travis-ci.org/ANierbeck/Karaf-Vertx)
+![](https://github.com/ANierbeck/Karaf-Vertx/workflows/maven/badge.svg)
+
 
 This is a simple sample showing how to run Vertx applications on Apache Karaf. 
 
