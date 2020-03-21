@@ -39,7 +39,7 @@
 
 	<properties>
 
-		<vertx.version>3.8.4</vertx.version>
+		<vertx.version>3.8.5</vertx.version>
 		<netty.version>4.1.30.Final</netty.version>
 		<karaf.version>4.2.7</karaf.version>
 		<karaf.cellar.version>4.1.0</karaf.cellar.version>
