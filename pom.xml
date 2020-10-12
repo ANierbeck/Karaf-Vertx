@@ -51,7 +51,7 @@
 		<pax.exam.version>4.13.1</pax.exam.version>
 		<pax.url.version>2.1.0</pax.url.version>
 		<slf4j.version>1.7.12</slf4j.version>
-		<junit.version>4.12</junit.version>
+		<junit.version>4.13.1</junit.version>
 		<hamcrest.version>2.1</hamcrest.version>
 		<c3p0.version>0.9.5.2_1</c3p0.version>
 		<pax.swissbox.version>1.8.3</pax.swissbox.version>
