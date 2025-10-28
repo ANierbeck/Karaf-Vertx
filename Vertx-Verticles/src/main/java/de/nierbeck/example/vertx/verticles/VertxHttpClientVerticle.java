@@ -31,8 +31,10 @@ public class VertxHttpClientVerticle extends AbstractVerticle {
     @Override
     public void start() throws Exception {
         LOGGER.info("starting VertxHttpClientVerticle");
+        /*
         getVertx().createHttpClient().getNow("perdu.com", "/", response -> {
             response.bodyHandler(buffer -> LOGGER.info(buffer.toString("UTF-8")));
         });
+        */
     }
 }

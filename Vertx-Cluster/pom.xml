@@ -22,7 +22,7 @@
 	<parent>
 		<groupId>de.nierbeck.example.vertx</groupId>
 		<artifactId>vertx-parent</artifactId>
-		<version>0.3.0-SNAPSHOT</version>
+		<version>0.4.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<artifactId>Vertx-Cluster</artifactId>
@@ -40,7 +40,27 @@
 		
 		<dependency>
 			<groupId>org.osgi</groupId>
-			<artifactId>osgi.enterprise</artifactId>
+			<artifactId>org.osgi.service.cm</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.osgi</groupId>
+			<artifactId>org.osgi.service.component</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.osgi</groupId>
+			<artifactId>org.osgi.service.component.annotations</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.osgi</groupId>
+			<artifactId>org.osgi.service.metatype</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.osgi</groupId>
+			<artifactId>org.osgi.service.metatype.annotations</artifactId>
 			<scope>provided</scope>
 		</dependency>
 

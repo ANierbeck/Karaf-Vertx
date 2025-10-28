@@ -40,8 +40,8 @@
         <bundle start-level="80">mvn:com.fasterxml.jackson.core/jackson-core/${jackson.version}</bundle>
         <bundle start-level="80">mvn:com.fasterxml.jackson.core/jackson-databind/${jackson.version}</bundle>
         <bundle start-level="80">mvn:com.fasterxml.jackson.core/jackson-annotations/${jackson.version}</bundle>
-        <bundle start-level="80">mvn:io.vertx/vertx-rx-java2/${vertx.version}</bundle>
-        <bundle start-level="80">mvn:io.reactivex.rxjava2/rxjava/2.2.4</bundle>
+        <bundle start-level="80">wrap:mvn:io.vertx/vertx-rx-java3/${vertx.version}</bundle>
+        <bundle start-level="80">wrap:mvn:io.reactivex.rxjava2/rxjava/2.2.4</bundle>
         <bundle start-level="80">mvn:org.reactivestreams/reactive-streams/1.0.2</bundle>
         <bundle start-level="80">mvn:org.jetbrains.kotlin/kotlin-osgi-bundle/${kotlin.version}</bundle>
        <capability>
@@ -53,34 +53,34 @@
 	</feature>
 	
 	<feature name="Vertx-Web" version="${project.version}">
-		<bundle start-level="80">mvn:io.vertx/vertx-web/${vertx.version}</bundle>
-        <bundle start-level="80">mvn:io.vertx/vertx-web-common/${vertx.version}</bundle>
-        <bundle start-level="80">mvn:io.vertx/vertx-auth-common/${vertx.version}</bundle>
-        <bundle start-level="80">mvn:io.vertx/vertx-jwt/${vertx.version}</bundle>
-        <bundle start-level="80">mvn:io.vertx/vertx-bridge-common/${vertx.version}</bundle>
-        <bundle start-level="80">mvn:io.netty/netty-transport/${netty.version}</bundle>
-        <bundle start-level="80">mvn:io.netty/netty-handler/${netty.version}</bundle>
-        <bundle start-level="80">mvn:io.netty/netty-codec/${netty.version}</bundle>
-        <bundle start-level="80">mvn:io.netty/netty-common/${netty.version}</bundle>
-        <bundle start-level="80">mvn:io.netty/netty-codec-http/${netty.version}</bundle>
+		<bundle start-level="80">wrap:mvn:io.vertx/vertx-web/${vertx.version}</bundle>
+        <bundle start-level="80">wrap:mvn:io.vertx/vertx-web-common/${vertx.version}</bundle>
+        <bundle start-level="80">wrap:mvn:io.vertx/vertx-auth-common/${vertx.version}</bundle>
+        <bundle start-level="80">wrap:mvn:io.vertx/vertx-jwt/${vertx.version}</bundle>
+        <bundle start-level="80">wrap:mvn:io.vertx/vertx-bridge-common/${vertx.version}</bundle>
+        <bundle start-level="80">wrap:mvn:io.netty/netty-transport/${netty.version}</bundle>
+        <bundle start-level="80">wrap:mvn:io.netty/netty-handler/${netty.version}</bundle>
+        <bundle start-level="80">wrap:mvn:io.netty/netty-codec/${netty.version}</bundle>
+        <bundle start-level="80">wrap:mvn:io.netty/netty-common/${netty.version}</bundle>
+        <bundle start-level="80">wrap:mvn:io.netty/netty-codec-http/${netty.version}</bundle>
 	</feature>
 	
 	<feature name="Vertx-JDBC" version="${project.version}">
-		<bundle start-level="80">mvn:io.vertx/vertx-jdbc-client/${vertx.version}</bundle>
-		<bundle start-level="80">mvn:io.vertx/vertx-sql-common/${vertx.version}</bundle>
+		<bundle start-level="80">wrap:mvn:io.vertx/vertx-jdbc-client/${vertx.version}</bundle>
+		<bundle start-level="80">wrap:mvn:io.vertx/vertx-sql-common/${vertx.version}</bundle>
 		<bundle start-level="80">mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.c3p0/${c3p0.version}</bundle>
 	</feature>
 	
 	<feature name="Vertx-Cluster" version="${project.version}">
 		<feature dependency="true">cellar-shell</feature>
 		<feature dependency="true">cellar</feature>
-		<bundle start-level="80">mvn:io.vertx/vertx-hazelcast/${vertx.version}</bundle>
+		<bundle start-level="80">wrap:mvn:io.vertx/vertx-hazelcast/${vertx.version}</bundle>
 		<bundle start-level="80">mvn:${project.groupId}/Vertx-Cluster/${project.version}</bundle>
 	</feature>
 
 	<feature name="Vertx-AliveCheck" version="${project.version}">
-		<bundle>mvn:io.vertx/vertx-health-check/${vertx.version}</bundle>
-		<bundle>mvn:io.vertx/vertx-codegen/${vertx.version}</bundle>
+		<bundle>wrap:mvn:io.vertx/vertx-health-check/${vertx.version}</bundle>
+		<bundle>wrap:mvn:io.vertx/vertx-codegen/${vertx.version}</bundle>
         <bundle>mvn:${project.groupId}/Vertx-AliveCheck/${project.version}</bundle>
 	</feature>
 

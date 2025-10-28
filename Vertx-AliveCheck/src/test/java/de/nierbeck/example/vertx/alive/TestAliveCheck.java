@@ -16,8 +16,6 @@
  */
 package de.nierbeck.example.vertx.alive;
 
-import static io.restassured.RestAssured.given;
-
 import java.io.IOException;
 import java.util.logging.Logger;
 
@@ -86,7 +84,13 @@ public class TestAliveCheck {
     @Test
     public void checkStatus(final TestContext context) {
         LOGGER.info("testing ... ");
-        given().port(8080).baseUri("http://localhost").when().get("/").then().assertThat().statusCode(200);
+        final Async async = context.async();
+        client.get(8080, "localhost", "/").send(ar -> {
+            context.assertTrue(ar.succeeded());
+            final HttpResponse<Buffer> response = ar.result();
+            context.assertEquals(response.statusCode(), 200);
+            async.complete();
+        });
     }
 
     @Test
@@ -116,8 +120,9 @@ public class TestAliveCheck {
             context.assertEquals(response.statusCode(), 200);
             context.assertEquals(response.headers().get("content-type"), "application/json;charset=UTF-8");
             final String body = response.bodyAsString();
+            //LOGGER.info("body: " + body.toString());
             context.assertTrue(body.toString()
-                    .contains("{\"checks\":[{\"id\":\"my-procedure\",\"status\":\"UP\"}],\"outcome\":\"UP\"}"));
+                    .contains("{\"status\":\"UP\",\"checks\":[{\"id\":\"my-procedure\",\"status\":\"UP\"}],\"outcome\":\"UP\"}"));
             async.complete();
         });
     }

@@ -23,7 +23,7 @@
 	<parent>
 		<groupId>de.nierbeck.example.vertx.mircoservices</groupId>
 		<artifactId>Vertx-Microservices</artifactId>
-		<version>0.3.0-SNAPSHOT</version>
+		<version>0.4.0-SNAPSHOT</version>
 	</parent>
 	<artifactId>Vertx-Microservice-MetricsDashboard</artifactId>
 	<packaging>bundle</packaging>
@@ -60,11 +60,11 @@
 			<scope>provided</scope>
 		</dependency>
 		
-		<dependency>
+		<!-- <dependency>
 			<groupId>org.osgi</groupId>
 			<artifactId>osgi.cmpn</artifactId>
 			<scope>provided</scope>
-		</dependency>
+		</dependency> -->
 		<dependency>
 			<groupId>org.osgi</groupId>
 			<artifactId>osgi.core</artifactId>

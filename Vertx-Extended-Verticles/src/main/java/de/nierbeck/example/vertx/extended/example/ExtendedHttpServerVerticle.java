@@ -16,14 +16,12 @@
 package de.nierbeck.example.vertx.extended.example;
 
 import io.vertx.core.AbstractVerticle;
-import io.vertx.core.Future;
 import io.vertx.core.Promise;
 
 public class ExtendedHttpServerVerticle extends AbstractVerticle {
 
     @Override
-    public void start(Future<Void> fut) {
-      Promise<Void> ret = Promise.promise();
+    public void start(Promise<Void> promise) {
       vertx
           .createHttpServer()
           .requestHandler(r -> {
@@ -32,9 +30,9 @@ public class ExtendedHttpServerVerticle extends AbstractVerticle {
           })
           .listen(9090, result -> {
             if (result.succeeded()) {
-              ret.complete();
+              promise.complete();
             } else {
-              ret.fail(result.cause());
+              promise.fail(result.cause());
             }
           });
     }
